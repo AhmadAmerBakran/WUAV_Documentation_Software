@@ -95,6 +95,9 @@ nbdist/
 nbactions.xml
 
 
+# Ignore the config file
+src/easv_2nd_term_exam/dal/connector/config.properties
+
 # End of https://www.gitignore.io/api/java,netbeans,intellij+all
 bots.txt
 **/bll/bot/disabled/
