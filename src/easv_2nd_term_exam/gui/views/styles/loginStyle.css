@@ -1,0 +1,28 @@
+.background {
+    -fx-background-image: url("/easv_2nd_term_exam/gui/views/images/background.jpg");
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.field {
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #000;
+    -fx-border-color: #333333;
+    -fx-border-width: 0 0 3 0;
+}
+
+.button {
+    -fx-background-color: #000;
+    -fx-background-radius: 0;
+    -fx-text-fill: #FFFF;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #E84910;
+}
+
+.button:pressed {
+    -fx-background-color: #deaa88;
+}
