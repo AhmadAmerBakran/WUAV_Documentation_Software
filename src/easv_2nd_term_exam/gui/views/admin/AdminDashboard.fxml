@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1300.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.admin.AdminDashboardController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefWidth="300.0" styleClass="left-vbox" HBox.hgrow="SOMETIMES">
+         <children>
+            <ImageView fitHeight="187.0" fitWidth="475.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+               <image>
+                  <Image url="@../images/Logo_WUAV.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+               <image>
+                  <Image url="@../images/user_96pxb.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="userLabel" text="Technician">
+               <VBox.margin>
+                  <Insets bottom="50.0" />
+               </VBox.margin>
+            </Label>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewUser" prefHeight="40.0" prefWidth="298.0" text="New User">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/add_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showAllUsers" prefHeight="40.0" prefWidth="298.0" text="All Users">
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/documents_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Button>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showHistory" prefHeight="40.0" prefWidth="298.0" text="History">
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/time_machine_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="298.0" text="Logout">
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/logout_rounded_left_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0" HBox.hgrow="ALWAYS">
+        <tabs>
+            <Tab fx:id="newUserPane" text="ADD NEW USER">
+               <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                        <VBox maxHeight="-Infinity">
+                           <children>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="FullName:      " HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <TextField fx:id="userFullnameField" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="100.0" top="15.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label alignment="BASELINE_LEFT" prefWidth="150.0" text="Username:" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="uUsernameField" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="15.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Email:  " HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <TextField fx:id="userEmailField" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="100.0" top="15.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Password: " HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="userPasswordField" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="15.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="User Type:" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <ComboBox fx:id="userTypeBox" prefWidth="283.0" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets top="15.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                              <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                      <buttons>
+                                        <Button mnemonicParsing="false" onAction="#cancelAdding" text="Cancel" />
+                                          <Button mnemonicParsing="false" onAction="#submitAdding" text="Save" />
+                                      </buttons>
+                                    </ButtonBar>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+          <Tab fx:id="allUsersPane" text="SHOW ALL USERS">
+               <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                        <VBox maxHeight="-Infinity">
+                           <children>
+                              <TableView fx:id="userTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                <columns>
+                                  <TableColumn fx:id="userIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                  <TableColumn fx:id="userNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                    <TableColumn fx:id="userEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                    <TableColumn fx:id="uUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                    <TableColumn fx:id="userRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                </columns>
+                              </TableView>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                      <buttons>
+                                        <Button mnemonicParsing="false" onAction="#updateUser" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                          <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="35.0" text="Delete" />
+                                      </buttons>
+                                    </ButtonBar>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="39.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children></VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+          <Tab fx:id="historyPane" text="HISTORY">
+               <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                        <VBox maxHeight="-Infinity" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</HBox>

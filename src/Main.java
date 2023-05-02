@@ -18,7 +18,5 @@ public class Main extends Application {
         stage.setTitle("Login to WUAV");
         stage.setScene(scene);
         stage.show();
-
-
     }
 }

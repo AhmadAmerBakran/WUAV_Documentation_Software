@@ -21,7 +21,7 @@
                         <Insets top="60.0" />
                     </BorderPane.margin>
                     <children>
-                        <TextField fx:id="txfUsername" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogin" prefWidth="230.0" promptText="Username" styleClass="field" stylesheets="@../styles/loginStyle.css">
+                        <TextField fx:id="usernameField" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogin" prefWidth="230.0" promptText="Username" styleClass="field" stylesheets="@../styles/loginStyle.css">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
@@ -29,7 +29,7 @@
                         <Font size="16.0" />
                      </font>
                         </TextField>
-                        <PasswordField fx:id="psfPassword" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogin" prefWidth="230.0" promptText="Password" styleClass="field">
+                        <PasswordField fx:id="passwordField" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogin" prefWidth="230.0" promptText="Password" styleClass="field">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>

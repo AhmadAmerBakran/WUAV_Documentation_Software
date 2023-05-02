@@ -1,20 +1,29 @@
 package easv_2nd_term_exam.be;
 
-import easv_2nd_term_exam.enums.UserType;
+import easv_2nd_term_exam.enums.UserRole;
 
 public abstract class User {
 
     private int id;
     private String name, email, username, password;
-    private UserType type;
+    private UserRole role;
 
-    public User(int id, String name, String email, String username, String password, UserType type) {
+
+    public User(int id, String name, String email, String username, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.type = type;
+    }
+
+    //Constructor without ID, this would help when creating new users
+    public User(String name, String email, String username, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public int getId() {
@@ -57,11 +66,11 @@ public abstract class User {
         this.password = password;
     }
 
-    public UserType getType() {
-        return type;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setType(UserType type) {
-        this.type = type;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
