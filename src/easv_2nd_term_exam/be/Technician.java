@@ -10,4 +10,7 @@ public class Technician extends User {
         setRole(UserRole.TECHNICIAN);
     }
 
+    public Technician(String name, String email, String username, String password) {
+        super(name, email, username, password);
+    }
 }

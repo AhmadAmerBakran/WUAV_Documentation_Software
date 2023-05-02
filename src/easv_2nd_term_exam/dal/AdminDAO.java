@@ -114,4 +114,51 @@ public class AdminDAO {
             throw new RuntimeException("Error while trying to delete user.", e);
         }
     }
+
+    public List<Technician> getAllTechnicians() {
+        return getUsersByRole(UserRole.TECHNICIAN);
+    }
+
+    public List<ProjectManager> getAllProjectManagers() {
+        return getUsersByRole(UserRole.PROJECT_MANAGER);
+    }
+
+    public List<SalesPerson> getAllSalesPersons() {
+        return getUsersByRole(UserRole.SALES_PERSON);
+    }
+
+    private <T extends User> List<T> getUsersByRole(UserRole role) {
+        String sql = "SELECT * FROM Employee WHERE Role = ?";
+        List<T> users = new ArrayList<>();
+
+        try (Connection connection = dbConnector.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, role.toString());
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                int id = result.getInt("ID");
+                String name = result.getString("Name");
+                String email = result.getString("Email");
+                String username = result.getString("Username");
+                String password = result.getString("Password");
+
+                switch (role) {
+                    case TECHNICIAN:
+                        users.add((T) new Technician(id, name, email, username, password));
+                        break;
+                    case PROJECT_MANAGER:
+                        users.add((T) new ProjectManager(id, name, email, username, password));
+                        break;
+                    case SALES_PERSON:
+                        users.add((T) new SalesPerson(id, name, email, username, password));
+                        break;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while trying to get users with role: " + role, e);
+        }
+
+        return users;
+    }
+
 }

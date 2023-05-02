@@ -1,7 +1,7 @@
 // easv_2nd_term_exam/gui/models/AdminModel.java
 package easv_2nd_term_exam.gui.models;
 
-import easv_2nd_term_exam.be.User;
+import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.bll.AdminManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +24,18 @@ public class AdminModel {
 
     public ObservableList<User> getUsers() {
         return users;
+    }
+
+    public ObservableList<Technician> getTechnicians() {
+        return FXCollections.observableArrayList(adminManager.getAllTechnicians());
+    }
+
+    public ObservableList<ProjectManager> getProjectManagers() {
+        return FXCollections.observableArrayList(adminManager.getAllProjectManagers());
+    }
+
+    public ObservableList<SalesPerson> getSalesPersons() {
+        return FXCollections.observableArrayList(adminManager.getAllSalesPersons());
     }
 
     public User addUser(User user) {

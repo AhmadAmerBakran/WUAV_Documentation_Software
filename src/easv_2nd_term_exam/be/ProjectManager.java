@@ -9,4 +9,8 @@ public class ProjectManager extends User {
         super(id, name, email, username, password);
         setRole(UserRole.PROJECT_MANAGER);
     }
+
+    public ProjectManager(String name, String email, String username, String password) {
+        super(name, email, username, password);
+    }
 }

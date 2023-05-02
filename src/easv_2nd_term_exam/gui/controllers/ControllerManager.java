@@ -1,5 +1,6 @@
 package easv_2nd_term_exam.gui.controllers;
 
+import easv_2nd_term_exam.gui.controllers.admin.AdminDashboardController;
 import easv_2nd_term_exam.gui.controllers.login.LoginViewController;
 import easv_2nd_term_exam.gui.controllers.technician.DrawingLayoutController;
 import easv_2nd_term_exam.gui.controllers.technician.TechnicianDashboardController;
@@ -10,6 +11,8 @@ public class ControllerManager {
     private TechnicianDashboardController technicianDashboardController;
     private DrawingLayoutController drawingLayoutController;
     private LoginViewController loginViewController;
+
+    private AdminDashboardController adminDashboardController;
 
     private ControllerManager() {
     }
@@ -23,6 +26,14 @@ public class ControllerManager {
 
     public void setTechnicianDashboardController(TechnicianDashboardController controller) {
         this.technicianDashboardController = controller;
+    }
+
+    public AdminDashboardController getAdminDashboardController() {
+        return adminDashboardController;
+    }
+
+    public void setAdminDashboardController(AdminDashboardController adminDashboardController) {
+        this.adminDashboardController = adminDashboardController;
     }
 
     public void setLoginViewController(LoginViewController loginViewController) {

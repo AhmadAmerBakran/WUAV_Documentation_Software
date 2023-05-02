@@ -31,6 +31,7 @@ public class LoginViewController implements Initializable {
 
 
     private LogInModel logInModel;
+    private User loggedUser;
 
 
     @Override
@@ -49,6 +50,7 @@ public class LoginViewController implements Initializable {
         User user = null;
         try {
             user = logInModel.userLogIn(username, password);
+            loggedUser = user;
 
             if (user != null) {
                 FXMLLoader loader;
@@ -90,5 +92,7 @@ public class LoginViewController implements Initializable {
         }
     }
 
-
+    public User getLoggedUser() {
+        return loggedUser;
+    }
 }

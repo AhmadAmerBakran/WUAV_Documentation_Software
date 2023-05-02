@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="800.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.admin.AddUserController">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="FullName:      " HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="userFullnameField" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="100.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Label alignment="BASELINE_LEFT" prefWidth="150.0" text="Username:" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="uUsernameField" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Email:  " HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="userEmailField" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="100.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Password: " HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="userPasswordField" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="BASELINE_LEFT" text="User Type:" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <ComboBox fx:id="userTypeComboBox" minWidth="150.0" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets top="15.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
+         <children>
+            <ButtonBar prefHeight="40.0" prefWidth="200.0">
+               <buttons>
+                  <Button mnemonicParsing="false" onAction="#cancelAdding" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#submitAdding" text="Save" />
+               </buttons>
+            </ButtonBar>
+         </children>
+      </HBox>
+   </children>
+</VBox>

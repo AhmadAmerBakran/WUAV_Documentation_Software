@@ -41,6 +41,7 @@ public class TechnicianDashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerManager.getInstance().setTechnicianDashboardController(this);
+        userLabel.setText(ControllerManager.getInstance().getLoginViewController().getLoggedUser().getName());
     }
 
 

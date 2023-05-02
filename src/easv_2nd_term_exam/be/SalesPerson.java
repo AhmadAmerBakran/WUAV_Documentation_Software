@@ -7,4 +7,8 @@ public class SalesPerson extends User{
         super(id, name, email, username, password);
         setRole(UserRole.SALES_PERSON);
     }
+
+    public SalesPerson(String name, String email, String username, String password) {
+        super(name, email, username, password);
+    }
 }
