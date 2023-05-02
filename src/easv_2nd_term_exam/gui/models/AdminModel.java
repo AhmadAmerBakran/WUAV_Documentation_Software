@@ -6,6 +6,8 @@ import easv_2nd_term_exam.bll.AdminManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.stream.IntStream;
+
 public class AdminModel {
 
     private AdminManager adminManager;
@@ -23,7 +25,7 @@ public class AdminModel {
     }
 
     public ObservableList<User> getUsers() {
-        return users;
+        return FXCollections.observableArrayList(adminManager.getAllUsers());
     }
 
     public ObservableList<Technician> getTechnicians() {
@@ -49,11 +51,14 @@ public class AdminModel {
     public boolean updateUser(User user) {
         boolean updated = adminManager.updateUser(user);
         if (updated) {
-            int index = users.indexOf(user);
-            users.set(index, user);
+            IntStream.range(0, users.size())
+                    .filter(i -> users.get(i).getId() == user.getId())
+                    .findFirst()
+                    .ifPresent(index -> users.set(index, user));
         }
         return updated;
     }
+
 
     public boolean deleteUser(int id) {
         boolean deleted = adminManager.deleteUser(id);

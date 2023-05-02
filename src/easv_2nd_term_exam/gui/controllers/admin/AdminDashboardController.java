@@ -157,6 +157,17 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
+    private void updateUserWithException()
+    {
+        if(selectedUser != null){
+            openNewWindow("/easv_2nd_term_exam/gui/views/admin/EditUserView.fxml", "Update " + selectedUser.getRole().toString().toLowerCase());
+        }else {
+            DialogUtil.showInformationDialog("Please select a user to update.");
+        }
+
+    }
+
+
     @FXML
     void deleteUser(ActionEvent event) {
         deleteUserWithConfirmation();
@@ -164,6 +175,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     void updateUser(ActionEvent event) {
+        updateUserWithException();
     }
 
     @FXML
@@ -173,7 +185,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateTechnician(ActionEvent event) {
-    }
+        deleteUserWithConfirmation();    }
 
     @FXML
     private void deleteManager(ActionEvent event) {
@@ -182,7 +194,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateManager(ActionEvent event) {
-    }
+        deleteUserWithConfirmation();    }
 
     @FXML
     private void deleteSalesPersons(ActionEvent event) {
@@ -191,5 +203,9 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateSalesPerson(ActionEvent event) {
+        deleteUserWithConfirmation();    }
+
+    public User getSelectedUser() {
+        return selectedUser;
     }
 }

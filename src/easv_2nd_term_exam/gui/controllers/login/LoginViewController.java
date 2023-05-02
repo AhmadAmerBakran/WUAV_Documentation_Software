@@ -88,7 +88,7 @@ public class LoginViewController implements Initializable {
                 currentWindow.hide();
             }
         } catch (SQLServerException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
