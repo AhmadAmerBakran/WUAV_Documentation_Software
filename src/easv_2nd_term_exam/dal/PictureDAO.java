@@ -38,6 +38,38 @@ public class PictureDAO implements IPictureDAO {
         }
         return picture;
     }
+
+    public List<Picture> createPictures(List<Picture> pictures) throws SQLException {
+        List<Picture> createdPictures = new ArrayList<>();
+        String sql = "INSERT INTO Picture (InstallationId, PictureName, ImageData) VALUES (?, ?, ?)";
+
+        try (Connection connection = dbConnector.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            for (Picture picture : pictures) {
+                pstmt.setInt(1, picture.getInstallationId());
+                pstmt.setString(2, picture.getPictureName());
+                pstmt.setBytes(3, picture.getImageData());
+
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                for (Picture picture : pictures) {
+                    if (generatedKeys.next()) {
+                        picture.setId(generatedKeys.getInt(1));
+                        createdPictures.add(picture);
+                    } else {
+                        throw new SQLException("Creating picture failed, no ID obtained.");
+                    }
+                }
+            }
+        }
+        return createdPictures;
+    }
+
     @Override
     public List<Picture> getPicturesByInstallationId(int installationId) throws SQLException {
         List<Picture> pictures = new ArrayList<>();

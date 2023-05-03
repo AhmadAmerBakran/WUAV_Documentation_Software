@@ -80,46 +80,61 @@ public class DrawingLayoutController implements Initializable {
     }
     @FXML
     private void saveLayout(ActionEvent event) {
-        // Create a snapshot of the canvasPane
-        WritableImage image = canvasPane.snapshot(new SnapshotParameters(), null);
+        WritableImage image = captureCanvasPaneSnapshot();
+        String packagePath = createPackagePath();
+        File outputFile = findUniqueOutputFile(packagePath);
+        saveImageToFile(image, outputFile);
 
-        // Get the project path and append the src folder
+        updateTechnicianDashboardImagePath(outputFile);
+        closeDrawingLayoutWindow();
+    }
+
+    private WritableImage captureCanvasPaneSnapshot() {
+        return canvasPane.snapshot(new SnapshotParameters(), null);
+    }
+
+    private String createPackagePath() {
         String projectPath = System.getProperty("user.dir") + File.separator + "src";
+        String sanitizedUserName = loggedUser.getName().replace(" ", "_");
+        return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
+    }
 
-        // Create a package path based on the loggedUser name
-        String packagePath = projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + loggedUser.getName() + File.separator;
-
-        // Check if the package exists and create it if not
+    private File findUniqueOutputFile(String packagePath) {
         File packageDir = new File(packagePath);
         if (!packageDir.exists()) {
             packageDir.mkdirs();
         }
 
-        // Find a unique filename for the output image
         String baseFilename = "drawing_output";
         String extension = ".png";
         int counter = 1;
         File outputFile = new File(packagePath + baseFilename + extension);
+
         while (outputFile.exists()) {
             outputFile = new File(packagePath + baseFilename + "_" + counter + extension);
             counter++;
         }
+        return outputFile;
+    }
 
-        // Save the image to the output file
+    private void saveImageToFile(WritableImage image, File outputFile) {
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        // Set the output image in the ImageView of the existing TechnicianDashboardController
-        ControllerManager.getInstance().getTechnicianDashboardController().getDrawingView().setImage(new Image(outputFile.toURI().toString()));
-        ControllerManager.getInstance().getTechnicianDashboardController().getRemoveDiagramBtn().setVisible(true);
+    private void updateTechnicianDashboardImagePath(File outputFile) {
+        String imagePath = "/src/easv_2nd_term_exam/installation_pictures/" + loggedUser.getName().toLowerCase().replace(" ", "_") + "/" + outputFile.getName();
+        ControllerManager.getInstance().getTechnicianDashboardController().getDiagramPathLabel().setText(imagePath);
+    }
 
-        // Close the DrawingLayout window
+    private void closeDrawingLayoutWindow() {
         Stage stage = (Stage) canvasPane.getScene().getWindow();
         stage.close();
     }
+
 
 
 

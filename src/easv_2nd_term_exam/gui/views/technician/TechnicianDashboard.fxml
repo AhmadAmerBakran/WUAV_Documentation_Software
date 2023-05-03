@@ -185,20 +185,6 @@
                                                                   </TextField>
                                                                </children>
                                                             </HBox>
-                                                            <HBox>
-                                                               <children>
-                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
-                                                                     <HBox.margin>
-                                                                        <Insets right="20.0" top="20.0" />
-                                                                     </HBox.margin>
-                                                                  </Label>
-                                                                  <DatePicker fx:id="datePicker" editable="false">
-                                                                     <HBox.margin>
-                                                                        <Insets top="15.0" />
-                                                                     </HBox.margin>
-                                                                  </DatePicker>
-                                                               </children>
-                                                            </HBox>
                                                          </children>
                                                       </VBox>
                                                    </children>
@@ -258,6 +244,20 @@
                                                                   <Insets bottom="10.0" />
                                                                </VBox.margin>
                                                             </HBox>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <DatePicker fx:id="datePicker" editable="false">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </DatePicker>
+                                                               </children>
+                                                            </HBox>
                                                          </children>
                                                       </VBox>
                                                    </children>
@@ -277,13 +277,29 @@
                                                                <VBox.margin>
                                                                   <Insets bottom="20.0" />
                                                                </VBox.margin></ImageView>
+                                                            <Label fx:id="uploadedPictureLabel" minWidth="968.0" VBox.vgrow="ALWAYS">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                               <padding>
+                                                                  <Insets left="20.0" />
+                                                               </padding>
+                                                            </Label>
+                                                            <Label fx:id="diagramPathLabel" minWidth="968.0">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                               <padding>
+                                                                  <Insets left="20.0" />
+                                                               </padding>
+                                                            </Label>
                                                             <HBox>
                                                                <children>
                                                                   <Button mnemonicParsing="false" onAction="#openDrawingLayout" text="Draw Diagram">
                                                                      <HBox.margin>
                                                                         <Insets right="20.0" />
                                                                      </HBox.margin></Button>
-                                                                  <Button fx:id="removeDiagramBtn" mnemonicParsing="false" onAction="#removeDiagram" text="Remove Diagram" visible="false">
+                                                                  <Button fx:id="removeDiagramBtn" mnemonicParsing="false" onAction="#openFileChooser" text="Upload a Photo">
                                                                      <HBox.margin>
                                                                         <Insets right="20.0" />
                                                                      </HBox.margin>

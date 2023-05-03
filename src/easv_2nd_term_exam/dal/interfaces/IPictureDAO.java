@@ -4,6 +4,7 @@ import easv_2nd_term_exam.be.Picture;
 import java.util.List;
 
 public interface IPictureDAO {
+    List<Picture> createPictures(List<Picture> pictures) throws Exception;
     Picture createPicture(Picture picture) throws Exception;
     Picture getPicture(int id) throws Exception;
     List<Picture> getAllPictures() throws Exception;

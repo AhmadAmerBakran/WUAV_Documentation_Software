@@ -12,9 +12,10 @@ public class PictureModel {
     private PictureManager pictureManager;
     private ObservableList<Picture> pictures;
 
-    public PictureModel() {
+    public PictureModel() throws Exception {
         pictureManager = new PictureManager();
         pictures = FXCollections.observableArrayList();
+        loadPictures();
     }
 
     public void loadPictures() throws Exception {
@@ -46,4 +47,10 @@ public class PictureModel {
     public List<Picture> getPicturesByInstallationId(int installationId) throws Exception {
         return pictureManager.getPicturesByInstallationId(installationId);
     }
+    public List<Picture> createPictures(List<Picture> pictureList) throws Exception {
+        List<Picture> createdPictures = pictureManager.createPictures(pictureList);
+        pictures.addAll(createdPictures);
+        return createdPictures;
+    }
+
 }

@@ -18,6 +18,10 @@ public class PictureManager {
     public Picture createPicture(Picture picture) throws Exception {
         return pictureDAO.createPicture(picture);
     }
+    public List<Picture> createPictures(List<Picture> pictures) throws Exception {
+        return pictureDAO.createPictures(pictures);
+    }
+
 
     public Picture getPicture(int id) throws Exception {
         return pictureDAO.getPicture(id);
