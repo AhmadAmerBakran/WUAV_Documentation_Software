@@ -4,6 +4,7 @@ import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.AdminModel;
+import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.util.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,6 +35,7 @@ public class AddUserController implements Initializable {
     private ComboBox<UserRole> userTypeComboBox;
 
     private AdminModel adminModel;
+    private ModelManager modelManager;
 
 
 

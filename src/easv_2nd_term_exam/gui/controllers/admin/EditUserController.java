@@ -4,6 +4,8 @@ import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.AdminModel;
+import easv_2nd_term_exam.gui.models.ModelManager;
+import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,10 +28,12 @@ public class EditUserController implements Initializable {
     private ComboBox<UserRole> userTypeComboBox;
 
     private AdminDashboardController controller;
-    AdminModel model;
+    private ModelManagerLoader modelManagerLoader;
+    private ModelManager modelManager;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        model = new AdminModel();
+        modelManagerLoader = ModelManagerLoader.getInstance();
+        modelManager = modelManagerLoader.getModelManager();
         controller = ControllerManager.getInstance().getAdminDashboardController();
         userTypeComboBox.getItems().setAll(UserRole.values());
         userTypeComboBox.setValue(controller.getSelectedUser().getRole());
@@ -77,7 +81,7 @@ public class EditUserController implements Initializable {
 
         // Add the new user to the model
         if (newUser != null) {
-            model.updateUser(newUser);
+            modelManager.getAdminModel().updateUser(newUser);
             DialogUtil.showInformationDialog("User Updated successfully!");
             ControllerManager.getInstance().getAdminDashboardController().showAllUsers(event);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

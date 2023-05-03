@@ -92,7 +92,7 @@
          <children>
             <Pane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="false" />
             <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0">
-              <tabs>
+               <tabs>
                   <Tab text="B2B">
                      <content>
                         <ScrollPane fitToHeight="true" fitToWidth="true">
@@ -310,10 +310,10 @@
                                     <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                            <buttons>
-                                              <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                                             <buttons>
+                                                <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                                                 <Button mnemonicParsing="false" onAction="#saveReport" text="Save" />
-                                            </buttons>
+                                             </buttons>
                                           </ButtonBar>
                                        </children>
                                     </HBox>
@@ -323,7 +323,7 @@
                         </ScrollPane>
                      </content>
                   </Tab>
-                <Tab text="B2G">
+                  <Tab text="B2G">
                      <content>
                         <ScrollPane fitToHeight="true" fitToWidth="true">
                            <content>
@@ -332,7 +332,7 @@
                         </ScrollPane>
                      </content>
                   </Tab>
-                <Tab text="B2C">
+                  <Tab text="B2C">
                      <content>
                         <ScrollPane fitToHeight="true" fitToWidth="true">
                            <content>
@@ -341,7 +341,7 @@
                         </ScrollPane>
                      </content>
                   </Tab>
-              </tabs>
+               </tabs>
             </TabPane>
          </children>
       </StackPane>

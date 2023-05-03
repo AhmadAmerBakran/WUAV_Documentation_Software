@@ -39,7 +39,7 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private Label userLabel;
     @FXML
-    Button removeDiagramBtn;
+    private Button removeDiagramBtn;
 
     private User loggedUser;
     @Override
@@ -147,6 +147,7 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void saveReport(ActionEvent event) {
+
     }
 
     @FXML

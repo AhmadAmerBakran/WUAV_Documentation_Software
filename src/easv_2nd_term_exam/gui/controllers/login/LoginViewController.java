@@ -5,6 +5,8 @@ import easv_2nd_term_exam.be.Technician;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.LogInModel;
+import easv_2nd_term_exam.gui.models.ModelManager;
+import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,16 +31,18 @@ public class LoginViewController implements Initializable {
     @FXML
     private PasswordField passwordField;
 
-
-    private LogInModel logInModel;
+    private ModelManagerLoader modelManagerLoader;
+    private ModelManager modelManager;
     private User loggedUser;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        modelManagerLoader = ModelManagerLoader.getInstance();
+        modelManager = modelManagerLoader.getModelManager();
+
         ControllerManager.getInstance().setLoginViewController(this);
 
-        logInModel = new LogInModel();
 
     }
 
@@ -49,7 +53,7 @@ public class LoginViewController implements Initializable {
 
         User user = null;
         try {
-            user = logInModel.userLogIn(username, password);
+            user = modelManager.getLogInModel().userLogIn(username, password);
             loggedUser = user;
 
             if (user != null) {

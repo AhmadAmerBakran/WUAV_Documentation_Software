@@ -19,7 +19,7 @@ public class InstallationDAO implements IInstallationDAO {
 
     @Override
     public Installation createInstallation(Installation installation) throws SQLException {
-        String sql = "INSERT INTO Installation (customerId, technicianId, username, password, description, installationType) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Installation (CustomerId, TechnicianId, Username, Password, Description, InstallationType) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -46,7 +46,7 @@ public class InstallationDAO implements IInstallationDAO {
     @Override
     public Installation getInstallation(int id) throws SQLException {
         Installation installation = null;
-        String sql = "SELECT * FROM Installation WHERE id = ?";
+        String sql = "SELECT * FROM Installation WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -54,13 +54,13 @@ public class InstallationDAO implements IInstallationDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     installation = new Installation(
-                            rs.getInt("id"),
-                            rs.getInt("customerId"),
-                            rs.getInt("technicianId"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("description"),
-                            InstallationType.valueOf(rs.getString("installationType"))
+                            rs.getInt("ID"),
+                            rs.getInt("CustomerId"),
+                            rs.getInt("TechnicianId"),
+                            rs.getString("Username"),
+                            rs.getString("Password"),
+                            rs.getString("Description"),
+                            InstallationType.valueOf(rs.getString("InstallationType"))
                     );
                 }
             }
@@ -78,13 +78,13 @@ public class InstallationDAO implements IInstallationDAO {
 
             while (rs.next()) {
                 installations.add(new Installation(
-                        rs.getInt("id"),
-                        rs.getInt("customerId"),
-                        rs.getInt("technicianId"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("description"),
-                        InstallationType.valueOf(rs.getString("installationType"))
+                        rs.getInt("ID"),
+                        rs.getInt("CustomerId"),
+                        rs.getInt("TechnicianId"),
+                        rs.getString("Username"),
+                        rs.getString("Password"),
+                        rs.getString("Description"),
+                        InstallationType.valueOf(rs.getString("InstallationType"))
                 ));
             }
         }
@@ -93,7 +93,7 @@ public class InstallationDAO implements IInstallationDAO {
 
     @Override
     public void updateInstallation(Installation installation) throws SQLException {
-        String sql = "UPDATE Installation SET customerId = ?, technicianId = ?, username = ?, password = ?, description = ?, installationType = ? WHERE id = ?";
+        String sql = "UPDATE Installation SET CustomerId = ?, TechnicianId = ?, Username = ?, Password = ?, Description = ?, InstallationType = ? WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -110,7 +110,7 @@ public class InstallationDAO implements IInstallationDAO {
     }
 
     public void deleteInstallation(int id) throws SQLException {
-        String sql = "DELETE FROM Installation WHERE id = ?";
+        String sql = "DELETE FROM Installation WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 

@@ -4,6 +4,8 @@ import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.AdminModel;
+import easv_2nd_term_exam.gui.models.ModelManager;
+import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,13 +44,15 @@ public class AdminDashboardController implements Initializable {
     @FXML
     private Tab allUsersTab, techTab, managerTab, salesPersonsTab;
 
-    private AdminModel adminModel;
+    private ModelManagerLoader modelManagerLoader;
+    private ModelManager modelManager;
     private User selectedUser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        modelManagerLoader = ModelManagerLoader.getInstance();
+        modelManager = modelManagerLoader.getModelManager();
         ControllerManager.getInstance().setAdminDashboardController(this);
-        adminModel = new AdminModel();
         adminTabPane.getSelectionModel().select(allUsersTab);
         userLabel.setText(ControllerManager.getInstance().getLoginViewController().getLoggedUser().getName());
         setupTableViews();
@@ -71,10 +75,10 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void setupTableViews() {
-        setupTableView(userTableView, adminModel::getUsers, userIdColumn, userNameColumn, uUsernameColumn, userEmailColumn, userRoleColumn);
-        setupTableView(techTableView, adminModel::getTechnicians, techIdColumn, techNameColumn, techUsernameColumn, techEmailColumn, techRoleColumn);
-        setupTableView(managerTableView, adminModel::getProjectManagers, manIdColumn, manNameColumn, manUsernameColumn, manEmailColumn, manRoleColumn);
-        setupTableView(salesPersonTableView, adminModel::getSalesPersons, salesPersonsIdColumn, salesPersonsNameColumn, salesPersonsUsernameColumn, salesPersonsEmailColumn, salesPersonsRoleColumn);
+        setupTableView(userTableView, modelManager.getAdminModel()::getUsers, userIdColumn, userNameColumn, uUsernameColumn, userEmailColumn, userRoleColumn);
+        setupTableView(techTableView, modelManager.getAdminModel()::getTechnicians, techIdColumn, techNameColumn, techUsernameColumn, techEmailColumn, techRoleColumn);
+        setupTableView(managerTableView, modelManager.getAdminModel()::getProjectManagers, manIdColumn, manNameColumn, manUsernameColumn, manEmailColumn, manRoleColumn);
+        setupTableView(salesPersonTableView, modelManager.getAdminModel()::getSalesPersons, salesPersonsIdColumn, salesPersonsNameColumn, salesPersonsUsernameColumn, salesPersonsEmailColumn, salesPersonsRoleColumn);
     }
 
     private void setupTableView(TableView<User> tableView, Supplier<?> dataSupplier, TableColumn<User, Integer> idColumn,
@@ -157,7 +161,7 @@ public class AdminDashboardController implements Initializable {
         if (selectedUser != null) {
             boolean confirmed = DialogUtil.showConfirmationDialog("Are you sure you want to delete " + selectedUser.getName() + " ?");
             if (confirmed) {
-                adminModel.deleteUser(selectedUser.getId());
+                modelManager.getAdminModel().deleteUser(selectedUser.getId());
                 setupTableViews(); // Refresh the table view after deletion
             }
         } else {

@@ -18,7 +18,7 @@ public class PictureDAO implements IPictureDAO {
 
     @Override
     public Picture createPicture(Picture picture) throws SQLException {
-        String sql = "INSERT INTO Picture (installationId, pictureName, imageData) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Picture (InstallationId, PictureName, ImageData) VALUES (?, ?, ?)";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -41,7 +41,7 @@ public class PictureDAO implements IPictureDAO {
     @Override
     public List<Picture> getPicturesByInstallationId(int installationId) throws SQLException {
         List<Picture> pictures = new ArrayList<>();
-        String sql = "SELECT * FROM Picture WHERE installationId = ?";
+        String sql = "SELECT * FROM Picture WHERE InstallationId = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -63,7 +63,7 @@ public class PictureDAO implements IPictureDAO {
     @Override
     public Picture getPicture(int id) throws SQLException {
         Picture picture = null;
-        String sql = "SELECT * FROM Picture WHERE id = ?";
+        String sql = "SELECT * FROM Picture WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -71,10 +71,10 @@ public class PictureDAO implements IPictureDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     picture = new Picture(
-                            rs.getInt("id"),
-                            rs.getString("pictureName"),
-                            rs.getBytes("imageData"),
-                            rs.getInt("installationId")
+                            rs.getInt("ID"),
+                            rs.getString("PictureName"),
+                            rs.getBytes("ImageData"),
+                            rs.getInt("InstallationId")
                     );
                 }
             }
@@ -92,10 +92,10 @@ public class PictureDAO implements IPictureDAO {
 
             while (rs.next()) {
                 pictures.add(new Picture(
-                        rs.getInt("id"),
-                        rs.getString("pictureName"),
-                        rs.getBytes("imageData"),
-                        rs.getInt("installationId")
+                        rs.getInt("ID"),
+                        rs.getString("PictureName"),
+                        rs.getBytes("ImageData"),
+                        rs.getInt("InstallationId")
                 ));
             }
         }
@@ -104,7 +104,7 @@ public class PictureDAO implements IPictureDAO {
 
     @Override
     public void updatePicture(Picture picture) throws SQLException {
-        String sql = "UPDATE Picture SET installationId = ?, pictureName = ?, imageData = ? WHERE id = ?";
+        String sql = "UPDATE Picture SET InstallationId = ?, PictureName = ?, ImageData = ? WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -119,7 +119,7 @@ public class PictureDAO implements IPictureDAO {
 
     @Override
     public void deletePicture(int id) throws SQLException {
-        String sql = "DELETE FROM Picture WHERE id = ?";
+        String sql = "DELETE FROM Picture WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 

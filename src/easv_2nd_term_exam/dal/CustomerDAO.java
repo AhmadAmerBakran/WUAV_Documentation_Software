@@ -19,7 +19,7 @@ public class CustomerDAO implements ICustomerDAO {
 
     @Override
     public Customer createCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO Customer (name, address, email, type) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Customer (Name, Address, Email, Type) VALUES (?, ?, ?, ?)";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -44,7 +44,7 @@ public class CustomerDAO implements ICustomerDAO {
     @Override
     public Customer getCustomer(int id) throws SQLException {
         Customer customer = null;
-        String sql = "SELECT * FROM Customer WHERE id = ?";
+        String sql = "SELECT * FROM Customer WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -52,11 +52,11 @@ public class CustomerDAO implements ICustomerDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     customer = new Customer(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("address"),
-                            rs.getString("email"),
-                            CustomerType.valueOf(rs.getString("type"))
+                            rs.getInt("ID"),
+                            rs.getString("Name"),
+                            rs.getString("Address"),
+                            rs.getString("Email"),
+                            CustomerType.valueOf(rs.getString("Type"))
                     );
                 }
             }
@@ -74,11 +74,11 @@ public class CustomerDAO implements ICustomerDAO {
 
             while (rs.next()) {
                 customers.add(new Customer(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("address"),
-                        rs.getString("email"),
-                        CustomerType.valueOf(rs.getString("type"))
+                        rs.getInt("ID"),
+                        rs.getString("Name"),
+                        rs.getString("Address"),
+                        rs.getString("Email"),
+                        CustomerType.valueOf(rs.getString("Type"))
                 ));
             }
         }
@@ -87,7 +87,7 @@ public class CustomerDAO implements ICustomerDAO {
 
     @Override
     public void updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE Customer SET name = ?, address = ?, email = ?, type = ? WHERE id = ?";
+        String sql = "UPDATE Customer SET Name = ?, Address = ?, Email = ?, Type = ? WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
@@ -103,7 +103,7 @@ public class CustomerDAO implements ICustomerDAO {
 
     @Override
     public void deleteCustomer(int id) throws SQLException {
-        String sql = "DELETE FROM Customer WHERE id = ?";
+        String sql = "DELETE FROM Customer WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 

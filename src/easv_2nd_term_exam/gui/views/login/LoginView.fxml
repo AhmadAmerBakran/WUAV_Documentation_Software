@@ -37,7 +37,7 @@
                         <Font size="16.0" />
                      </font>
                         </PasswordField>
-                        <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogin" prefWidth="230.0" text="Login" />
+                        <Button fx:id="loginBtn" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogin" prefWidth="230.0" text="Login" />
                     </children>
                     <padding>
                         <Insets left="32.0" right="32.0" />
