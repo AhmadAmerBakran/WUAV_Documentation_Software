@@ -1,8 +1,17 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
+import easv_2nd_term_exam.be.Customer;
+import easv_2nd_term_exam.be.Installation;
+import easv_2nd_term_exam.be.Picture;
 import easv_2nd_term_exam.be.User;
+import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
+import easv_2nd_term_exam.gui.models.ModelManager;
+import easv_2nd_term_exam.gui.models.ModelManagerLoader;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,19 +20,22 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class TechnicianDashboardController implements Initializable {
@@ -40,12 +52,23 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private ComboBox<InstallationType> installationTypeBox;
     @FXML
+    private ComboBox<CustomerType> customerTypeBox;
+    @FXML
     private Label userLabel, diagramPathLabel, uploadedPictureLabel;
+    @FXML
+    private TextArea descriptionArea;
+
+    private ModelManagerLoader modelManagerLoader;
+    private ModelManager modelManager;
+
 
     private User loggedUser;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        modelManagerLoader = ModelManagerLoader.getInstance();
+        modelManager = modelManagerLoader.getModelManager();
         installationTypeBox.getItems().setAll(InstallationType.values());
+        customerTypeBox.getItems().setAll(CustomerType.values());
         ControllerManager.getInstance().setTechnicianDashboardController(this);
         switchTchPane(false, true);
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
@@ -68,6 +91,7 @@ public class TechnicianDashboardController implements Initializable {
         techNameField.setText(loggedUser.getName());
         techEmailField.setText(loggedUser.getEmail());
     }
+
 
 
 
@@ -157,11 +181,13 @@ public class TechnicianDashboardController implements Initializable {
     private void copySelectedFile(File selectedFile, File targetFile) {
         try {
             Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            uploadedPictureLabel.setText("/src/easv_2nd_term_exam/installation_pictures/" + loggedUser.getName().replace(" ", "_").toLowerCase() + "/" + targetFile.getName());
+            // Set the absolute path of the targetFile to the label
+            uploadedPictureLabel.setText(targetFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
@@ -175,10 +201,64 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void saveReport(ActionEvent event) {
+        String customerName = customerNameField.getText();
+        String customerEmail = customerEmailField.getText();
+        String customerAddress = customerAddressField.getText();
+        CustomerType type = customerTypeBox.getValue();
+        Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
+        try {
+            modelManager.getCustomerModel().createCustomer(newCustomer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        int customerId = newCustomer.getId();
+        int technicianId = Integer.parseInt(techIdField.getText());
+        String deviceUsername = deviceUsernameField.getText();
+        String devicePassword = devicePasswordField.getText();
+        String installationDescription = descriptionArea.getText();
+        InstallationType installationType = installationTypeBox.getValue();
+        Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
+        try {
+            modelManager.getInstallationModel().createInstallation(newInstallation);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        int installationId = newInstallation.getId();
+        Image diagramImage = new Image(diagramPathLabel.getText());
+        Image uploadedImage = new Image(uploadedPictureLabel.getText());
+        List<Picture> pictures = new ArrayList<>();
 
+        byte[] diagramImageData = imageToByteArray(diagramImage);
+        byte[] uploadedImageData = imageToByteArray(uploadedImage);
 
+        if (diagramImageData != null) {
+            Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
+            pictures.add(diagramPicture);
+        }
 
+        if (uploadedImageData != null) {
+            Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
+            pictures.add(uploadedPicture);
+        }
+        try {
+            modelManager.getPictureModel().createPictures(pictures);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private byte[] imageToByteArray(Image image) {
+        try {
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     @FXML
     private void createNewReport(ActionEvent event)
@@ -191,5 +271,4 @@ public class TechnicianDashboardController implements Initializable {
     private void showMyReports(ActionEvent event) {
         switchTchPane(false, true);
     }
-
 }

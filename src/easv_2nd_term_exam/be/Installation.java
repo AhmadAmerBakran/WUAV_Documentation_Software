@@ -21,6 +21,15 @@ public class Installation {
         this.installationType = installationType;
     }
 
+    public Installation(int customerId, int technicianId, String username, String password, String description, InstallationType installationType) {
+        this.customerId = customerId;
+        this.technicianId = technicianId;
+        this.username = username;
+        this.password = password;
+        this.description = description;
+        this.installationType = installationType;
+    }
+
     public int getCustomerId() {
         return customerId;
     }

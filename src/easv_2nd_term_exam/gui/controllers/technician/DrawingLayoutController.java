@@ -126,9 +126,10 @@ public class DrawingLayoutController implements Initializable {
     }
 
     private void updateTechnicianDashboardImagePath(File outputFile) {
-        String imagePath = "/src/easv_2nd_term_exam/installation_pictures/" + loggedUser.getName().toLowerCase().replace(" ", "_") + "/" + outputFile.getName();
-        ControllerManager.getInstance().getTechnicianDashboardController().getDiagramPathLabel().setText(imagePath);
+        // Set the absolute path of the outputFile to the label
+        ControllerManager.getInstance().getTechnicianDashboardController().getDiagramPathLabel().setText(outputFile.getAbsolutePath());
     }
+
 
     private void closeDrawingLayoutWindow() {
         Stage stage = (Stage) canvasPane.getScene().getWindow();

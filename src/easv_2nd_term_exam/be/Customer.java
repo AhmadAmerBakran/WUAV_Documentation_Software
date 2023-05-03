@@ -16,6 +16,13 @@ public class Customer {
         this.type = type;
     }
 
+    public Customer(String name, String address, String email, CustomerType type) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }

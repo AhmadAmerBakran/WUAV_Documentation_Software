@@ -51,13 +51,9 @@ public class PictureDAO implements IPictureDAO {
                 pstmt.setString(2, picture.getPictureName());
                 pstmt.setBytes(3, picture.getImageData());
 
-                pstmt.addBatch();
-            }
+                pstmt.executeUpdate(); // Execute each prepared statement individually
 
-            pstmt.executeBatch();
-
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                for (Picture picture : pictures) {
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         picture.setId(generatedKeys.getInt(1));
                         createdPictures.add(picture);
@@ -65,10 +61,13 @@ public class PictureDAO implements IPictureDAO {
                         throw new SQLException("Creating picture failed, no ID obtained.");
                     }
                 }
+
+                pstmt.clearParameters(); // Clear the parameters for the next iteration
             }
         }
         return createdPictures;
     }
+
 
     @Override
     public List<Picture> getPicturesByInstallationId(int installationId) throws SQLException {

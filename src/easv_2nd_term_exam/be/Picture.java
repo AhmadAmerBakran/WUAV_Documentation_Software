@@ -13,6 +13,12 @@ public class Picture {
         this.imageData = imageData;
     }
 
+    public Picture(int installationId, String pictureName, byte[] imageData) {
+        this.installationId = installationId;
+        this.pictureName = pictureName;
+        this.imageData = imageData;
+    }
+
     public int getId() {
         return id;
     }
