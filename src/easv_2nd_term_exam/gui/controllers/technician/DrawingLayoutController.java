@@ -1,5 +1,6 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
+import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -44,36 +45,11 @@ public class DrawingLayoutController implements Initializable {
     private Canvas tempCanvas;
     private GraphicsContext gc;
     private GraphicsContext tempGc;
-
-
-    @FXML
-    private void saveLayout(ActionEvent event) {
-        // Create a snapshot of the canvasPane
-        WritableImage image = canvasPane.snapshot(new SnapshotParameters(), null);
-
-        // Get the user's desktop path
-        String desktopPath = System.getProperty("user.home") + "/Desktop/";
-
-        // Create a File object for the output image
-        File outputFile = new File(Paths.get(desktopPath, "drawing_output.png").toString());
-
-        // Save the image to the output file
-        try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Set the output image in the ImageView of the existing TechnicianDashboardController
-        ControllerManager.getInstance().getTechnicianDashboardController().getDrawingView().setImage(new Image(outputFile.toURI().toString()));
-
-        // Close the DrawingLayout window
-        Stage stage = (Stage) canvasPane.getScene().getWindow();
-        stage.close();
-    }
+    private User loggedUser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         ControllerManager.getInstance().setDrawingLayoutController(this);
 
         drawingCanvas = new Canvas();
@@ -103,6 +79,52 @@ public class DrawingLayoutController implements Initializable {
         });
 
     }
+    @FXML
+    private void saveLayout(ActionEvent event) {
+        // Create a snapshot of the canvasPane
+        WritableImage image = canvasPane.snapshot(new SnapshotParameters(), null);
+
+        // Get the project path and append the src folder
+        String projectPath = System.getProperty("user.dir") + File.separator + "src";
+
+        // Create a package path based on the loggedUser name
+        String packagePath = projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + loggedUser.getName() + File.separator;
+
+        // Check if the package exists and create it if not
+        File packageDir = new File(packagePath);
+        if (!packageDir.exists()) {
+            packageDir.mkdirs();
+        }
+
+        // Find a unique filename for the output image
+        String baseFilename = "drawing_output";
+        String extension = ".png";
+        int counter = 1;
+        File outputFile = new File(packagePath + baseFilename + extension);
+        while (outputFile.exists()) {
+            outputFile = new File(packagePath + baseFilename + "_" + counter + extension);
+            counter++;
+        }
+
+        // Save the image to the output file
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Set the output image in the ImageView of the existing TechnicianDashboardController
+        ControllerManager.getInstance().getTechnicianDashboardController().getDrawingView().setImage(new Image(outputFile.toURI().toString()));
+        ControllerManager.getInstance().getTechnicianDashboardController().getRemoveDiagramBtn().setVisible(true);
+
+        // Close the DrawingLayout window
+        Stage stage = (Stage) canvasPane.getScene().getWindow();
+        stage.close();
+    }
+
+
+
+
 
 
     private enum Shape { LINE, RECTANGLE, CIRCLE, TRIANGLE, NONE }

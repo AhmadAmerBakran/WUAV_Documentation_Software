@@ -16,6 +16,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1300.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.technician.TechnicianDashboardController">
@@ -40,7 +42,7 @@
                   <Insets bottom="50.0" />
                </VBox.margin>
             </Label>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="298.0" text="New Installation">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#createNewReport" prefHeight="40.0" prefWidth="298.0" text="New Report">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -55,7 +57,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="298.0" text="My Reports">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showMyReports" prefHeight="40.0" prefWidth="298.0" text="My Reports">
                <padding>
                   <Insets left="50.0" />
                </padding>
@@ -86,256 +88,262 @@
             </Button>
          </children>
       </VBox>
-      <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0" HBox.hgrow="ALWAYS">
-        <tabs>
-            <Tab text="B2B">
-               <content>
-                  <ScrollPane fitToHeight="true" fitToWidth="true">
+      <StackPane prefHeight="600.0" prefWidth="999.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Pane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="false" />
+            <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0">
+              <tabs>
+                  <Tab text="B2B">
                      <content>
-                        <VBox maxHeight="-Infinity">
-                           <children>
-                              <Accordion>
-                                 <panes>
-                                    <TitledPane animated="false" text="Technician &amp; Customer's Information">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                   <children>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician ID:      " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="techIdField" alignment="CENTER" editable="false" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="100.0" top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                            <Label alignment="BASELINE_LEFT" prefWidth="150.0" text="Customer's Name:" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="customerNameField" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                         </children>
-                                                         <VBox.margin>
-                                                            <Insets bottom="10.0" />
-                                                         </VBox.margin>
-                                                      </HBox>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician Name:    " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="techNameField" editable="false" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="100.0" top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Customer's Address: " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="customerAddressField" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                         </children>
-                                                         <VBox.margin>
-                                                            <Insets bottom="10.0" />
-                                                         </VBox.margin>
-                                                      </HBox>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician's Email:  " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="techEmailField" editable="false" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="100.0" top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Customer's Email: " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="customerEmailField" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                         </children>
-                                                      </HBox>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <DatePicker fx:id="datePicker" editable="false">
-                                                               <HBox.margin>
-                                                                  <Insets top="15.0" />
-                                                               </HBox.margin>
-                                                            </DatePicker>
-                                                         </children>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                 </panes>
-                                 <VBox.margin>
-                                    <Insets bottom="30.0" top="30.0" />
-                                 </VBox.margin>
-                              </Accordion>
-                              <Accordion>
-                                <panes>
-                                    <TitledPane animated="false" text="Installation's Information">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                   <children>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Installations's Type:" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <ComboBox fx:id="installationTypeBox" prefWidth="150.0" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets top="12.0" />
-                                                               </HBox.margin>
-                                                            </ComboBox>
-                                                         </children>
-                                                         <VBox.margin>
-                                                            <Insets bottom="10.0" />
-                                                         </VBox.margin>
-                                                      </HBox>
-                                                      <HBox>
-                                                         <children>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Device Username: " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="deviceUsernameField" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="100.0" top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                            <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Device Password: " HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets right="20.0" top="20.0" />
-                                                               </HBox.margin>
-                                                            </Label>
-                                                            <TextField fx:id="devicePasswordField" HBox.hgrow="SOMETIMES">
-                                                               <HBox.margin>
-                                                                  <Insets top="15.0" />
-                                                               </HBox.margin>
-                                                            </TextField>
-                                                         </children>
-                                                         <VBox.margin>
-                                                            <Insets bottom="10.0" />
-                                                         </VBox.margin>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                </panes>
-                                 <VBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </VBox.margin>
-                              </Accordion>
-                              <Accordion>
-                                <panes>
-                                    <TitledPane animated="false" text="Installation's Diagram">
-                                       <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                   <children>
-                                                      <HBox>
-                                                         <children>
-                                                            <Button mnemonicParsing="false" onAction="#openDrawingLayout" text="Button" />
-                                                         </children>
-                                                         <VBox.margin>
-                                                            <Insets bottom="10.0" />
-                                                         </VBox.margin>
-                                                      </HBox>
-                                                      <ImageView fx:id="drawingView" fitHeight="150.0" fitWidth="971.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </TitledPane>
-                                </panes>
-                                 <VBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </VBox.margin>
-                              </Accordion>
-                              <Accordion>
-                                 <VBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </VBox.margin>
-                              </Accordion>
-                              <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                           <content>
+                              <VBox maxHeight="-Infinity">
                                  <children>
-                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                      <buttons>
-                                        <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                                          <Button mnemonicParsing="false" onAction="#saveReport" text="Save" />
-                                      </buttons>
-                                    </ButtonBar>
+                                    <Accordion>
+                                       <panes>
+                                          <TitledPane animated="false" text="Technician &amp; Customer's Information">
+                                             <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician ID:      " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="techIdField" alignment="CENTER" editable="false" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="100.0" top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                                  <Label alignment="BASELINE_LEFT" prefWidth="150.0" text="Customer's Name:" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="customerNameField" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                            </HBox>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician Name:    " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="techNameField" editable="false" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="100.0" top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Customer's Address: " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="customerAddressField" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                            </HBox>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Technician's Email:  " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="techEmailField" editable="false" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="100.0" top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Customer's Email: " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="customerEmailField" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                               </children>
+                                                            </HBox>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <DatePicker fx:id="datePicker" editable="false">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </DatePicker>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                             </content>
+                                             <padding>
+                                                <Insets bottom="30.0" />
+                                             </padding>
+                                          </TitledPane>
+                                          <TitledPane animated="false" text="Installation's Information">
+                                             <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Installations's Type:" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <ComboBox fx:id="installationTypeBox" prefWidth="150.0" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets top="12.0" />
+                                                                     </HBox.margin>
+                                                                  </ComboBox>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                            </HBox>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Device Username: " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="deviceUsernameField" promptText="Only if existing ..." HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="100.0" top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Device Password: " HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <TextField fx:id="devicePasswordField" promptText="Only if existing ..." HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </TextField>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                             </content>
+                                             <padding>
+                                                <Insets bottom="30.0" />
+                                             </padding>
+                                          </TitledPane>
+                                          <TitledPane animated="false" text="Installation's Diagram">
+                                             <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <VBox layoutX="358.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <ImageView fx:id="drawingView" fitHeight="177.0" fitWidth="971.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="20.0" />
+                                                               </VBox.margin></ImageView>
+                                                            <HBox>
+                                                               <children>
+                                                                  <Button mnemonicParsing="false" onAction="#openDrawingLayout" text="Draw Diagram">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" />
+                                                                     </HBox.margin></Button>
+                                                                  <Button fx:id="removeDiagramBtn" mnemonicParsing="false" onAction="#removeDiagram" text="Remove Diagram" visible="false">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Button>
+                                                               </children>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="10.0" />
+                                                               </VBox.margin>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                             </content>
+                                             <padding>
+                                                <Insets bottom="30.0" />
+                                             </padding>
+                                          </TitledPane>
+                                       </panes>
+                                       <VBox.margin>
+                                          <Insets bottom="30.0" top="30.0" />
+                                       </VBox.margin>
+                                    </Accordion>
+                                    <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                            <buttons>
+                                              <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                                                <Button mnemonicParsing="false" onAction="#saveReport" text="Save" />
+                                            </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                    </HBox>
                                  </children>
-                              </HBox>
-                           </children>
-                        </VBox>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                      </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-          <Tab text="B2C">
-               <content>
-                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                  </Tab>
+                <Tab text="B2G">
                      <content>
-                        <VBox maxHeight="-Infinity" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                           <content>
+                              <VBox maxHeight="-Infinity" />
+                           </content>
+                        </ScrollPane>
                      </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-          <Tab text="B2Habibi">
-               <content>
-                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                  </Tab>
+                <Tab text="B2C">
                      <content>
-                        <VBox maxHeight="-Infinity" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                           <content>
+                              <VBox maxHeight="-Infinity" />
+                           </content>
+                        </ScrollPane>
                      </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-        </tabs>
-      </TabPane>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </StackPane>
    </children>
 </HBox>

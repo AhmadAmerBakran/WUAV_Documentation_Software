@@ -64,7 +64,7 @@
 }
 
 .titled-pane {
-    -fx-background-color: #E84910;
+    -fx-background-color: transparent;
     -fx-text-fill: #F7F8F9;
 }
 

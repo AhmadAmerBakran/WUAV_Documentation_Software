@@ -1,51 +1,40 @@
 package easv_2nd_term_exam.be;
 
+import easv_2nd_term_exam.enums.InstallationType;
+
 import java.time.LocalDateTime;
 
 public class Installation {
 
-    private int id;
-    private String description, setupInfo, username, password;
-    private byte[] layoutDrawing;
-    private LocalDateTime date;
-    private Customer customer;
-    private User technician;
+    private int id, customerId, technicianId;
+    private String username, password, description;
 
-    public Installation(int id, String description, String setupInfo, String username, String password, byte[] layoutDrawing,
-                        LocalDateTime date, Customer customer, User technician) {
+    private InstallationType installationType;
+
+    public Installation(int id, int customerId, int technicianId, String username, String password, String description, InstallationType installationType) {
         this.id = id;
-        this.description = description;
-        this.setupInfo = setupInfo;
+        this.customerId = customerId;
+        this.technicianId = technicianId;
         this.username = username;
         this.password = password;
-        this.layoutDrawing = layoutDrawing;
-        this.date = date;
-        this.customer = customer;
-        this.technician = technician;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
+        this.installationType = installationType;
     }
 
-    public String getSetupInfo() {
-        return setupInfo;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setSetupInfo(String setupInfo) {
-        this.setupInfo = setupInfo;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public int getTechnicianId() {
+        return technicianId;
+    }
+
+    public void setTechnicianId(int technicianId) {
+        this.technicianId = technicianId;
     }
 
     public String getUsername() {
@@ -64,36 +53,27 @@ public class Installation {
         this.password = password;
     }
 
-    public byte[] getLayoutDrawing() {
-        return layoutDrawing;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLayoutDrawing(byte[] layoutDrawing) {
-        this.layoutDrawing = layoutDrawing;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public InstallationType getInstallationType() {
+        return installationType;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setInstallationType(InstallationType installationType) {
+        this.installationType = installationType;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public int getId() {
+        return id;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public User getTechnician() {
-        return technician;
-    }
-
-    public void setTechnician(User technician) {
-        this.technician = technician;
-    }
-
 }

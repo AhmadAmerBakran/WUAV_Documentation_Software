@@ -1,5 +1,6 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
+import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,15 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class TechnicianDashboardController implements Initializable {
@@ -24,7 +24,10 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private TextField customerAddressField, customerEmailField, customerNameField, devicePasswordField, deviceUsernameField, techEmailField, techIdField, techNameField;
 
-
+    @FXML
+    private TabPane technicianTabPane;
+    @FXML
+    private Pane technicianPane;
     @FXML
     private DatePicker datePicker;
 
@@ -35,13 +38,33 @@ public class TechnicianDashboardController implements Initializable {
     private ComboBox<?> installationTypeBox;
     @FXML
     private Label userLabel;
+    @FXML
+    Button removeDiagramBtn;
 
-
-
+    private User loggedUser;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerManager.getInstance().setTechnicianDashboardController(this);
-        userLabel.setText(ControllerManager.getInstance().getLoginViewController().getLoggedUser().getName());
+        switchTchPane(false, true);
+        loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
+        datePicker.setValue(LocalDate.now());
+        fillTechnicianData();
+
+    }
+
+    private void switchTchPane(boolean dashboard, boolean startBoard)
+    {
+        technicianPane.setVisible(startBoard);
+        technicianTabPane.setVisible(dashboard);
+
+    }
+
+    private void fillTechnicianData()
+    {
+        userLabel.setText(loggedUser.getName());
+        techIdField.setText(String.valueOf(loggedUser.getId()));
+        techNameField.setText(loggedUser.getName());
+        techEmailField.setText(loggedUser.getEmail());
     }
 
 
@@ -88,6 +111,16 @@ public class TechnicianDashboardController implements Initializable {
         stage.show();
     }
 
+    @FXML
+    private void removeDiagram(ActionEvent event) {
+        drawingView.setImage(null);
+        removeDiagramBtn.setVisible(false);
+    }
+
+    public Button getRemoveDiagramBtn() {
+        return removeDiagramBtn;
+    }
+
     public TextField getTechEmailField() {
         return techEmailField;
     }
@@ -115,4 +148,17 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private void saveReport(ActionEvent event) {
     }
+
+    @FXML
+    private void createNewReport(ActionEvent event)
+    {
+        switchTchPane(true, false);
+
+    }
+
+    @FXML
+    private void showMyReports(ActionEvent event) {
+        switchTchPane(true, false);
+    }
+
 }

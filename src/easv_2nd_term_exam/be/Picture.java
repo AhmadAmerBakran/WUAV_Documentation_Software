@@ -2,42 +2,46 @@ package easv_2nd_term_exam.be;
 
 public class Picture {
 
-    private int id;
-    private String name, filePath, metadata;
+    private int id, installationId;
+    private String pictureName;
+    private byte[] imageData;
 
-    public Picture(int id, String name, String filePath, String metadata) {
+    public Picture(int id, String pictureName, byte[] imageData, int installationId) {
         this.id = id;
-        this.name = name;
-        this.filePath = filePath;
-        this.metadata = metadata;
+        this.installationId = installationId;
+        this.pictureName = pictureName;
+        this.imageData = imageData;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public int getInstallationId() {
+        return installationId;
     }
 
-    public String getMetadata() {
-        return metadata;
+    public void setInstallationId(int installationId) {
+        this.installationId = installationId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPictureName() {
+        return pictureName;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 
-    public void setMetadata(String metadata) {
-        this.metadata = metadata;
+    public byte[] getImageData() {
+        return imageData;
     }
 
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
+    }
 }

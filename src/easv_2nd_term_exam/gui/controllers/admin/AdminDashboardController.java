@@ -86,7 +86,15 @@ public class AdminDashboardController implements Initializable {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+
+        // Set column widths to be proportional to the TableView width
+        idColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.075));
+        nameColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
+        usernameColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
+        emailColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
+        roleColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.18));
     }
+
 
 
     @FXML
