@@ -1,12 +1,22 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.TextAlignment;
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.DialogUtil;
+import easv_2nd_term_exam.util.AppUtility;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,11 +32,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -316,7 +325,7 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         if (deviceUsernameField.getText().trim().isEmpty() || devicePasswordField.getText().trim().isEmpty()) {
-            return DialogUtil.showDeviceFieldsReminder();
+            return AppUtility.showDeviceFieldsReminder();
         }
 
         return true;
@@ -329,7 +338,7 @@ public class TechnicianDashboardController implements Initializable {
         for (String field : emptyFields) {
             errorMessage += "- " + field + "\n";
         }
-        DialogUtil.showInformationDialog(errorMessage);
+        AppUtility.showInformationDialog(errorMessage);
     }
 
     private byte[] imageToByteArray(Image image) {
@@ -380,12 +389,12 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void downloadReport(ActionEvent event) {
-        /*Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
-            generatePdfReport(selectedReport);
+            AppUtility.generatePdfReport(selectedReport);
         } else {
-            DialogUtil.showInformationDialog("Please select a report to download.");
-        }*/
+            AppUtility.showInformationDialog("Please select a report to download.");
+        }
     }
 
 
@@ -401,7 +410,7 @@ public class TechnicianDashboardController implements Initializable {
 
             // Title
             Paragraph title = new Paragraph("Report: " + report.getInstallationId())
-                    .setFont(PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD))
+                    .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
                     .setFontSize(18)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setBold();
@@ -418,9 +427,11 @@ public class TechnicianDashboardController implements Initializable {
             // Add images (e.g., diagramImage, uploadedImage)
             List<Picture> pictures = modelManager.getPictureModel().getPicturesByInstallationId(report.getInstallationId());
             for (Picture picture : pictures) {
-                Image image = new Image(new ByteArrayInputStream(picture.getImageData()));
+                byte[] imageData = picture.getImageData();
+                PdfImageXObject pdfImageXObject = new PdfImageXObject(ImageDataFactory.create(imageData));
                 float width = pdfDocument.getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin();
-                float height = (image.getHeight() * width) / image.getWidth();
+                float height = (pdfImageXObject.getHeight() * width) / pdfImageXObject.getWidth();
+
                 com.itextpdf.layout.element.Image pdfImage = new com.itextpdf.layout.element.Image(
                         ImageDataFactory.create(picture.getImageData()))
                         .setWidth(width)
