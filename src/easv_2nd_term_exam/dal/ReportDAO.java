@@ -83,7 +83,7 @@ public class ReportDAO {
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
                 "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
-                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 "; // Remove this line for getAllReports method
+                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -117,6 +117,7 @@ public class ReportDAO {
 
 
     public boolean updateReport(Report report) {
+        System.out.println("updateReport called");
         try {
             conn.setAutoCommit(false);
 
@@ -130,42 +131,57 @@ public class ReportDAO {
                 stmtCustomer.setString(3, report.getCustomerEmail());
                 stmtCustomer.setString(4, report.getCustomerType());
                 stmtCustomer.setInt(5, report.getCustomerId());
+
+                //My debugger XD
+                System.out.println("Executing SQL (Customer): " + sqlCustomer);
+                System.out.println("Values: " + report.getCustomerName() + ", " + report.getCustomerAddress() + ", " + report.getCustomerEmail() + ", " + report.getCustomerType() + ", " + report.getCustomerId());
                 stmtCustomer.executeUpdate();
             }
 
             // Update Installation
             String sqlInstallation = "UPDATE Installation " +
-                    "SET Username = ?, InstallationType = ? " +
+                    "SET TechnicianId = ?, InstallationType = ?, Username = ?, Password = ?, Description = ? " +
                     "WHERE ID = ?";
             try (PreparedStatement stmtInstallation = conn.prepareStatement(sqlInstallation)) {
                 stmtInstallation.setInt(1, report.getTechnicianId());
                 stmtInstallation.setString(2, report.getInstallationType());
-                stmtInstallation.setInt(3, report.getInstallationId());
+                stmtInstallation.setString(3, report.getUsername());
+                stmtInstallation.setString(4, report.getPassword());
+                stmtInstallation.setString(5, report.getDescription());
+                stmtInstallation.setInt(6, report.getInstallationId());
+
+                //My debugger again XD
+                System.out.println("Executing SQL (Installation): " + sqlInstallation);
+                System.out.println("Values: " + report.getTechnicianId() + ", " + report.getInstallationType() + ", " + report.getUsername() + ", " + report.getPassword() + ", " + report.getDescription() + ", " + report.getInstallationId());
                 stmtInstallation.executeUpdate();
             }
 
             // Update Picture 1
-            String sqlPicture1 = "UPDATE Picture " +
-                    "SET PictureName = ?, ImageData = ? " +
-                    "WHERE InstallationId = ? AND PictureName = ?";
-            try (PreparedStatement stmtPicture1 = conn.prepareStatement(sqlPicture1)) {
-                stmtPicture1.setString(1, report.getPicture1Name());
-                stmtPicture1.setBytes(2, report.getPicture1Data());
-                stmtPicture1.setInt(3, report.getInstallationId());
-                stmtPicture1.setString(4, report.getPicture1Name());
-                stmtPicture1.executeUpdate();
+            if (report.getPicture1Data() != null) {
+                String sqlPicture1 = "UPDATE Picture " +
+                        "SET PictureName = ?, ImageData = ? " +
+                        "WHERE InstallationId = ? AND PictureName = ?";
+                try (PreparedStatement stmtPicture1 = conn.prepareStatement(sqlPicture1)) {
+                    stmtPicture1.setString(1, report.getPicture1Name());
+                    stmtPicture1.setBytes(2, report.getPicture1Data());
+                    stmtPicture1.setInt(3, report.getInstallationId());
+                    stmtPicture1.setString(4, report.getPicture1Name());
+                    stmtPicture1.executeUpdate();
+                }
             }
 
             // Update Picture 2
-            String sqlPicture2 = "UPDATE Picture " +
-                    "SET PictureName = ?, ImageData = ? " +
-                    "WHERE InstallationId = ? AND PictureName = ?";
-            try (PreparedStatement stmtPicture2 = conn.prepareStatement(sqlPicture2)) {
-                stmtPicture2.setString(1, report.getPicture2Name());
-                stmtPicture2.setBytes(2, report.getPicture2Data());
-                stmtPicture2.setInt(3, report.getInstallationId());
-                stmtPicture2.setString(4, report.getPicture2Name());
-                stmtPicture2.executeUpdate();
+            if (report.getPicture2Data() != null) {
+                String sqlPicture2 = "UPDATE Picture " +
+                        "SET PictureName = ?, ImageData = ? " +
+                        "WHERE InstallationId = ? AND PictureName = ?";
+                try (PreparedStatement stmtPicture2 = conn.prepareStatement(sqlPicture2)) {
+                    stmtPicture2.setString(1, report.getPicture2Name());
+                    stmtPicture2.setBytes(2, report.getPicture2Data());
+                    stmtPicture2.setInt(3, report.getInstallationId());
+                    stmtPicture2.setString(4, report.getPicture2Name());
+                    stmtPicture2.executeUpdate();
+                }
             }
 
             conn.commit();

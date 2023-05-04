@@ -5,11 +5,11 @@ import easv_2nd_term_exam.dal.ReportDAO;
 
 import java.util.List;
 
-public class ProjectManager {
+public class ReportManager {
 
     private ReportDAO reportDAO;
 
-    public ProjectManager() {
+    public ReportManager() {
         reportDAO = new ReportDAO();
     }
 

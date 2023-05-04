@@ -1,7 +1,10 @@
 package easv_2nd_term_exam.gui.controllers.projectManager;
 
 import easv_2nd_term_exam.be.Report;
+import easv_2nd_term_exam.be.Technician;
 import easv_2nd_term_exam.be.User;
+import easv_2nd_term_exam.enums.CustomerType;
+import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
@@ -22,6 +25,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ProjectManagerDashboardController implements Initializable {
@@ -32,7 +37,7 @@ public class ProjectManagerDashboardController implements Initializable {
 
 
     @FXML
-    private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn;
+    private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn, customerIdColumn;
 
 
     @FXML
@@ -70,6 +75,7 @@ public class ProjectManagerDashboardController implements Initializable {
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
         customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
         customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
+        customerIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
     }
     @FXML
     void downloadReport(ActionEvent event) {
@@ -110,6 +116,8 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     void updateReport(ActionEvent event) {
+        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
         Parent root = null;
         try {
@@ -117,6 +125,20 @@ public class ProjectManagerDashboardController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        UpdateReportViewController controller = loader.getController();
+        controller.getTechIdField().setText(String.valueOf(selectedReport.getTechnicianId()));
+        controller.getTechNameField().setText(selectedReport.getTechnicianName());
+        controller.getCustomerNameField().setText(selectedReport.getCustomerName());
+        controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
+        controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
+        controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
+        controller.getInstallationTypeBox().setValue(InstallationType.valueOf(selectedReport.getInstallationType()));
+        controller.getDeviceUsernameField().setText(selectedReport.getUsername());
+        controller.getDevicePasswordField().setText(selectedReport.getPassword());
+        controller.getDatePicker().setValue(LocalDate.now());
+        controller.getDescriptionArea().setText(selectedReport.getDescription());
+        controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
+        controller.getInstallationIdField().setText(String.valueOf(selectedReport.getInstallationId()));
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setTitle("Update Installation/Report");
