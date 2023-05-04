@@ -161,9 +161,9 @@ public class DrawingLayoutController implements Initializable {
     private ImageView draggedIcon;
 
     private void initializeIcons() {
-        cameraIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images/wall_mount_camera_96px.png"));
-        speakerIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images/speaker_96px.png"));
-        screenIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images/widescreen_96px.png"));
+        cameraIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/wall_mount_camera_96px.png"));
+        speakerIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/speaker_96px.png"));
+        screenIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/widescreen_96px.png"));
         cameraIcon.setOnDragDetected(event -> {
             draggedIcon = cameraIcon;
             Dragboard db = cameraIcon.startDragAndDrop(TransferMode.ANY);

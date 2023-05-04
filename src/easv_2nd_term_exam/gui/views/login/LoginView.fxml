@@ -47,7 +47,7 @@
             <top>
                 <ImageView fitHeight="240.0" fitWidth="363.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                     <image>
-                        <Image url="@../images/Logo_WUAV.png" />
+                        <Image url="@../images_resource/Logo_WUAV.png" />
                     </image>
                     <BorderPane.margin>
                         <Insets bottom="50.0" />

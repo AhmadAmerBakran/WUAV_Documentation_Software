@@ -269,7 +269,7 @@
     -fx-tick-label-fill: #FFF;
 }
 .background {
-    -fx-background-image: url("/easv_2nd_term_exam/gui/views/images/background.jpg");
+    -fx-background-image: url("/easv_2nd_term_exam/gui/views/images_resource/background.jpg");
     -fx-background-position: center center;
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;

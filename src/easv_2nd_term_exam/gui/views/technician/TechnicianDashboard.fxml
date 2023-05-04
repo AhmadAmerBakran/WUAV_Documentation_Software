@@ -28,7 +28,7 @@
          <children>
             <ImageView fitHeight="187.0" fitWidth="475.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
-                  <Image url="@../images/Logo_WUAV.png" />
+                  <Image url="@../images_resource/Logo_WUAV.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
@@ -36,7 +36,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
                <image>
-                  <Image url="@../images/user_96pxb.png" />
+                  <Image url="@../images_resource/user_96pxb.png" />
                </image>
             </ImageView>
             <Label fx:id="userLabel" text="Technician">
@@ -54,7 +54,7 @@
                <graphic>
                   <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/add_96px.png" />
+                        <Image url="@../images_resource/add_96px.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -66,7 +66,7 @@
                <graphic>
                   <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/documents_96px.png" />
+                        <Image url="@../images_resource/documents_96px.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -80,7 +80,7 @@
                <graphic>
                   <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/logout_rounded_left_96px.png" />
+                        <Image url="@../images_resource/logout_rounded_left_96px.png" />
                      </image>
                   </ImageView>
                </graphic>

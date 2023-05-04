@@ -63,11 +63,13 @@ public class TechnicianDashboardController implements Initializable {
 
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
+    private Report selectedReport;
 
 
     private User loggedUser;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         modelManagerLoader = ModelManagerLoader.getInstance();
         modelManager = modelManagerLoader.getModelManager();
         installationTypeBox.getItems().setAll(InstallationType.values());
@@ -378,6 +380,60 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void downloadReport(ActionEvent event) {
-
+        /*Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        if (selectedReport != null) {
+            generatePdfReport(selectedReport);
+        } else {
+            DialogUtil.showInformationDialog("Please select a report to download.");
+        }*/
     }
+
+
+    /*private void generatePdfReport(Report report) {
+        try {
+            String fileName = "report_" + report.getInstallationId() + ".pdf";
+            File outputFile = new File(fileName);
+            OutputStream outputStream = new FileOutputStream(outputFile);
+
+            PdfWriter writer = new PdfWriter(outputStream);
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            Document document = new Document(pdfDocument, PageSize.A4);
+
+            // Title
+            Paragraph title = new Paragraph("Report: " + report.getInstallationId())
+                    .setFont(PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD))
+                    .setFontSize(18)
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setBold();
+            document.add(title);
+
+            // Add report details (e.g., customerName, customerEmail, customerAddress, etc.)
+            document.add(new Paragraph("Customer Name: " + report.getCustomerName()));
+            document.add(new Paragraph("Customer Email: " + report.getCustomerEmail()));
+            document.add(new Paragraph("Customer Address: " + report.getCustomerAddress()));
+
+            // Add other report details
+            // ...
+
+            // Add images (e.g., diagramImage, uploadedImage)
+            List<Picture> pictures = modelManager.getPictureModel().getPicturesByInstallationId(report.getInstallationId());
+            for (Picture picture : pictures) {
+                Image image = new Image(new ByteArrayInputStream(picture.getImageData()));
+                float width = pdfDocument.getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin();
+                float height = (image.getHeight() * width) / image.getWidth();
+                com.itextpdf.layout.element.Image pdfImage = new com.itextpdf.layout.element.Image(
+                        ImageDataFactory.create(picture.getImageData()))
+                        .setWidth(width)
+                        .setHeight(height)
+                        .setAutoScale(true);
+                document.add(pdfImage);
+            }
+
+            // Close document
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
 }

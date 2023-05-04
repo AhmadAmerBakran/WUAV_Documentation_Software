@@ -69,7 +69,7 @@ public class LoginViewController implements Initializable {
                         loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectmanager/ProjectManagerDashboard.fxml"));
                         break;
                     case SALES_PERSON:
-                        loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/salesperson/SalesPersonDashboard.fxml"));
+                        loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/salesPerson/SalesPersonDashboard.fxml"));
                         break;
                     default:
                         throw new RuntimeException("Unknown user role.");

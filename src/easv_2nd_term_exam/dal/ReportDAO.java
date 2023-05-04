@@ -29,14 +29,15 @@ public class ReportDAO {
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
                 "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, " +
-                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, " +
-                "p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
-                "JOIN Picture p1 ON i.ID = p1.InstallationId " +
-                "JOIN Picture p2 ON i.ID = p2.InstallationId " +
-                "WHERE i.TechnicianId = ? AND p1.ID <> p2.ID";
+                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
+                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
+                "WHERE i.TechnicianId = ?";
+
+
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, technicianId);
@@ -59,6 +60,8 @@ public class ReportDAO {
                 report.setPicture2Data(rs.getBytes("Picture2Data"));
                 reports.add(report);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,14 +74,12 @@ public class ReportDAO {
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
                 "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, " +
-                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, " +
-                "p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
-                "JOIN Picture p1 ON i.ID = p1.InstallationId " +
-                "JOIN Picture p2 ON i.ID = p2.InstallationId " +
-                "WHERE p1.ID <> p2.ID";
+                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
+                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -106,6 +107,7 @@ public class ReportDAO {
 
         return reports;
     }
+
 
     public boolean updateReport(Report report) {
         try {
