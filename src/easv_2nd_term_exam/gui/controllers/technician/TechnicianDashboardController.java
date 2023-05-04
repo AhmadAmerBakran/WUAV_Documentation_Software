@@ -9,6 +9,7 @@ import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
+import easv_2nd_term_exam.util.DialogUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -201,50 +202,118 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void saveReport(ActionEvent event) {
-        String customerName = customerNameField.getText();
-        String customerEmail = customerEmailField.getText();
-        String customerAddress = customerAddressField.getText();
-        CustomerType type = customerTypeBox.getValue();
-        Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
-        try {
-            modelManager.getCustomerModel().createCustomer(newCustomer);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        int customerId = newCustomer.getId();
-        int technicianId = Integer.parseInt(techIdField.getText());
-        String deviceUsername = deviceUsernameField.getText();
-        String devicePassword = devicePasswordField.getText();
-        String installationDescription = descriptionArea.getText();
-        InstallationType installationType = installationTypeBox.getValue();
-        Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
-        try {
-            modelManager.getInstallationModel().createInstallation(newInstallation);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        int installationId = newInstallation.getId();
-        Image diagramImage = new Image(diagramPathLabel.getText());
-        Image uploadedImage = new Image(uploadedPictureLabel.getText());
-        List<Picture> pictures = new ArrayList<>();
+        if (validateFields()) {
+            String customerName = customerNameField.getText();
+            String customerEmail = customerEmailField.getText();
+            String customerAddress = customerAddressField.getText();
+            CustomerType type = customerTypeBox.getValue();
+            Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
+            try {
+                modelManager.getCustomerModel().createCustomer(newCustomer);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            int customerId = newCustomer.getId();
+            int technicianId = Integer.parseInt(techIdField.getText());
+            String deviceUsername = deviceUsernameField.getText();
+            String devicePassword = devicePasswordField.getText();
+            String installationDescription = descriptionArea.getText();
+            InstallationType installationType = installationTypeBox.getValue();
+            Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
+            try {
+                modelManager.getInstallationModel().createInstallation(newInstallation);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            int installationId = newInstallation.getId();
+            Image diagramImage = new Image(diagramPathLabel.getText());
+            Image uploadedImage = new Image(uploadedPictureLabel.getText());
+            List<Picture> pictures = new ArrayList<>();
 
-        byte[] diagramImageData = imageToByteArray(diagramImage);
-        byte[] uploadedImageData = imageToByteArray(uploadedImage);
+            byte[] diagramImageData = imageToByteArray(diagramImage);
+            byte[] uploadedImageData = imageToByteArray(uploadedImage);
 
-        if (diagramImageData != null) {
-            Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
-            pictures.add(diagramPicture);
+            if (diagramImageData != null) {
+                Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
+                pictures.add(diagramPicture);
+            }
+
+            if (uploadedImageData != null) {
+                Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
+                pictures.add(uploadedPicture);
+            }
+            try {
+                modelManager.getPictureModel().createPictures(pictures);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private boolean validateFields() {
+        boolean isValid = true;
+        List<String> emptyFields = new ArrayList<>();
+
+        if (customerNameField.getText().trim().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Customer Name");
         }
 
-        if (uploadedImageData != null) {
-            Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
-            pictures.add(uploadedPicture);
+        if (customerEmailField.getText().trim().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Customer Email");
         }
-        try {
-            modelManager.getPictureModel().createPictures(pictures);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+        if (customerAddressField.getText().trim().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Customer Address");
         }
+
+        if (customerTypeBox.getValue() == null) {
+            isValid = false;
+            emptyFields.add("Customer Type");
+        }
+
+        if (installationTypeBox.getValue() == null) {
+            isValid = false;
+            emptyFields.add("Installation Type");
+        }
+
+        if (uploadedPictureLabel.getText().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Uploaded Picture");
+        }
+
+        if (diagramPathLabel.getText().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Diagram Path");
+        }
+
+        if (descriptionArea.getText().trim().isEmpty()) {
+            isValid = false;
+            emptyFields.add("Installation Description");
+        }
+
+        if (!isValid) {
+            showAlert(emptyFields);
+            return false;
+        }
+
+        if (deviceUsernameField.getText().trim().isEmpty() || devicePasswordField.getText().trim().isEmpty()) {
+            return DialogUtil.showDeviceFieldsReminder();
+        }
+
+        return true;
+    }
+
+
+
+    private void showAlert(List<String> emptyFields) {
+        String errorMessage = "The following fields are empty:\n";
+        for (String field : emptyFields) {
+            errorMessage += "- " + field + "\n";
+        }
+        DialogUtil.showInformationDialog(errorMessage);
     }
 
     private byte[] imageToByteArray(Image image) {
