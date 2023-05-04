@@ -10,6 +10,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
@@ -17,7 +19,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -91,8 +92,29 @@
       </VBox>
       <StackPane prefHeight="600.0" prefWidth="999.0" HBox.hgrow="ALWAYS">
          <children>
-            <Pane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="false" />
-            <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0">
+            <AnchorPane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background">
+               <children>
+                  <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="installationIdColumn" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Installation ID" />
+                      <TableColumn fx:id="installationTypeColumn" maxWidth="1.7976931348623157E308" minWidth="139.0" prefWidth="-1.0" text="Installation Type" />
+                        <TableColumn fx:id="customerNameColumn" maxWidth="1.7976931348623157E308" minWidth="165.0" prefWidth="-1.0" text="Customer Nme" />
+                        <TableColumn fx:id="customerEmailColumn" maxWidth="1.7976931348623157E308" minWidth="240.0" prefWidth="-1.0" text="Customer Email" />
+                        <TableColumn fx:id="customerAddressColumn" maxWidth="1.7976931348623157E308" minWidth="335.0" prefWidth="-1.0" text="Customer Address" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" layoutX="76.0" layoutY="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#downloadReport" text="Download Report" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0" visible="false">
                <tabs>
                   <Tab text="B2B">
                      <content>
@@ -335,6 +357,7 @@
                                                                         <Insets right="20.0" />
                                                                      </HBox.margin>
                                                                   </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#removeAllPhotos" text="Delete Photos" />
                                                                </children>
                                                                <VBox.margin>
                                                                   <Insets bottom="10.0" />

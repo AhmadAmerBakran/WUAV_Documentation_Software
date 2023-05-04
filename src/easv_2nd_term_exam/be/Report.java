@@ -1,69 +1,125 @@
 package easv_2nd_term_exam.be;
 
-import java.util.Date;
-
 public class Report {
-    private int id;
-    private Installation installation;
-    private User createdBy;
-    private Date createdDate;
-    private User lastUpdatedBy;
-    private Date lastUpdatedDate;
+    private int customerId;
+    private String customerName;
+    private String customerAddress;
+    private String customerEmail;
+    private String customerType;
+    private int installationId;
+    private int technicianId;
+    private String technicianName;
+    private String installationType;
+    private String picture1Name;
+    private byte[] picture1Data;
+    private String picture2Name;
+    private byte[] picture2Data;
 
-    public Report(int id, Installation installation, User createdBy, Date createdDate, User lastUpdatedBy, Date lastUpdatedDate) {
-        this.id = id;
-        this.installation = installation;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastUpdatedBy = lastUpdatedBy;
-        this.lastUpdatedDate = lastUpdatedDate;
+    public Report() {
+
     }
 
-    public int getId() {
-        return id;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public Installation getInstallation() {
-        return installation;
+    public String getCustomerAddress() {
+        return customerAddress;
     }
 
-    public void setInstallation(Installation installation) {
-        this.installation = installation;
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public String getCustomerType() {
+        return customerType;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
-    public User getLastUpdatedBy() {
-        return lastUpdatedBy;
+    public int getInstallationId() {
+        return installationId;
     }
 
-    public void setLastUpdatedBy(User lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setInstallationId(int installationId) {
+        this.installationId = installationId;
     }
 
-    public Date getLastUpdatedDate() {
-        return lastUpdatedDate;
+    public int getTechnicianId() {
+        return technicianId;
     }
 
-    public void setLastUpdatedDate(Date lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
+    public void setTechnicianId(int technicianId) {
+        this.technicianId = technicianId;
+    }
+
+    public String getTechnicianName() {
+        return technicianName;
+    }
+
+    public void setTechnicianName(String technicianName) {
+        this.technicianName = technicianName;
+    }
+
+    public String getInstallationType() {
+        return installationType;
+    }
+
+    public void setInstallationType(String installationType) {
+        this.installationType = installationType;
+    }
+
+    public String getPicture1Name() {
+        return picture1Name;
+    }
+
+    public void setPicture1Name(String picture1Name) {
+        this.picture1Name = picture1Name;
+    }
+
+    public byte[] getPicture1Data() {
+        return picture1Data;
+    }
+
+    public void setPicture1Data(byte[] picture1Data) {
+        this.picture1Data = picture1Data;
+    }
+
+    public String getPicture2Name() {
+        return picture2Name;
+    }
+
+    public void setPicture2Name(String picture2Name) {
+        this.picture2Name = picture2Name;
+    }
+
+    public byte[] getPicture2Data() {
+        return picture2Data;
+    }
+
+    public void setPicture2Data(byte[] picture2Data) {
+        this.picture2Data = picture2Data;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 }

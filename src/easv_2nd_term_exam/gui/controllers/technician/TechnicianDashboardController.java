@@ -1,17 +1,12 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
-import easv_2nd_term_exam.be.Customer;
-import easv_2nd_term_exam.be.Installation;
-import easv_2nd_term_exam.be.Picture;
-import easv_2nd_term_exam.be.User;
+import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtil;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,8 +16,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -47,7 +43,7 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private TabPane technicianTabPane;
     @FXML
-    private Pane technicianPane;
+    private AnchorPane technicianPane;
     @FXML
     private DatePicker datePicker;
     @FXML
@@ -58,6 +54,12 @@ public class TechnicianDashboardController implements Initializable {
     private Label userLabel, diagramPathLabel, uploadedPictureLabel;
     @FXML
     private TextArea descriptionArea;
+    @FXML
+    private TableView<Report> reportTableView;
+    @FXML
+    private TableColumn<Report, Integer> installationIdColumn;
+    @FXML
+    private TableColumn<Report, String> installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn;
 
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
@@ -75,6 +77,7 @@ public class TechnicianDashboardController implements Initializable {
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         datePicker.setValue(LocalDate.now());
         fillTechnicianData();
+        setUpReportTableView();
 
     }
 
@@ -91,6 +94,16 @@ public class TechnicianDashboardController implements Initializable {
         techIdField.setText(String.valueOf(loggedUser.getId()));
         techNameField.setText(loggedUser.getName());
         techEmailField.setText(loggedUser.getEmail());
+    }
+
+    private void setUpReportTableView()
+    {
+        reportTableView.getItems().setAll(modelManager.getReportModel().getAllTechnicianReports(loggedUser.getId()));
+        installationIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
+        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
+        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
     }
 
 
@@ -247,6 +260,7 @@ public class TechnicianDashboardController implements Initializable {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            deleteFilesFromDirectory(createPackagePath());
         }
     }
 
@@ -339,5 +353,31 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private void showMyReports(ActionEvent event) {
         switchTchPane(false, true);
+    }
+
+    private void deleteFilesFromDirectory(String directoryPath) {
+        File directory = new File(directoryPath);
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (!file.isDirectory()) {
+                        file.delete();
+                    }
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void removeAllPhotos(ActionEvent event) {
+        deleteFilesFromDirectory(createPackagePath());
+        diagramPathLabel.setText(null);
+        uploadedPictureLabel.setText(null);
+    }
+
+    @FXML
+    private void downloadReport(ActionEvent event) {
+
     }
 }

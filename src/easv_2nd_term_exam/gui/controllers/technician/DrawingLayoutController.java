@@ -136,9 +136,10 @@ public class DrawingLayoutController implements Initializable {
         stage.close();
     }
 
-
-
-
+    @FXML
+    private void cancelDrawing(ActionEvent event) {
+        closeDrawingLayoutWindow();
+    }
 
 
 

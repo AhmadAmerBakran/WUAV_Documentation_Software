@@ -30,6 +30,7 @@
             <Button fx:id="undoBtn" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
             <Button fx:id="clearBtn" onAction="#clearCanvas" text="Clear" />
             <ColorPicker fx:id="colorPicker" />
+            <Button mnemonicParsing="false" onAction="#cancelDrawing" text="Cancel" />
             <Button mnemonicParsing="false" onAction="#saveLayout" text="Save" />
          </children>
       </HBox>

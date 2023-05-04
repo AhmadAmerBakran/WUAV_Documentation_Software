@@ -8,16 +8,27 @@ public class ModelManager {
     private LogInModel logInModel;
     private PictureModel pictureModel;
 
+    private ReportModel reportModel;
+
     public ModelManager() throws Exception {
         adminModel = new AdminModel();
         customerModel = new CustomerModel();
         installationModel = new InstallationModel();
         logInModel = new LogInModel();
         pictureModel = new PictureModel();
+        reportModel = new ReportModel();
     }
 
     public AdminModel getAdminModel() {
         return adminModel;
+    }
+
+    public ReportModel getReportModel() {
+        return reportModel;
+    }
+
+    public void setReportModel(ReportModel reportModel) {
+        this.reportModel = reportModel;
     }
 
     public void setAdminModel(AdminModel adminModel) {
