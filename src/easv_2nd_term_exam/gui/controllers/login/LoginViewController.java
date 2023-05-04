@@ -66,7 +66,7 @@ public class LoginViewController implements Initializable {
                         loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/technician/TechnicianDashboard.fxml"));
                         break;
                     case PROJECT_MANAGER:
-                        loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectmanager/ProjectManagerDashboard.fxml"));
+                        loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/ProjectManagerDashboard.fxml"));
                         break;
                     case SALES_PERSON:
                         loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/salesPerson/SalesPersonDashboard.fxml"));

@@ -42,6 +42,7 @@ public class AddUserController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ControllerManager.getInstance().setAddUserController(this);
         adminModel = new AdminModel();
         userTypeComboBox.getItems().setAll(UserRole.values());
 

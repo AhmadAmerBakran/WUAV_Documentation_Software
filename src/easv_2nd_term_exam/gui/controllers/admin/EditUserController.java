@@ -31,6 +31,7 @@ public class EditUserController implements Initializable {
     private ModelManager modelManager;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ControllerManager.getInstance().setEditUserController(this);
         modelManagerLoader = ModelManagerLoader.getInstance();
         modelManager = modelManagerLoader.getModelManager();
         controller = ControllerManager.getInstance().getAdminDashboardController();

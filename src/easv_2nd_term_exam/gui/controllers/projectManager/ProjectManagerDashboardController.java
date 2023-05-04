@@ -1,4 +1,4 @@
-package easv_2nd_term_exam.gui.controllers.salesPerson;
+package easv_2nd_term_exam.gui.controllers.projectManager;
 
 import easv_2nd_term_exam.be.Report;
 import easv_2nd_term_exam.be.User;
@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SalesPersonDashboard implements Initializable {
+public class ProjectManagerDashboardController implements Initializable {
+
 
     @FXML
     private TableColumn<Report, String> customerAddressColumn, customerEmailColumn, customerNameColumn, installationTypeColumn;
@@ -38,20 +39,20 @@ public class SalesPersonDashboard implements Initializable {
     private TableView<Report> reportTableView;
 
     @FXML
-    private AnchorPane salesPersonPane;
+    private AnchorPane projectManagerPane;
+
 
     @FXML
     private Label userLabel;
 
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
-
     private User loggedUser;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ControllerManager.getInstance().setSalesPersonDashboardController(this);
+        ControllerManager.getInstance().setProjectManagerDashboardController(this);
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         modelManagerLoader = ModelManagerLoader.getInstance();
         modelManager = modelManagerLoader.getModelManager();
@@ -80,6 +81,7 @@ public class SalesPersonDashboard implements Initializable {
         }
     }
 
+
     @FXML
     void handleLogout(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
@@ -103,6 +105,11 @@ public class SalesPersonDashboard implements Initializable {
     @FXML
     void showAllReports(ActionEvent event) {
         setUpReportTableView();
+
+    }
+
+    @FXML
+    void updateReport(ActionEvent event) {
 
     }
 

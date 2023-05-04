@@ -1,13 +1,23 @@
 package easv_2nd_term_exam.gui.controllers;
 
+import easv_2nd_term_exam.gui.controllers.admin.AddUserController;
 import easv_2nd_term_exam.gui.controllers.admin.AdminDashboardController;
+import easv_2nd_term_exam.gui.controllers.admin.EditUserController;
 import easv_2nd_term_exam.gui.controllers.login.LoginViewController;
+import easv_2nd_term_exam.gui.controllers.projectManager.ProjectManagerDashboardController;
+import easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController;
+import easv_2nd_term_exam.gui.controllers.salesPerson.SalesPersonDashboard;
 import easv_2nd_term_exam.gui.controllers.technician.DrawingLayoutController;
 import easv_2nd_term_exam.gui.controllers.technician.TechnicianDashboardController;
 
 public class ControllerManager {
 
     private static ControllerManager instance;
+    private ProjectManagerDashboardController projectManagerDashboardController;
+    private UpdateReportViewController updateReportViewController;
+    private AddUserController addUserController;
+    private EditUserController editUserController;
+    private SalesPersonDashboard salesPersonDashboardController;
     private TechnicianDashboardController technicianDashboardController;
     private DrawingLayoutController drawingLayoutController;
     private LoginViewController loginViewController;
@@ -24,9 +34,50 @@ public class ControllerManager {
         return instance;
     }
 
+    public ProjectManagerDashboardController getProjectManagerDashboardController() {
+        return projectManagerDashboardController;
+    }
+
+    public void setProjectManagerDashboardController(ProjectManagerDashboardController projectManagerDashboardController) {
+        this.projectManagerDashboardController = projectManagerDashboardController;
+    }
+
+    public UpdateReportViewController getUpdateReportViewController() {
+        return updateReportViewController;
+    }
+
+    public void setUpdateReportViewController(UpdateReportViewController updateReportViewController) {
+        this.updateReportViewController = updateReportViewController;
+    }
+
+    public AddUserController getAddUserController() {
+        return addUserController;
+    }
+
+    public void setAddUserController(AddUserController addUserController) {
+        this.addUserController = addUserController;
+    }
+
+    public EditUserController getEditUserController() {
+        return editUserController;
+    }
+
+    public void setEditUserController(EditUserController editUserController) {
+        this.editUserController = editUserController;
+    }
+
+    public SalesPersonDashboard getSalesPersonDashboardController() {
+        return salesPersonDashboardController;
+    }
+
+    public void setSalesPersonDashboardController(SalesPersonDashboard salesPersonDashboardController) {
+        this.salesPersonDashboardController = salesPersonDashboardController;
+    }
+
     public void setTechnicianDashboardController(TechnicianDashboardController controller) {
         this.technicianDashboardController = controller;
     }
+
 
     public AdminDashboardController getAdminDashboardController() {
         return adminDashboardController;
