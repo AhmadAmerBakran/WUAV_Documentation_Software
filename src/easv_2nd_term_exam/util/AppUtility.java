@@ -8,6 +8,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
 import easv_2nd_term_exam.be.Picture;
@@ -109,6 +110,8 @@ public class AppUtility {
             document.add(new Paragraph("Customer Name: " + report.getCustomerName()));
             document.add(new Paragraph("Customer Email: " + report.getCustomerEmail()));
             document.add(new Paragraph("Customer Address: " + report.getCustomerAddress()));
+            document.add(new AreaBreak());
+            document.add(new Paragraph("Installation Description :" + report.getDescription()));
 
             // Add other report details
             // ...

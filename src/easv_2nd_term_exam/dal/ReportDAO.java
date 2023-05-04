@@ -28,14 +28,15 @@ public class ReportDAO {
         List<Report> reports = new ArrayList<>();
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
-                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, " +
+                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
                 "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
                 "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
                 "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
-                "WHERE i.TechnicianId = ?";
+                "WHERE i.TechnicianId = ?"; // Remove this line for getAllReports method
+
 
 
 
@@ -58,6 +59,9 @@ public class ReportDAO {
                 report.setPicture1Data(rs.getBytes("Picture1Data"));
                 report.setPicture2Name(rs.getString("Picture2Name"));
                 report.setPicture2Data(rs.getBytes("Picture2Data"));
+                report.setUsername(rs.getString("Username"));
+                report.setPassword(rs.getString("Password"));
+                report.setDescription(rs.getString("Description"));
                 reports.add(report);
             }
 
@@ -73,13 +77,13 @@ public class ReportDAO {
         List<Report> reports = new ArrayList<>();
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
-                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, " +
+                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
                 "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
                 "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
-                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2";
+                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 "; // Remove this line for getAllReports method
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -99,6 +103,9 @@ public class ReportDAO {
                 report.setPicture1Data(rs.getBytes("Picture1Data"));
                 report.setPicture2Name(rs.getString("Picture2Name"));
                 report.setPicture2Data(rs.getBytes("Picture2Data"));
+                report.setUsername(rs.getString("Username"));
+                report.setPassword(rs.getString("Password"));
+                report.setDescription(rs.getString("Description"));
                 reports.add(report);
             }
         } catch (Exception e) {
@@ -128,7 +135,7 @@ public class ReportDAO {
 
             // Update Installation
             String sqlInstallation = "UPDATE Installation " +
-                    "SET TechnicianId = ?, InstallationType = ? " +
+                    "SET Username = ?, InstallationType = ? " +
                     "WHERE ID = ?";
             try (PreparedStatement stmtInstallation = conn.prepareStatement(sqlInstallation)) {
                 stmtInstallation.setInt(1, report.getTechnicianId());

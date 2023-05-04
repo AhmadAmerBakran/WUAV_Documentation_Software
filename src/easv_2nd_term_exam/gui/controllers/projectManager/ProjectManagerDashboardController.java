@@ -110,6 +110,19 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     void updateReport(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Update Installation/Report");
+        stage.setScene(scene);
+        stage.show();
+
 
     }
 
