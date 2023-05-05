@@ -1,7 +1,6 @@
 package easv_2nd_term_exam.gui.controllers.projectManager;
 
 import easv_2nd_term_exam.be.Report;
-import easv_2nd_term_exam.be.Technician;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
@@ -25,8 +24,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ProjectManagerDashboardController implements Initializable {

@@ -211,7 +211,7 @@ public class AppUtility {
     }
 
     private static void addPage1Content(Document document, Report report) {
-        float middleOfPageYPosition = document.getPageEffectiveArea(PageSize.A4).getHeight() / 2;
+        float middleOfPageYPosition = document.getPageEffectiveArea(PageSize.A4).getHeight() / 2 + 60;
 
         Paragraph installationType = new Paragraph("Installation Type: " + report.getInstallationType())
                 .setFontSize(14)
@@ -252,17 +252,20 @@ public class AppUtility {
                 .setFixedPosition(document.getLeftMargin(), pageContentYPosition - 40, UnitValue.createPercentValue(100));
 
         document.add(installationSummary);
+
+        float additionalInfoYPosition = pageContentYPosition - 120;
         Paragraph additionalInfoParagraph = new Paragraph()
                 .add("Additional Info: ")
                 .add(new Text(report.getDescription()).setBold())
-                .setFontSize(12);
-
+                .setFontSize(12)
+                .setFixedPosition(document.getLeftMargin(), additionalInfoYPosition, UnitValue.createPercentValue(100));
         document.add(additionalInfoParagraph);
 
         Paragraph deviceInfoParagraph = new Paragraph()
                 .add("Device Username: ").add(new Text(report.getUsername()).setBold())
                 .add("\nDevice Password: ").add(new Text(report.getPassword()).setBold())
-                .setFontSize(12);
+                .setFontSize(12)
+                .setFixedPosition(document.getLeftMargin(), additionalInfoYPosition - 40, UnitValue.createPercentValue(100));
 
         document.add(deviceInfoParagraph);
 

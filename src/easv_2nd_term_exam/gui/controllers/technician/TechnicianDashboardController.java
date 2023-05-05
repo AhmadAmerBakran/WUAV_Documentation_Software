@@ -15,7 +15,6 @@ import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
-import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.AppUtility;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -70,7 +69,6 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private TableColumn<Report, String> installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn;
 
-    private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
     private Report selectedReport;
 
@@ -79,8 +77,11 @@ public class TechnicianDashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        modelManagerLoader = ModelManagerLoader.getInstance();
-        modelManager = modelManagerLoader.getModelManager();
+        try {
+            modelManager = new ModelManager();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         installationTypeBox.getItems().setAll(InstallationType.values());
         customerTypeBox.getItems().setAll(CustomerType.values());
         ControllerManager.getInstance().setTechnicianDashboardController(this);
