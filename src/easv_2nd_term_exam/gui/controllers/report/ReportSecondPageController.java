@@ -1,10 +1,15 @@
 package easv_2nd_term_exam.gui.controllers.report;
 
+import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class ReportSecondPageController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ReportSecondPageController implements Initializable {
 
     @FXML
     private Label createDateLabel;
@@ -48,4 +53,8 @@ public class ReportSecondPageController {
     @FXML
     private Label locationLabel;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        ControllerManager.getInstance().setReportSecondPageController(this);
+    }
 }

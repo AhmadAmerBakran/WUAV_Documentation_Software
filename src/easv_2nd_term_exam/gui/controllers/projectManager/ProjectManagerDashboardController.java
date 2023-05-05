@@ -54,7 +54,6 @@ public class ProjectManagerDashboardController implements Initializable {
     private ModelManager modelManager;
     private User loggedUser;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerManager.getInstance().setProjectManagerDashboardController(this);
@@ -89,6 +88,19 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     void downloadReport(ActionEvent event) {
+        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/report/ReportHolder.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root, 895, 895);
+        Stage stage = new Stage();
+        stage.setTitle("Login");
+        stage.setScene(scene);
+        stage.show();*/
+
         Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
             Node source = (Node) event.getSource();
@@ -160,6 +172,7 @@ public class ProjectManagerDashboardController implements Initializable {
 
 
     }
+
 
 
 }

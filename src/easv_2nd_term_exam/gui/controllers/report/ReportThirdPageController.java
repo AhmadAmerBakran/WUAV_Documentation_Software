@@ -1,10 +1,15 @@
 package easv_2nd_term_exam.gui.controllers.report;
 
+import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
-public class ReportThirdPageController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ReportThirdPageController implements Initializable {
 
     @FXML
     private Label createDateLabel;
@@ -33,4 +38,8 @@ public class ReportThirdPageController {
     @FXML
     private ImageView secondImageView;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        ControllerManager.getInstance().setReportThirdPageController(this);
+    }
 }

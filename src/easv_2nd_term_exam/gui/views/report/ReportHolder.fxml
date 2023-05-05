@@ -10,7 +10,7 @@
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="798.0" minWidth="798.0" HBox.hgrow="ALWAYS">
          <children>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="728.0" minWidth="798.0" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="728.0" minWidth="798.0" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="reportPagesHolder" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="726.0" minWidth="796.0" />
                </content>
