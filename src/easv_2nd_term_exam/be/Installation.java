@@ -2,6 +2,7 @@ package easv_2nd_term_exam.be;
 
 import easv_2nd_term_exam.enums.InstallationType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Installation {
@@ -10,6 +11,7 @@ public class Installation {
     private String username, password, description;
 
     private InstallationType installationType;
+    private LocalDate createdDate, expiryDate;
 
     public Installation(int id, int customerId, int technicianId, String username, String password, String description, InstallationType installationType) {
         this.id = id;
@@ -28,6 +30,22 @@ public class Installation {
         this.password = password;
         this.description = description;
         this.installationType = installationType;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public int getCustomerId() {

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -43,7 +44,7 @@ public class UpdateReportViewController implements Initializable {
     private ComboBox<CustomerType> customerTypeBox;
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker datePicker, expireDatePicker;
 
     @FXML
     private TextArea descriptionArea;
@@ -81,6 +82,10 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     void cancelUpdating(ActionEvent event) {
 
+    }
+
+    public DatePicker getExpireDatePicker() {
+        return expireDatePicker;
     }
 
     private byte[] imageToByteArray(Image image) {
@@ -179,6 +184,8 @@ public class UpdateReportViewController implements Initializable {
         String deviceUsername = deviceUsernameField.getText();
         String devicePassword = devicePasswordField.getText();
         String installationDescription = descriptionArea.getText();
+        LocalDate createdDate = datePicker.getValue();
+        LocalDate expiryDate = expireDatePicker.getValue();
         InstallationType installationType = installationTypeBox.getValue();
         int customerId = Integer.parseInt(customerIdField.getText());
         int installationId = Integer.parseInt(installationIdField.getText());
@@ -211,6 +218,8 @@ public class UpdateReportViewController implements Initializable {
         tobeUpdated.setDescription(installationDescription);
         tobeUpdated.setCustomerId(customerId);
         tobeUpdated.setInstallationId(installationId);
+        tobeUpdated.setCreatedDate(createdDate);
+        tobeUpdated.setExpiryDate(expiryDate);
         modelManager.getReportModel().updateReport(tobeUpdated);
         deleteFilesFromDirectory(createPackagePath());
 

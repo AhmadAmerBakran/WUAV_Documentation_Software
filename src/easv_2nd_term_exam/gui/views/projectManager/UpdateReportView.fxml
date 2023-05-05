@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController">
    <children>
       <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -194,20 +193,27 @@
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
+                                                <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Installation Date:" HBox.hgrow="SOMETIMES">
                                                    <HBox.margin>
                                                       <Insets right="20.0" top="20.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <DatePicker fx:id="datePicker" editable="false">
+                                                <DatePicker fx:id="datePicker" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="234.0" HBox.hgrow="ALWAYS">
+                                                   <HBox.margin>
+                                                      <Insets right="100.0" top="15.0" />
+                                                   </HBox.margin>
+                                                </DatePicker>
+                                                <Label prefHeight="25.0" prefWidth="150.0" text="Expire Date:" HBox.hgrow="SOMETIMES">
+                                                   <HBox.margin>
+                                                      <Insets right="20.0" top="20.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <DatePicker fx:id="expireDatePicker" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="234.0" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets top="15.0" />
                                                    </HBox.margin>
                                                 </DatePicker>
                                              </children>
-                                             <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                             </VBox.margin>
                                           </HBox>
                                           <HBox>
                                              <children>
@@ -216,10 +222,13 @@
                                                       <Insets right="20.0" top="20.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextArea fx:id="descriptionArea" HBox.hgrow="ALWAYS" />
+                                                <TextArea fx:id="descriptionArea" HBox.hgrow="ALWAYS">
+                                                   <HBox.margin>
+                                                      <Insets top="15.0" />
+                                                   </HBox.margin></TextArea>
                                              </children>
                                              <VBox.margin>
-                                                <Insets bottom="10.0" />
+                                                <Insets bottom="10.0" top="15.0" />
                                              </VBox.margin>
                                           </HBox>
                                        </children>

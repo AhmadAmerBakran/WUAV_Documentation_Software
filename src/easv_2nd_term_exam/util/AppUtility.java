@@ -21,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.List;
@@ -88,52 +90,57 @@ public class AppUtility {
         return showConfirmationDialog(message);
     }
 
-    public static void generatePdfReport(Report report) {
+    public static void generatePdfReport(Report report, Stage primaryStage) {
         try {
-            String fileName = "report_" + report.getInstallationId() + ".pdf";
-            File outputFile = new File(fileName);
-            OutputStream outputStream = new FileOutputStream(outputFile);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Report");
+            fileChooser.setInitialFileName("report_" + report.getInstallationId() + ".pdf");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            File outputFile = fileChooser.showSaveDialog(primaryStage);
 
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdfDocument = new PdfDocument(writer);
-            Document document = new Document(pdfDocument, PageSize.A4);
+            if (outputFile != null) {
+                OutputStream outputStream = new FileOutputStream(outputFile);
+                PdfWriter writer = new PdfWriter(outputStream);
+                PdfDocument pdfDocument = new PdfDocument(writer);
+                Document document = new Document(pdfDocument, PageSize.A4);
 
-            // Title
-            Paragraph title = new Paragraph("Report: " + report.getInstallationId())
-                    .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
-                    .setFontSize(18)
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setBold();
-            document.add(title);
+                // Title
+                Paragraph title = new Paragraph("Report: " + report.getInstallationId())
+                        .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
+                        .setFontSize(18)
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setBold();
+                document.add(title);
 
-            // Add report details (e.g., customerName, customerEmail, customerAddress, etc.)
-            document.add(new Paragraph("Customer Name: " + report.getCustomerName()));
-            document.add(new Paragraph("Customer Email: " + report.getCustomerEmail()));
-            document.add(new Paragraph("Customer Address: " + report.getCustomerAddress()));
-            document.add(new AreaBreak());
-            document.add(new Paragraph("Installation Description :" + report.getDescription()));
+                // Add report details (e.g., customerName, customerEmail, customerAddress, etc.)
+                document.add(new Paragraph("Customer Name: " + report.getCustomerName()));
+                document.add(new Paragraph("Customer Email: " + report.getCustomerEmail()));
+                document.add(new Paragraph("Customer Address: " + report.getCustomerAddress()));
+                document.add(new AreaBreak());
+                document.add(new Paragraph("Installation Description :" + report.getDescription()));
 
-            // Add other report details
-            // ...
+                // Add other report details
+                // ...
 
-            // Add images (e.g., diagramImage, uploadedImage)
-            List<Picture> pictures = modelManager.getPictureModel().getPicturesByInstallationId(report.getInstallationId());
-            for (Picture picture : pictures) {
-                byte[] imageData = picture.getImageData();
-                PdfImageXObject pdfImageXObject = new PdfImageXObject(ImageDataFactory.create(imageData));
-                float width = pdfDocument.getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin();
-                float height = (pdfImageXObject.getHeight() * width) / pdfImageXObject.getWidth();
+                // Add images (e.g., diagramImage, uploadedImage)
+                List<Picture> pictures = modelManager.getPictureModel().getPicturesByInstallationId(report.getInstallationId());
+                for (Picture picture : pictures) {
+                    byte[] imageData = picture.getImageData();
+                    PdfImageXObject pdfImageXObject = new PdfImageXObject(ImageDataFactory.create(imageData));
+                    float width = pdfDocument.getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin();
+                    float height = (pdfImageXObject.getHeight() * width) / pdfImageXObject.getWidth();
 
-                com.itextpdf.layout.element.Image pdfImage = new com.itextpdf.layout.element.Image(
-                        ImageDataFactory.create(picture.getImageData()))
-                        .setWidth(width)
-                        .setHeight(height)
-                        .setAutoScale(true);
-                document.add(pdfImage);
+                    com.itextpdf.layout.element.Image pdfImage = new com.itextpdf.layout.element.Image(
+                            ImageDataFactory.create(picture.getImageData()))
+                            .setWidth(width)
+                            .setHeight(height)
+                            .setAutoScale(true);
+                    document.add(pdfImage);
+                }
+
+                // Close document
+                document.close();
             }
-
-            // Close document
-            document.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

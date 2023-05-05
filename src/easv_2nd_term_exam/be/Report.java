@@ -1,5 +1,7 @@
 package easv_2nd_term_exam.be;
 
+import java.time.LocalDate;
+
 public class Report {
     private int customerId;
     private String customerName;
@@ -14,9 +16,27 @@ public class Report {
     private byte[] picture1Data;
     private String picture2Name;
     private byte[] picture2Data;
+    private LocalDate createdDate;
+    private LocalDate expiryDate;
 
     public Report() {
 
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public String getUsername() {

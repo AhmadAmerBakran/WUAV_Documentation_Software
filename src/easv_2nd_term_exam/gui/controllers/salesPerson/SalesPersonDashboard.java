@@ -74,7 +74,10 @@ public class SalesPersonDashboard implements Initializable {
     void downloadReport(ActionEvent event) {
         Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
-            AppUtility.generatePdfReport(selectedReport);
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+
+            AppUtility.generatePdfReport(selectedReport, primaryStage);
         } else {
             AppUtility.showInformationDialog("Please select a report to download.");
         }

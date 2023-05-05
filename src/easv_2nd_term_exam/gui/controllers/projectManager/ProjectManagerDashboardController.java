@@ -77,7 +77,7 @@ public class ProjectManagerDashboardController implements Initializable {
         customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
         customerIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
     }
-    @FXML
+    /*@FXML
     void downloadReport(ActionEvent event) {
         Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
@@ -85,8 +85,20 @@ public class ProjectManagerDashboardController implements Initializable {
         } else {
             AppUtility.showInformationDialog("Please select a report to download.");
         }
-    }
+    }*/
 
+    @FXML
+    void downloadReport(ActionEvent event) {
+        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        if (selectedReport != null) {
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+
+            AppUtility.generatePdfReport(selectedReport, primaryStage);
+        } else {
+            AppUtility.showInformationDialog("Please select a report to download.");
+        }
+    }
 
     @FXML
     void handleLogout(ActionEvent event) {
@@ -135,7 +147,8 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getInstallationTypeBox().setValue(InstallationType.valueOf(selectedReport.getInstallationType()));
         controller.getDeviceUsernameField().setText(selectedReport.getUsername());
         controller.getDevicePasswordField().setText(selectedReport.getPassword());
-        controller.getDatePicker().setValue(LocalDate.now());
+        controller.getDatePicker().setValue(selectedReport.getCreatedDate());
+        controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
         controller.getDescriptionArea().setText(selectedReport.getDescription());
         controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
         controller.getInstallationIdField().setText(String.valueOf(selectedReport.getInstallationId()));

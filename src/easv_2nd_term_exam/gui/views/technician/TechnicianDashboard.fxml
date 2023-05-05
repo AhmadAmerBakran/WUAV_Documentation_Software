@@ -92,7 +92,7 @@
       </VBox>
       <StackPane prefHeight="600.0" prefWidth="999.0" HBox.hgrow="ALWAYS">
          <children>
-            <AnchorPane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background">
+            <AnchorPane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="false">
                <children>
                   <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
@@ -114,7 +114,7 @@
                   </HBox>
                </children>
             </AnchorPane>
-            <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0" visible="false">
+            <TabPane fx:id="technicianTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="313.0">
                <tabs>
                   <Tab text="B2B">
                      <content>
@@ -283,12 +283,22 @@
                                                             </HBox>
                                                             <HBox>
                                                                <children>
-                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Date:" HBox.hgrow="SOMETIMES">
+                                                                  <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="150.0" text="Installation Date:" HBox.hgrow="SOMETIMES">
                                                                      <HBox.margin>
                                                                         <Insets right="20.0" top="20.0" />
                                                                      </HBox.margin>
                                                                   </Label>
-                                                                  <DatePicker fx:id="datePicker" editable="false">
+                                                                  <DatePicker fx:id="datePicker" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="234.0" HBox.hgrow="ALWAYS">
+                                                                     <HBox.margin>
+                                                                        <Insets right="100.0" top="15.0" />
+                                                                     </HBox.margin>
+                                                                  </DatePicker>
+                                                                  <Label prefHeight="25.0" prefWidth="150.0" text="Expire Date:" HBox.hgrow="SOMETIMES">
+                                                                     <HBox.margin>
+                                                                        <Insets right="20.0" top="20.0" />
+                                                                     </HBox.margin>
+                                                                  </Label>
+                                                                  <DatePicker fx:id="expireDatePicker" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="234.0" HBox.hgrow="ALWAYS">
                                                                      <HBox.margin>
                                                                         <Insets top="15.0" />
                                                                      </HBox.margin>

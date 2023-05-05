@@ -29,16 +29,13 @@ public class ReportDAO {
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
                 "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
-                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
                 "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
                 "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
-                "WHERE i.TechnicianId = ?"; // Remove this line for getAllReports method
-
-
-
+                "WHERE i.TechnicianId = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, technicianId);
@@ -62,9 +59,10 @@ public class ReportDAO {
                 report.setUsername(rs.getString("Username"));
                 report.setPassword(rs.getString("Password"));
                 report.setDescription(rs.getString("Description"));
+                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
+                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
                 reports.add(report);
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,13 +76,12 @@ public class ReportDAO {
 
         String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
                 "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
-                "i.InstallationType, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
                 "FROM Customer c " +
                 "JOIN Installation i ON c.ID = i.CustomerId " +
                 "JOIN Employee e ON i.TechnicianId = e.ID " +
                 "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
                 "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 ";
-
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
 
@@ -106,6 +103,8 @@ public class ReportDAO {
                 report.setUsername(rs.getString("Username"));
                 report.setPassword(rs.getString("Password"));
                 report.setDescription(rs.getString("Description"));
+                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
+                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
                 reports.add(report);
             }
         } catch (Exception e) {
@@ -114,7 +113,6 @@ public class ReportDAO {
 
         return reports;
     }
-
 
     public boolean updateReport(Report report) {
         System.out.println("updateReport called");
@@ -140,19 +138,19 @@ public class ReportDAO {
 
             // Update Installation
             String sqlInstallation = "UPDATE Installation " +
-                    "SET TechnicianId = ?, InstallationType = ?, Username = ?, Password = ?, Description = ? " +
-                    "WHERE ID = ?";
+                    "SET TechnicianId = ?, InstallationType = ?, Username = ?, Password = ?, Description = ?, InstallationDate = ?, ExpiryDate = ? " + "WHERE ID = ?";
             try (PreparedStatement stmtInstallation = conn.prepareStatement(sqlInstallation)) {
                 stmtInstallation.setInt(1, report.getTechnicianId());
                 stmtInstallation.setString(2, report.getInstallationType());
                 stmtInstallation.setString(3, report.getUsername());
                 stmtInstallation.setString(4, report.getPassword());
                 stmtInstallation.setString(5, report.getDescription());
-                stmtInstallation.setInt(6, report.getInstallationId());
-
+                stmtInstallation.setDate(6, java.sql.Date.valueOf(report.getCreatedDate()));
+                stmtInstallation.setDate(7, java.sql.Date.valueOf(report.getExpiryDate()));
+                stmtInstallation.setInt(8, report.getInstallationId());
                 //My debugger again XD
                 System.out.println("Executing SQL (Installation): " + sqlInstallation);
-                System.out.println("Values: " + report.getTechnicianId() + ", " + report.getInstallationType() + ", " + report.getUsername() + ", " + report.getPassword() + ", " + report.getDescription() + ", " + report.getInstallationId());
+                System.out.println("Values: " + report.getTechnicianId() + ", " + report.getInstallationType() + ", " + report.getUsername() + ", " + report.getPassword() + ", " + report.getDescription() + ", " + report.getCreatedDate() + ", " + report.getExpiryDate() + ", " + report.getInstallationId());
                 stmtInstallation.executeUpdate();
             }
 
@@ -203,6 +201,5 @@ public class ReportDAO {
             }
         }
     }
-
-
 }
+

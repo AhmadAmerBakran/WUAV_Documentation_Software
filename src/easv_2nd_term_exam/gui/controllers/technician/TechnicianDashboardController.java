@@ -54,7 +54,7 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private AnchorPane technicianPane;
     @FXML
-    private DatePicker datePicker;
+    private DatePicker datePicker, expireDatePicker;
     @FXML
     private ComboBox<InstallationType> installationTypeBox;
     @FXML
@@ -87,6 +87,7 @@ public class TechnicianDashboardController implements Initializable {
         switchTchPane(false, true);
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         datePicker.setValue(LocalDate.now());
+        expireDatePicker.setValue(datePicker.getValue().plusMonths(48));
         fillTechnicianData();
         setUpReportTableView();
 
@@ -244,6 +245,8 @@ public class TechnicianDashboardController implements Initializable {
             String installationDescription = descriptionArea.getText();
             InstallationType installationType = installationTypeBox.getValue();
             Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
+            newInstallation.setCreatedDate(datePicker.getValue());
+            newInstallation.setExpiryDate(expireDatePicker.getValue());
             try {
                 modelManager.getInstallationModel().createInstallation(newInstallation);
             } catch (Exception e) {
@@ -391,11 +394,12 @@ public class TechnicianDashboardController implements Initializable {
     private void downloadReport(ActionEvent event) {
         Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
-            AppUtility.generatePdfReport(selectedReport);
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+
+            AppUtility.generatePdfReport(selectedReport, primaryStage);
         } else {
             AppUtility.showInformationDialog("Please select a report to download.");
         }
     }
-
-
 }
