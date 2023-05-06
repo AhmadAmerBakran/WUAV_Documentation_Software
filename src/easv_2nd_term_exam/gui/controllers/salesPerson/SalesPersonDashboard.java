@@ -5,7 +5,8 @@ import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -77,9 +78,9 @@ public class SalesPersonDashboard implements Initializable {
             Node source = (Node) event.getSource();
             Stage primaryStage = (Stage) source.getScene().getWindow();
 
-            AppUtility.generatePdfReport(selectedReport, primaryStage);
+            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
         } else {
-            AppUtility.showInformationDialog("Please select a report to download.");
+            DialogUtility.showInformationDialog("Please select a report to download.");
         }
     }
 

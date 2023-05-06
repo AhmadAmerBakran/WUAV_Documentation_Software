@@ -21,8 +21,16 @@ public class ReportManager {
         return reportDAO.getAllReports();
     }
 
+    public List<Report> getExpiringReports(int daysBeforeExpiry) {
+        return reportDAO.getExpiringReports(daysBeforeExpiry);
+    }
+
     public boolean updateReport(Report report) {
         return reportDAO.updateReport(report);
+    }
+
+    public boolean deleteReport(int installationId) {
+        return reportDAO.deleteReport(installationId);
     }
 
 }

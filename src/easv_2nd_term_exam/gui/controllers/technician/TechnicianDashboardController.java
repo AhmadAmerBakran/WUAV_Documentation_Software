@@ -1,21 +1,12 @@
 package easv_2nd_term_exam.gui.controllers.technician;
 
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.properties.TextAlignment;
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -329,7 +320,7 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         if (deviceUsernameField.getText().trim().isEmpty() || devicePasswordField.getText().trim().isEmpty()) {
-            return AppUtility.showDeviceFieldsReminder();
+            return DialogUtility.showDeviceFieldsReminder();
         }
 
         return true;
@@ -342,7 +333,7 @@ public class TechnicianDashboardController implements Initializable {
         for (String field : emptyFields) {
             errorMessage += "- " + field + "\n";
         }
-        AppUtility.showInformationDialog(errorMessage);
+        DialogUtility.showInformationDialog(errorMessage);
     }
 
     private byte[] imageToByteArray(Image image) {
@@ -398,9 +389,9 @@ public class TechnicianDashboardController implements Initializable {
             Node source = (Node) event.getSource();
             Stage primaryStage = (Stage) source.getScene().getWindow();
 
-            AppUtility.generatePdfReport(selectedReport, primaryStage);
+            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
         } else {
-            AppUtility.showInformationDialog("Please select a report to download.");
+            DialogUtility.showInformationDialog("Please select a report to download.");
         }
     }
 }

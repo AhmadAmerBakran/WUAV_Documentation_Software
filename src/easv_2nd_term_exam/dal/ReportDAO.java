@@ -114,6 +114,57 @@ public class ReportDAO {
         return reports;
     }
 
+    public List<Report> getExpiringReports(int daysBeforeExpiry) {
+        List<Report> reports = new ArrayList<>();
+
+        String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
+                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
+                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+                "FROM Customer c " +
+                "JOIN Installation i ON c.ID = i.CustomerId " +
+                "JOIN Employee e ON i.TechnicianId = e.ID " +
+                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
+                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
+                "WHERE i.ExpiryDate BETWEEN GETDATE() AND DATEADD(DAY, ?, GETDATE())";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, daysBeforeExpiry);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Report report = new Report();
+                report.setCustomerId(rs.getInt("CustomerId"));
+                report.setCustomerName(rs.getString("CustomerName"));
+                report.setCustomerAddress(rs.getString("CustomerAddress"));
+                report.setCustomerEmail(rs.getString("CustomerEmail"));
+                report.setCustomerType(rs.getString("CustomerType"));
+                report.setInstallationId(rs.getInt("InstallationId"));
+                report.setTechnicianId(rs.getInt("TechnicianId"));
+                report.setTechnicianName(rs.getString("TechnicianName"));
+                report.setInstallationType(rs.getString("InstallationType"));
+                report.setPicture1Name(rs.getString("Picture1Name"));
+                report.setPicture1Data(rs.getBytes("Picture1Data"));
+                report.setPicture2Name(rs.getString("Picture2Name"));
+                report.setPicture2Data(rs.getBytes("Picture2Data"));
+                report.setUsername(rs.getString("Username"));
+                report.setPassword(rs.getString("Password"));
+                report.setDescription(rs.getString("Description"));
+                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
+                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
+                reports.add(report);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return reports;
+    }
+
+
+
+
+
     public boolean updateReport(Report report) {
         System.out.println("updateReport called");
         try {
@@ -201,5 +252,49 @@ public class ReportDAO {
             }
         }
     }
+
+    public boolean deleteReport(int installationId) {
+        boolean result = false;
+
+        String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
+        String sqlDeleteInstallation = "DELETE FROM Installation WHERE ID = ?";
+
+        try (PreparedStatement stmtDeletePictures = conn.prepareStatement(sqlDeletePictures);
+             PreparedStatement stmtDeleteInstallation = conn.prepareStatement(sqlDeleteInstallation)) {
+
+            // Start a transaction
+            conn.setAutoCommit(false);
+
+            // Delete pictures associated with the installation
+            stmtDeletePictures.setInt(1, installationId);
+            stmtDeletePictures.executeUpdate();
+
+            // Delete the installation record
+            stmtDeleteInstallation.setInt(1, installationId);
+            int affectedRows = stmtDeleteInstallation.executeUpdate();
+
+            // Commit the transaction
+            conn.commit();
+
+            // Set auto-commit back to true
+            conn.setAutoCommit(true);
+
+            if (affectedRows > 0) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            try {
+                // Rollback the transaction if any error occurred
+                conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }
 

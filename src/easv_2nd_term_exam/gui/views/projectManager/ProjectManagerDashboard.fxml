@@ -49,6 +49,18 @@
                   <Insets />
                </VBox.margin>
             </Button>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showExpiredReport" prefHeight="40.0" prefWidth="298.0" text="About to Expire">
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images_resource/expired_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="298.0" text="Logout">
                <padding>
                   <Insets left="50.0" />
@@ -68,7 +80,7 @@
       </VBox>
       <StackPane prefHeight="600.0" prefWidth="999.0" HBox.hgrow="ALWAYS">
          <children>
-            <AnchorPane fx:id="projectManagerPane" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="allProjectsPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columns>
@@ -89,6 +101,34 @@
                            </HBox.margin>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#updateReport" text="Update Info" />
+                        <Button mnemonicParsing="false" onAction="#deleteReport" text="Delete Report" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="expiredProjectPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TableView fx:id="expiredReportTable" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="installationIdColumnE" maxWidth="1.7976931348623157E308" minWidth="112.0" prefWidth="-1.0" text="Installation ID" />
+                        <TableColumn fx:id="installationTypeColumnE" maxWidth="1.7976931348623157E308" minWidth="132.0" prefWidth="-1.0" text="Installation Type" />
+                        <TableColumn fx:id="customerNameColumnE" maxWidth="1.7976931348623157E308" minWidth="119.0" prefWidth="-1.0" text="Customer Nme" />
+                        <TableColumn fx:id="customerEmailColumnE" maxWidth="1.7976931348623157E308" minWidth="124.0" prefWidth="-1.0" text="Customer Email" />
+                        <TableColumn fx:id="customerAddressColumnE" maxWidth="1.7976931348623157E308" minWidth="183.0" prefWidth="-1.0" text="Customer Address" />
+                        <TableColumn fx:id="technicianIdColumnE" maxWidth="1.7976931348623157E308" minWidth="108.0" prefWidth="-1.0" text="Technician ID" />
+                        <TableColumn fx:id="customerIdColumnE" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Customer ID" />
+                        <TableColumn fx:id="expiryDateColumn" maxWidth="1.7976931348623157E308" minWidth="124.0" prefWidth="-1.0" text="Expiry Date" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" layoutX="76.0" layoutY="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#downloadExpiredReport" text="Download Report" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#updateExpiredReport" text="Update Info" />
+                        <Button mnemonicParsing="false" onAction="#deleteExpiredReport" text="Delete Report" />
                      </children>
                   </HBox>
                </children>

@@ -5,7 +5,8 @@ import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -82,12 +83,12 @@ public class EditUserController implements Initializable {
         // Add the new user to the model
         if (newUser != null) {
             modelManager.getAdminModel().updateUser(newUser);
-            AppUtility.showInformationDialog("User Updated successfully!");
+            DialogUtility.showInformationDialog("User Updated successfully!");
             ControllerManager.getInstance().getAdminDashboardController().showAllUsers(event);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         } else {
-            AppUtility.showExceptionDialog(new IllegalArgumentException("Something went wrong"));
+            DialogUtility.showExceptionDialog(new IllegalArgumentException("Something went wrong"));
         }
 
     }

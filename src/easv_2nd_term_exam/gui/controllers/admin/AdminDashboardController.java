@@ -5,7 +5,8 @@ import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -158,13 +159,13 @@ public class AdminDashboardController implements Initializable {
 
     private void deleteUserWithConfirmation() {
         if (selectedUser != null) {
-            boolean confirmed = AppUtility.showConfirmationDialog("Are you sure you want to delete " + selectedUser.getName() + " ?");
+            boolean confirmed = DialogUtility.showConfirmationDialog("Are you sure you want to delete " + selectedUser.getName() + " ?");
             if (confirmed) {
                 modelManager.getAdminModel().deleteUser(selectedUser.getId());
                 setupTableViews(); // Refresh the table view after deletion
             }
         } else {
-            AppUtility.showInformationDialog("Please select a user to delete.");
+            DialogUtility.showInformationDialog("Please select a user to delete.");
         }
     }
 
@@ -173,7 +174,7 @@ public class AdminDashboardController implements Initializable {
         if(selectedUser != null){
             openNewWindow("/easv_2nd_term_exam/gui/views/admin/EditUserView.fxml", "Update " + selectedUser.getRole().toString().toLowerCase());
         }else {
-            AppUtility.showInformationDialog("Please select a user to update.");
+            DialogUtility.showInformationDialog("Please select a user to update.");
         }
 
     }

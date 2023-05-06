@@ -5,7 +5,8 @@ import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.AdminModel;
 import easv_2nd_term_exam.gui.models.ModelManager;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -86,12 +87,12 @@ public class AddUserController implements Initializable {
         // Add the new user to the model
         if (newUser != null) {
             adminModel.addUser(newUser);
-            AppUtility.showInformationDialog("User added successfully!");
+            DialogUtility.showInformationDialog("User added successfully!");
             ControllerManager.getInstance().getAdminDashboardController().showAllUsers(event);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         } else {
-            AppUtility.showExceptionDialog(new IllegalArgumentException("Invalid user role selected."));
+            DialogUtility.showExceptionDialog(new IllegalArgumentException("Invalid user role selected."));
         }
     }
 

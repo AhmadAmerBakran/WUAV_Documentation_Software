@@ -7,7 +7,8 @@ import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.AppUtility;
+import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ProjectManagerDashboardController implements Initializable {
@@ -31,17 +33,27 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     private TableColumn<Report, String> customerAddressColumn, customerEmailColumn, customerNameColumn, installationTypeColumn;
+    @FXML
+    private TableColumn<Report, String> customerAddressColumnE, customerEmailColumnE, customerNameColumnE, installationTypeColumnE;
 
 
     @FXML
     private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn, customerIdColumn;
+    @FXML
+    private TableColumn<Report, Integer> installationIdColumnE, technicianIdColumnE, customerIdColumnE;
+    @FXML
+    private TableColumn<Report, LocalDate> expiryDateColumn;
 
 
     @FXML
     private TableView<Report> reportTableView;
+    @FXML
+    private TableView<Report> expiredReportTable;
 
     @FXML
-    private AnchorPane projectManagerPane;
+    private AnchorPane expiredProjectPane;
+    @FXML
+    private AnchorPane allProjectsPane;
 
 
     @FXML
@@ -50,6 +62,7 @@ public class ProjectManagerDashboardController implements Initializable {
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
     private User loggedUser;
+    private Report selectedReport;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,7 +70,9 @@ public class ProjectManagerDashboardController implements Initializable {
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         modelManagerLoader = ModelManagerLoader.getInstance();
         modelManager = modelManagerLoader.getModelManager();
+        showReportsPane(true, false);
         setUpReportTableView();
+        setUpExpiringReportsTableView();
         userLabel.setText(loggedUser.getName());
 
     }
@@ -73,39 +88,37 @@ public class ProjectManagerDashboardController implements Initializable {
         customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
         customerIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
     }
-    /*@FXML
-    void downloadReport(ActionEvent event) {
-        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        if (selectedReport != null) {
-            AppUtility.generatePdfReport(selectedReport);
-        } else {
-            AppUtility.showInformationDialog("Please select a report to download.");
-        }
-    }*/
+
+    private void setUpExpiringReportsTableView()
+    {
+        expiredReportTable.getItems().setAll(modelManager.getReportModel().getExpiringReports(30));
+        installationIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
+        technicianIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("technicianId"));
+        installationTypeColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
+        customerNameColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
+        customerEmailColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
+        customerAddressColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
+        customerIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
+        expiryDateColumn.setCellValueFactory(new PropertyValueFactory<Report, LocalDate>("expiryDate"));
+    }
+
+    private void showReportsPane(boolean allReports, boolean expiredReports)
+    {
+        allProjectsPane.setVisible(allReports);
+        expiredProjectPane.setVisible(expiredReports);
+    }
+
 
     @FXML
     void downloadReport(ActionEvent event) {
-        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/report/ReportHolder.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Scene scene = new Scene(root, 895, 895);
-        Stage stage = new Stage();
-        stage.setTitle("Login");
-        stage.setScene(scene);
-        stage.show();*/
-
-        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         if (selectedReport != null) {
             Node source = (Node) event.getSource();
             Stage primaryStage = (Stage) source.getScene().getWindow();
 
-            AppUtility.generatePdfReport(selectedReport, primaryStage);
+            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
         } else {
-            AppUtility.showInformationDialog("Please select a report to download.");
+            DialogUtility.showInformationDialog("Please select a report to download.");
         }
     }
 
@@ -131,13 +144,14 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     void showAllReports(ActionEvent event) {
+        showReportsPane(true, false);
         setUpReportTableView();
 
     }
 
     @FXML
     void updateReport(ActionEvent event) {
-        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
         Parent root = null;
@@ -171,5 +185,66 @@ public class ProjectManagerDashboardController implements Initializable {
     }
 
 
+    @FXML
+    private void showExpiredReport(ActionEvent event) {
+        showReportsPane(false, true);
+    }
 
+    @FXML
+    private void deleteReport(ActionEvent event) {
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+    }
+
+    @FXML
+    private void downloadExpiredReport(ActionEvent event) {
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+        if (selectedReport != null) {
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+
+            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+        } else {
+            DialogUtility.showInformationDialog("Please select a report to download.");
+        }
+    }
+
+    @FXML
+    private void updateExpiredReport(ActionEvent event) {
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UpdateReportViewController controller = loader.getController();
+        controller.getTechIdField().setText(String.valueOf(selectedReport.getTechnicianId()));
+        controller.getTechNameField().setText(selectedReport.getTechnicianName());
+        controller.getCustomerNameField().setText(selectedReport.getCustomerName());
+        controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
+        controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
+        controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
+        controller.getInstallationTypeBox().setValue(InstallationType.valueOf(selectedReport.getInstallationType()));
+        controller.getDeviceUsernameField().setText(selectedReport.getUsername());
+        controller.getDevicePasswordField().setText(selectedReport.getPassword());
+        controller.getDatePicker().setValue(selectedReport.getCreatedDate());
+        controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
+        controller.getDescriptionArea().setText(selectedReport.getDescription());
+        controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
+        controller.getInstallationIdField().setText(String.valueOf(selectedReport.getInstallationId()));
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Update Installation/Report");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void deleteExpiredReport(ActionEvent event) {
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+        modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+    }
 }
