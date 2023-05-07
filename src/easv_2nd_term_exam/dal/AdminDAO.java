@@ -1,4 +1,3 @@
-// easv_2nd_term_exam/dal/AdminDAO.java
 package easv_2nd_term_exam.dal;
 
 import easv_2nd_term_exam.be.*;

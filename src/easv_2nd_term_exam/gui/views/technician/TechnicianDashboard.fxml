@@ -92,7 +92,7 @@
       </VBox>
       <StackPane prefHeight="600.0" prefWidth="999.0" HBox.hgrow="ALWAYS">
          <children>
-            <AnchorPane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="false">
+            <AnchorPane fx:id="technicianPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
