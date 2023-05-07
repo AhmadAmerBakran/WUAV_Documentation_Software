@@ -30,12 +30,10 @@ import java.util.ResourceBundle;
 
 public class ProjectManagerDashboardController implements Initializable {
 
-
     @FXML
     private TableColumn<Report, String> customerAddressColumn, customerEmailColumn, customerNameColumn, installationTypeColumn;
     @FXML
     private TableColumn<Report, String> customerAddressColumnE, customerEmailColumnE, customerNameColumnE, installationTypeColumnE;
-
 
     @FXML
     private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn, customerIdColumn;
@@ -43,7 +41,6 @@ public class ProjectManagerDashboardController implements Initializable {
     private TableColumn<Report, Integer> installationIdColumnE, technicianIdColumnE, customerIdColumnE;
     @FXML
     private TableColumn<Report, LocalDate> expiryDateColumn;
-
 
     @FXML
     private TableView<Report> reportTableView;
@@ -54,7 +51,6 @@ public class ProjectManagerDashboardController implements Initializable {
     private AnchorPane expiredProjectPane;
     @FXML
     private AnchorPane allProjectsPane;
-
 
     @FXML
     private Label userLabel;
@@ -71,43 +67,66 @@ public class ProjectManagerDashboardController implements Initializable {
         modelManagerLoader = ModelManagerLoader.getInstance();
         modelManager = modelManagerLoader.getModelManager();
         showReportsPane(true, false);
-        setUpReportTableView();
-        setUpExpiringReportsTableView();
+        try {
+            setUpReportTableView();
+            setUpExpiringReportsTableView();
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
+
         userLabel.setText(loggedUser.getName());
-
     }
 
-    private void setUpReportTableView()
-    {
+    private void setUpReportTableView() {
         reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
-        installationIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
-        technicianIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("technicianId"));
-        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
-        customerNameColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
-        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
-        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
-        customerIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
+        setCellValueFactories(installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
+        setTableColumnsPrefWidth(reportTableView, installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
     }
 
-    private void setUpExpiringReportsTableView()
-    {
+    private void setUpExpiringReportsTableView() {
         expiredReportTable.getItems().setAll(modelManager.getReportModel().getExpiringReports(30));
-        installationIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
-        technicianIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("technicianId"));
-        installationTypeColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
-        customerNameColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
-        customerEmailColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
-        customerAddressColumnE.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
-        customerIdColumnE.setCellValueFactory(new PropertyValueFactory<Report, Integer>("customerId"));
-        expiryDateColumn.setCellValueFactory(new PropertyValueFactory<Report, LocalDate>("expiryDate"));
+        setCellValueFactories(installationIdColumnE, technicianIdColumnE, installationTypeColumnE, customerNameColumnE, customerEmailColumnE, customerAddressColumnE, customerIdColumnE);
+        expiryDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
+                setTableColumnsPrefWidth(expiredReportTable, installationIdColumnE, technicianIdColumnE, installationTypeColumnE, customerNameColumnE, customerEmailColumnE, customerAddressColumnE, customerIdColumnE, expiryDateColumn);
     }
 
-    private void showReportsPane(boolean allReports, boolean expiredReports)
-    {
+    private void setCellValueFactories(TableColumn<Report, Integer> installationIdColumn, TableColumn<Report, Integer> technicianIdColumn, TableColumn<Report, String> installationTypeColumn, TableColumn<Report, String> customerNameColumn, TableColumn<Report, String> customerEmailColumn, TableColumn<Report, String> customerAddressColumn, TableColumn<Report, Integer> customerIdColumn) {
+        installationIdColumn.setCellValueFactory(new PropertyValueFactory<>("installationId"));
+        technicianIdColumn.setCellValueFactory(new PropertyValueFactory<>("technicianId"));
+        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<>("installationType"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<>("customerEmail"));
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<>("customerAddress"));
+        customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    }
+
+    private void setTableColumnsPrefWidth(TableView<Report> tableView, TableColumn<Report, Integer> installationIdColumn, TableColumn<Report, Integer> technicianIdColumn, TableColumn<Report, String> installationTypeColumn, TableColumn<Report, String> customerNameColumn, TableColumn<Report, String> customerEmailColumn, TableColumn<Report, String> customerAddressColumn, TableColumn<Report, Integer> customerIdColumn, TableColumn... extraColumns) {
+        double[] columnRatios = {0.09, 0.09, 0.14, 0.14, 0.14, 0.21, 0.19};
+        double[] columnRatiosWithExpiryDate = {0.08, 0.08, 0.12, 0.12, 0.12, 0.17, 0.13, 0.18};
+        TableColumn[] columns = {installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn};
+
+        if (extraColumns.length > 0) {
+            for (int i = 0; i < columns.length; i++) {
+                columns[i].prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatiosWithExpiryDate[i]));
+            }
+
+            TableColumn<Report, LocalDate> expiryDateColumn = extraColumns[0];
+            expiryDateColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatiosWithExpiryDate[7]));
+        } else {
+            for (int i = 0; i < columns.length; i++) {
+                columns[i].prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatios[i]));
+            }
+        }
+    }
+
+
+
+
+
+    private void showReportsPane(boolean allReports, boolean expiredReports) {
         allProjectsPane.setVisible(allReports);
         expiredProjectPane.setVisible(expiredReports);
     }
-
 
     @FXML
     void downloadReport(ActionEvent event) {
@@ -116,20 +135,26 @@ public class ProjectManagerDashboardController implements Initializable {
             Node source = (Node) event.getSource();
             Stage primaryStage = (Stage) source.getScene().getWindow();
 
-            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+            try {
+                PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+
         } else {
             DialogUtility.showInformationDialog("Please select a report to download.");
         }
     }
 
-    @FXML
+
+        @FXML
     void handleLogout(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
         Parent root = null;
         try {
             root = loader.load();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(e);
         }
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -145,13 +170,22 @@ public class ProjectManagerDashboardController implements Initializable {
     @FXML
     void showAllReports(ActionEvent event) {
         showReportsPane(true, false);
-        setUpReportTableView();
+        try {
+            setUpReportTableView();
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
+
 
     }
 
     @FXML
     void updateReport(ActionEvent event) {
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        if (selectedReport == null) {
+            DialogUtility.showInformationDialog("Please select a report to update.");
+            return;
+        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
         Parent root = null;
@@ -180,8 +214,6 @@ public class ProjectManagerDashboardController implements Initializable {
         stage.setTitle("Update Installation/Report");
         stage.setScene(scene);
         stage.show();
-
-
     }
 
 
@@ -193,7 +225,19 @@ public class ProjectManagerDashboardController implements Initializable {
     @FXML
     private void deleteReport(ActionEvent event) {
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+        if (selectedReport != null) {
+            if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this report?")) {
+                try {
+                    modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+                    DialogUtility.showInformationDialog("Report deleted successfully.");
+                    setUpReportTableView();
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select a report to delete.");
+        }
     }
 
     @FXML
@@ -203,7 +247,12 @@ public class ProjectManagerDashboardController implements Initializable {
             Node source = (Node) event.getSource();
             Stage primaryStage = (Stage) source.getScene().getWindow();
 
-            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+            try {
+                PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+
         } else {
             DialogUtility.showInformationDialog("Please select a report to download.");
         }
@@ -211,7 +260,11 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     private void updateExpiredReport(ActionEvent event) {
-        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        if (selectedReport == null) {
+            DialogUtility.showInformationDialog("Please select a report to update.");
+            return;
+        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
         Parent root = null;
@@ -245,6 +298,18 @@ public class ProjectManagerDashboardController implements Initializable {
     @FXML
     private void deleteExpiredReport(ActionEvent event) {
         selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
-        modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+        if (selectedReport != null) {
+            if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this expiring report?")) {
+                try {
+                    modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+                    DialogUtility.showInformationDialog("Expiring report deleted successfully.");
+                    setUpExpiringReportsTableView();
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select an expiring report to delete.");
+        }
     }
 }

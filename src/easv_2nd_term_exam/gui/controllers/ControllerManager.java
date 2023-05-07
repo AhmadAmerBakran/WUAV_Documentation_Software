@@ -6,7 +6,6 @@ import easv_2nd_term_exam.gui.controllers.admin.EditUserController;
 import easv_2nd_term_exam.gui.controllers.login.LoginViewController;
 import easv_2nd_term_exam.gui.controllers.projectManager.ProjectManagerDashboardController;
 import easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController;
-import easv_2nd_term_exam.gui.controllers.report.*;
 import easv_2nd_term_exam.gui.controllers.salesPerson.SalesPersonDashboard;
 import easv_2nd_term_exam.gui.controllers.technician.DrawingLayoutController;
 import easv_2nd_term_exam.gui.controllers.technician.TechnicianDashboardController;
@@ -24,51 +23,8 @@ public class ControllerManager {
     private LoginViewController loginViewController;
 
     private AdminDashboardController adminDashboardController;
-    private ReportManagerController reportManagerController;
-    private ReportHolderController reportHolderController;
-    private ReportFirstPageController reportFirstPageController;
-    private ReportSecondPageController reportSecondPageController;
-    private ReportThirdPageController reportThirdPageController;
 
-    public ReportManagerController getReportManagerController() {
-        return reportManagerController;
-    }
 
-    public void setReportManagerController(ReportManagerController reportManagerController) {
-        this.reportManagerController = reportManagerController;
-    }
-
-    public ReportHolderController getReportHolderController() {
-        return reportHolderController;
-    }
-
-    public void setReportHolderController(ReportHolderController reportHolderController) {
-        this.reportHolderController = reportHolderController;
-    }
-
-    public ReportFirstPageController getReportFirstPageController() {
-        return reportFirstPageController;
-    }
-
-    public void setReportFirstPageController(ReportFirstPageController reportFirstPageController) {
-        this.reportFirstPageController = reportFirstPageController;
-    }
-
-    public ReportSecondPageController getReportSecondPageController() {
-        return reportSecondPageController;
-    }
-
-    public void setReportSecondPageController(ReportSecondPageController reportSecondPageController) {
-        this.reportSecondPageController = reportSecondPageController;
-    }
-
-    public ReportThirdPageController getReportThirdPageController() {
-        return reportThirdPageController;
-    }
-
-    public void setReportThirdPageController(ReportThirdPageController reportThirdPageController) {
-        this.reportThirdPageController = reportThirdPageController;
-    }
 
     private ControllerManager() {
     }

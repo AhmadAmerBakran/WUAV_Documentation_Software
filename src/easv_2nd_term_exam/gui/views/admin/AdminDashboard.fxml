@@ -135,7 +135,7 @@
                                     <TableColumn fx:id="userRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
                                 </columns>
                               </TableView>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                                  <children>
                                     <ButtonBar prefHeight="40.0" prefWidth="200.0">
                                       <buttons>
@@ -145,7 +145,7 @@
                                     </ButtonBar>
                                  </children>
                                  <VBox.margin>
-                                    <Insets top="39.0" />
+                                    <Insets />
                                  </VBox.margin>
                               </HBox>
                            </children></VBox>
