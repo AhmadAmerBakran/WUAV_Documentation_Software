@@ -5,6 +5,7 @@ import easv_2nd_term_exam.bll.CustomerManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerModel {
@@ -15,6 +16,10 @@ public class CustomerModel {
     public CustomerModel() {
         customerManager = new CustomerManager();
         customers = FXCollections.observableArrayList();
+    }
+
+    public Customer findCustomerByEmail(String email) throws SQLException {
+        return customerManager.findCustomerByEmail(email);
     }
 
     public void loadCustomers() throws Exception {
@@ -41,5 +46,9 @@ public class CustomerModel {
     public void deleteCustomer(int id) throws Exception {
         customerManager.deleteCustomer(id);
         customers.removeIf(c -> c.getId() == id);
+    }
+
+    public Customer updateCustomerByEmail(Customer customer) throws Exception {
+        return customerManager.updateCustomerByEmail(customer);
     }
 }

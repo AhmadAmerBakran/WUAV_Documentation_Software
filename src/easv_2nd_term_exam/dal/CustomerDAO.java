@@ -42,6 +42,31 @@ public class CustomerDAO implements ICustomerDAO {
     }
 
     @Override
+    public Customer findCustomerByEmail(String email) throws SQLException {
+        String sql = "SELECT * FROM Customer WHERE Email = ?";
+        Customer customer = null;
+
+        try (Connection connection = dbConnector.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("ID");
+                    String name = resultSet.getString("Name");
+                    String address = resultSet.getString("Address");
+                    CustomerType type = CustomerType.valueOf(resultSet.getString("Type"));
+                    customer = new Customer(name, address, email, type);
+                    customer.setId(id);
+                }
+            }
+        }
+
+        return customer;
+    }
+
+
+    @Override
     public Customer getCustomer(int id) throws SQLException {
         Customer customer = null;
         String sql = "SELECT * FROM Customer WHERE ID = ?";
@@ -100,6 +125,25 @@ public class CustomerDAO implements ICustomerDAO {
             pstmt.executeUpdate();
         }
     }
+
+    @Override
+    public Customer updateCustomerByEmail(Customer customer) throws SQLException {
+        String sql = "UPDATE Customer SET Name = ?, Address = ?, Type = ? WHERE Email = ?";
+
+        try (Connection connection = dbConnector.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, customer.getName());
+            pstmt.setString(2, customer.getAddress());
+            pstmt.setString(3, customer.getType().toString());
+            pstmt.setString(4, customer.getEmail());
+
+            pstmt.executeUpdate();
+        }
+
+        return customer;
+    }
+
 
     @Override
     public void deleteCustomer(int id) throws SQLException {

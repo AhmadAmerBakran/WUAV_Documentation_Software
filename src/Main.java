@@ -1,3 +1,4 @@
+import easv_2nd_term_exam.dal.AdminDAO;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,13 @@ import javafx.util.Duration;
 
 public class Main extends Application {
     public static void main(String[] args) {
+        AdminDAO adminDAO = new AdminDAO();
+
+        // Check if there are existing admin users
+        if (!adminDAO.hasAdmins()) {
+            // If no admin users exist, create an admin user
+            adminDAO.createAdminUser("Ahmad Amer Bakran", "nights.maestro@gmail.com", "admin", "admin");
+        }
         launch(args);
     }
 

@@ -1,6 +1,8 @@
 package easv_2nd_term_exam.dal.interfaces;
 
 import easv_2nd_term_exam.be.Customer;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ICustomerDAO {
@@ -9,4 +11,6 @@ public interface ICustomerDAO {
     List<Customer> getAllCustomers() throws Exception;
     void updateCustomer(Customer customer) throws Exception;
     void deleteCustomer(int id) throws Exception;
+    Customer findCustomerByEmail(String email) throws SQLException;
+    Customer updateCustomerByEmail(Customer customer) throws SQLException;
 }

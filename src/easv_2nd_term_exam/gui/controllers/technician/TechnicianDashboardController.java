@@ -224,13 +224,33 @@ public class TechnicianDashboardController implements Initializable {
             String customerEmail = customerEmailField.getText();
             String customerAddress = customerAddressField.getText();
             CustomerType type = customerTypeBox.getValue();
-            Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
+            Customer customer = null;
+
             try {
-                modelManager.getCustomerModel().createCustomer(newCustomer);
+                customer = modelManager.getCustomerModel().findCustomerByEmail(customerEmail);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            int customerId = newCustomer.getId();
+
+            if (customer == null) {
+                customer = new Customer(customerName, customerAddress, customerEmail, type);
+                try {
+                    modelManager.getCustomerModel().createCustomer(customer);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                customer.setName(customerName);
+                customer.setAddress(customerAddress);
+                customer.setType(type);
+                try {
+                    modelManager.getCustomerModel().updateCustomerByEmail(customer);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            int customerId = customer.getId();
             int technicianId = Integer.parseInt(techIdField.getText());
             String deviceUsername = deviceUsernameField.getText();
             String devicePassword = devicePasswordField.getText();
@@ -239,11 +259,13 @@ public class TechnicianDashboardController implements Initializable {
             Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
             newInstallation.setCreatedDate(datePicker.getValue());
             newInstallation.setExpiryDate(expireDatePicker.getValue());
+
             try {
                 modelManager.getInstallationModel().createInstallation(newInstallation);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+
             int installationId = newInstallation.getId();
             Image diagramImage = new Image(diagramPathLabel.getText());
             Image uploadedImage = new Image(uploadedPictureLabel.getText());
@@ -261,6 +283,7 @@ public class TechnicianDashboardController implements Initializable {
                 Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
                 pictures.add(uploadedPicture);
             }
+
             try {
                 modelManager.getPictureModel().createPictures(pictures);
             } catch (Exception e) {
@@ -269,6 +292,7 @@ public class TechnicianDashboardController implements Initializable {
             deleteFilesFromDirectory(createPackagePath());
         }
     }
+
 
     private boolean validateFields() {
         boolean isValid = true;

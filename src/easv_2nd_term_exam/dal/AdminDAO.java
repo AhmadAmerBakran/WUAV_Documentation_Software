@@ -4,6 +4,7 @@ package easv_2nd_term_exam.dal;
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.dal.connector.DBConnector;
 import easv_2nd_term_exam.enums.UserRole;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,13 +55,16 @@ public class AdminDAO {
     }
 
     public User addUser(User user) {
+        String salt = BCrypt.gensalt();
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
+
         String sql = "INSERT INTO Employee (Name, Email, Username, Password, Role) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = dbConnector.getConnection(); PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getUsername());
-            statement.setString(4, user.getPassword());
+            statement.setString(4, hashedPassword);
             statement.setString(5, user.getRole().toString());
 
             int affectedRows = statement.executeUpdate();
@@ -82,14 +86,45 @@ public class AdminDAO {
         return user;
     }
 
+    public boolean hasAdmins() {
+        String sql = "SELECT COUNT(*) FROM Employee WHERE Role = ?;";
+
+        try (Connection connection = dbConnector.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, UserRole.ADMIN.toString());
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    int count = result.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while checking for existing admins.", e);
+        }
+
+        return false;
+    }
+
+    public void createAdminUser(String name, String email, String username, String password) {
+        User adminUser = new Admin(0, name, email, username, password);
+        adminUser.setRole(UserRole.ADMIN);
+        addUser(adminUser);
+    }
+
+
+
     public boolean updateUser(User user) {
+
+        String salt = BCrypt.gensalt();
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
         String sql = "UPDATE Employee SET Name = ?, Email = ?, Username = ?, Password = ?, Role = ? WHERE ID = ?";
+
 
         try (Connection connection = dbConnector.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getUsername());
-            statement.setString(4, user.getPassword());
+            statement.setString(4, hashedPassword);
             statement.setString(5, user.getRole().toString());
             statement.setInt(6, user.getId());
 

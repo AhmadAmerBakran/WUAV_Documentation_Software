@@ -19,6 +19,11 @@ public class CustomerManager {
         return customerDAO.createCustomer(customer);
     }
 
+    public Customer findCustomerByEmail(String email) throws SQLException {
+        return customerDAO.findCustomerByEmail(email);
+    }
+
+
     public Customer getCustomer(int id) throws Exception {
         return customerDAO.getCustomer(id);
     }
@@ -34,4 +39,9 @@ public class CustomerManager {
     public void deleteCustomer(int id) throws Exception {
         customerDAO.deleteCustomer(id);
     }
+
+    public Customer updateCustomerByEmail(Customer customer) throws SQLException {
+        return customerDAO.updateCustomerByEmail(customer);
+    }
+
 }

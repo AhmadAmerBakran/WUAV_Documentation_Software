@@ -188,7 +188,7 @@ public class PdfReportGenerator {
 
         document.add(installationSummaryTitle);
 
-        String installationSummaryText = String.format("On %s, WUAV installed a %s at %s's residence located at %s.",
+        String installationSummaryText = String.format("On %s, WUAV installed a new %s at %s's residence located at %s.",
                 report.getCreatedDate(), report.getInstallationType(), report.getCustomerName(), report.getCustomerAddress());
 
         Paragraph installationSummary = new Paragraph(installationSummaryText)
