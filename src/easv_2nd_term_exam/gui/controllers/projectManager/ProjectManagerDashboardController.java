@@ -3,7 +3,6 @@ package easv_2nd_term_exam.gui.controllers.projectManager;
 import easv_2nd_term_exam.be.Report;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.enums.CustomerType;
-import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
@@ -25,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -78,13 +78,21 @@ public class ProjectManagerDashboardController implements Initializable {
     }
 
     private void setUpReportTableView() {
-        reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
+        try {
+            reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         setCellValueFactories(installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
         setTableColumnsPrefWidth(reportTableView, installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
     }
 
     private void setUpExpiringReportsTableView() {
-        expiredReportTable.getItems().setAll(modelManager.getReportModel().getExpiringReports(30));
+        try {
+            expiredReportTable.getItems().setAll(modelManager.getReportModel().getExpiringReports(30));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         setCellValueFactories(installationIdColumnE, technicianIdColumnE, installationTypeColumnE, customerNameColumnE, customerEmailColumnE, customerAddressColumnE, customerIdColumnE);
         expiryDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
                 setTableColumnsPrefWidth(expiredReportTable, installationIdColumnE, technicianIdColumnE, installationTypeColumnE, customerNameColumnE, customerEmailColumnE, customerAddressColumnE, customerIdColumnE, expiryDateColumn);
@@ -201,9 +209,9 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
         controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
         controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
-        controller.getInstallationTypeBox().setValue(InstallationType.valueOf(selectedReport.getInstallationType()));
-        controller.getDeviceUsernameField().setText(selectedReport.getUsername());
-        controller.getDevicePasswordField().setText(selectedReport.getPassword());
+        controller.getInstallationTypeBox().setValue(selectedReport.getInstallationType());
+        /**controller.getDeviceUsernameField().setText(selectedReport.getUsername());
+        controller.getDevicePasswordField().setText(selectedReport.getPassword());*/
         controller.getDatePicker().setValue(selectedReport.getCreatedDate());
         controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
         controller.getDescriptionArea().setText(selectedReport.getDescription());
@@ -280,9 +288,9 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
         controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
         controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
-        controller.getInstallationTypeBox().setValue(InstallationType.valueOf(selectedReport.getInstallationType()));
-        controller.getDeviceUsernameField().setText(selectedReport.getUsername());
-        controller.getDevicePasswordField().setText(selectedReport.getPassword());
+        controller.getInstallationTypeBox().setValue(selectedReport.getInstallationType());
+        /**controller.getDeviceUsernameField().setText(selectedReport.getUsername());
+        controller.getDevicePasswordField().setText(selectedReport.getPassword());*/
         controller.getDatePicker().setValue(selectedReport.getCreatedDate());
         controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
         controller.getDescriptionArea().setText(selectedReport.getDescription());

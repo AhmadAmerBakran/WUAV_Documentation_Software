@@ -1,300 +1,348 @@
 package easv_2nd_term_exam.dal;
 
-import easv_2nd_term_exam.be.Report;
-import easv_2nd_term_exam.dal.connector.DBConnector;
+        import easv_2nd_term_exam.be.*;
+        import easv_2nd_term_exam.dal.connector.DBConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+        import java.sql.*;
+        import java.util.ArrayList;
+        import java.util.List;
 
 public class ReportDAO {
-    private DBConnector dbConnector;
-    private Connection conn;
+    private final DBConnector dbConnector;
 
     public ReportDAO() {
         dbConnector = new DBConnector();
-        try {
-            conn = dbConnector.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not establish connection", e);
-        }
     }
 
     public List<Report> getAllTechnicianReports(int technicianId) {
-        List<Report> reports = new ArrayList<>();
-
-        String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
-                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
-                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+        List<Report> reportList = new ArrayList<>();
+        String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
+                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
+                "it.Name AS installationType, i.Description AS description, " +
+                "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
                 "FROM Customer c " +
-                "JOIN Installation i ON c.ID = i.CustomerId " +
-                "JOIN Employee e ON i.TechnicianId = e.ID " +
-                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
-                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
-                "WHERE i.TechnicianId = ?";
+                "INNER JOIN Installation i ON c.ID = i.CustomerId " +
+                "INNER JOIN Employee e ON e.ID = i.TechnicianId " +
+                "INNER JOIN InstallationType it ON it.ID = i.InstallationTypeId " +
+                "WHERE e.ID = ?";
+        String query2 = "SELECT d.ID, d.Name, dt.Name AS deviceType, d.Username, d.Password " +
+                "FROM Devices d " +
+                "INNER JOIN DeviceType dt ON dt.ID = d.DeviceTypeId " +
+                "WHERE d.InstallationId = ?";
+        String query3 = "SELECT p.ID, p.PictureName, p.ImageData " +
+                "FROM Picture p " +
+                "WHERE p.InstallationId = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, technicianId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
+        try (
+                Connection conn = dbConnector.getConnection();
+                PreparedStatement ps1 = conn.prepareStatement(query1);
+                PreparedStatement ps2 = conn.prepareStatement(query2);
+                PreparedStatement ps3 = conn.prepareStatement(query3)
+        ) {
+            ps1.setInt(1, technicianId);
+            ResultSet rs1 = ps1.executeQuery();
+            while (rs1.next()) {
                 Report report = new Report();
-                report.setCustomerId(rs.getInt("CustomerId"));
-                report.setCustomerName(rs.getString("CustomerName"));
-                report.setCustomerAddress(rs.getString("CustomerAddress"));
-                report.setCustomerEmail(rs.getString("CustomerEmail"));
-                report.setCustomerType(rs.getString("CustomerType"));
-                report.setInstallationId(rs.getInt("InstallationId"));
-                report.setTechnicianId(rs.getInt("TechnicianId"));
-                report.setTechnicianName(rs.getString("TechnicianName"));
-                report.setInstallationType(rs.getString("InstallationType"));
-                report.setPicture1Name(rs.getString("Picture1Name"));
-                report.setPicture1Data(rs.getBytes("Picture1Data"));
-                report.setPicture2Name(rs.getString("Picture2Name"));
-                report.setPicture2Data(rs.getBytes("Picture2Data"));
-                report.setUsername(rs.getString("Username"));
-                report.setPassword(rs.getString("Password"));
-                report.setDescription(rs.getString("Description"));
-                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
-                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
-                reports.add(report);
-            }
+                report.setCustomerId(rs1.getInt("customerId"));
+                report.setCustomerName(rs1.getString("customerName"));
+                report.setCustomerAddress(rs1.getString("customerAddress"));
+                report.setCustomerEmail(rs1.getString("customerEmail"));
+                report.setCustomerType(rs1.getString("customerType"));
+                report.setInstallationId(rs1.getInt("installationId"));
+                report.setTechnicianId(rs1.getInt("technicianId"));
+                report.setTechnicianName(rs1.getString("technicianName"));
+                report.setInstallationType(rs1.getString("installationType"));
+                report.setDescription(rs1.getString("description"));
+                report.setCreatedDate(rs1.getDate("createdDate").toLocalDate());
+                report.setExpiryDate(rs1.getDate("expiryDate").toLocalDate());
 
-        } catch (Exception e) {
+                // Fetch Devices related to the Installation
+                ps2.setInt(1, report.getInstallationId());
+                ResultSet rs2 = ps2.executeQuery();
+                List<Device> devices = new ArrayList<>();
+                while (rs2.next()) {
+                    Device device = new Device();
+                    // Populate device object
+                    devices.add(device);
+                }
+                report.setDevices(devices);
+
+                // Fetch Pictures related to the Installation
+                ps3.setInt(1, report.getInstallationId());
+                ResultSet rs3 = ps3.executeQuery();
+                List<Picture> pictures = new ArrayList<>();
+                while (rs3.next()) {
+                    Picture picture = new Picture();
+                    // Populate picture object
+                    pictures.add(picture);
+                }
+                report.setPictures(pictures);
+
+                // Add report to list
+                reportList.add(report);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return reports;
+        return reportList;
     }
 
+
+
     public List<Report> getAllReports() {
-        List<Report> reports = new ArrayList<>();
-
-        String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
-                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
-                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+        List<Report> reportList = new ArrayList<>();
+        String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
+                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
+                "it.Name AS installationType, i.Description AS description, " +
+                "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
                 "FROM Customer c " +
-                "JOIN Installation i ON c.ID = i.CustomerId " +
-                "JOIN Employee e ON i.TechnicianId = e.ID " +
-                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
-                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 ";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
+                "INNER JOIN Installation i ON c.ID = i.CustomerId " +
+                "INNER JOIN Employee e ON e.ID = i.TechnicianId " +
+                "INNER JOIN InstallationType it ON it.ID = i.InstallationTypeId";
+        String query2 = "SELECT d.ID, d.Name, dt.Name AS deviceType, d.Username, d.Password " +
+                "FROM Devices d " +
+                "INNER JOIN DeviceType dt ON dt.ID = d.DeviceTypeId " +
+                "WHERE d.InstallationId = ?";
+        String query3 = "SELECT p.ID, p.PictureName, p.ImageData " +
+                "FROM Picture p " +
+                "WHERE p.InstallationId = ?";
 
-            while (rs.next()) {
-                Report report = new Report();
-                report.setCustomerId(rs.getInt("CustomerId"));
-                report.setCustomerName(rs.getString("CustomerName"));
-                report.setCustomerAddress(rs.getString("CustomerAddress"));
-                report.setCustomerEmail(rs.getString("CustomerEmail"));
-                report.setCustomerType(rs.getString("CustomerType"));
-                report.setInstallationId(rs.getInt("InstallationId"));
-                report.setTechnicianId(rs.getInt("TechnicianId"));
-                report.setTechnicianName(rs.getString("TechnicianName"));
-                report.setInstallationType(rs.getString("InstallationType"));
-                report.setPicture1Name(rs.getString("Picture1Name"));
-                report.setPicture1Data(rs.getBytes("Picture1Data"));
-                report.setPicture2Name(rs.getString("Picture2Name"));
-                report.setPicture2Data(rs.getBytes("Picture2Data"));
-                report.setUsername(rs.getString("Username"));
-                report.setPassword(rs.getString("Password"));
-                report.setDescription(rs.getString("Description"));
-                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
-                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
-                reports.add(report);
+        try (
+                Connection conn = dbConnector.getConnection();
+                PreparedStatement ps1 = conn.prepareStatement(query1);
+                PreparedStatement ps2 = conn.prepareStatement(query2);
+                PreparedStatement ps3 = conn.prepareStatement(query3)
+        ) {
+            ResultSet rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                Report report = fetchAndSetReportData(rs1, ps2, ps3);
+                reportList.add(report);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return reports;
+        return reportList;
     }
 
     public List<Report> getExpiringReports(int daysBeforeExpiry) {
-        List<Report> reports = new ArrayList<>();
-
-        String sql = "SELECT c.ID as CustomerId, c.Name as CustomerName, c.Address as CustomerAddress, c.Email as CustomerEmail, " +
-                "c.Type as CustomerType, i.ID as InstallationId, i.TechnicianId, e.Name as TechnicianName, i.Username, i.Password, i.Description, " +
-                "i.InstallationType, i.InstallationDate, i.ExpiryDate, p1.PictureName as Picture1Name, p1.ImageData as Picture1Data, p2.PictureName as Picture2Name, p2.ImageData as Picture2Data " +
+        List<Report> reportList = new ArrayList<>();
+        String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
+                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
+                "it.Name AS installationType, i.Description AS description, " +
+                "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
                 "FROM Customer c " +
-                "JOIN Installation i ON c.ID = i.CustomerId " +
-                "JOIN Employee e ON i.TechnicianId = e.ID " +
-                "JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p1 ON i.ID = p1.InstallationId AND p1.rn = 1 " +
-                "LEFT JOIN (SELECT *, ROW_NUMBER() OVER (PARTITION BY InstallationId ORDER BY ID) as rn FROM Picture) p2 ON i.ID = p2.InstallationId AND p2.rn = 2 " +
-                "WHERE i.ExpiryDate BETWEEN GETDATE() AND DATEADD(DAY, ?, GETDATE())";
+                "INNER JOIN Installation i ON c.ID = i.CustomerId " +
+                "INNER JOIN Employee e ON e.ID = i.TechnicianId " +
+                "INNER JOIN InstallationType it ON it.ID = i.InstallationTypeId " +
+                "WHERE DATEDIFF(DAY, GETDATE(), i.ExpiryDate) <= ?";
+        String query2 = "SELECT d.ID, d.Name, dt.Name AS deviceType, d.Username, d.Password " +
+                "FROM Devices d " +
+                "INNER JOIN DeviceType dt ON dt.ID = d.DeviceTypeId " +
+                "WHERE d.InstallationId = ?";
+        String query3 = "SELECT p.ID, p.PictureName, p.ImageData " +
+                "FROM Picture p " +
+                "WHERE p.InstallationId = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, daysBeforeExpiry);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Report report = new Report();
-                report.setCustomerId(rs.getInt("CustomerId"));
-                report.setCustomerName(rs.getString("CustomerName"));
-                report.setCustomerAddress(rs.getString("CustomerAddress"));
-                report.setCustomerEmail(rs.getString("CustomerEmail"));
-                report.setCustomerType(rs.getString("CustomerType"));
-                report.setInstallationId(rs.getInt("InstallationId"));
-                report.setTechnicianId(rs.getInt("TechnicianId"));
-                report.setTechnicianName(rs.getString("TechnicianName"));
-                report.setInstallationType(rs.getString("InstallationType"));
-                report.setPicture1Name(rs.getString("Picture1Name"));
-                report.setPicture1Data(rs.getBytes("Picture1Data"));
-                report.setPicture2Name(rs.getString("Picture2Name"));
-                report.setPicture2Data(rs.getBytes("Picture2Data"));
-                report.setUsername(rs.getString("Username"));
-                report.setPassword(rs.getString("Password"));
-                report.setDescription(rs.getString("Description"));
-                report.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
-                report.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
-                reports.add(report);
+        try (
+                Connection conn = dbConnector.getConnection();
+                PreparedStatement ps1 = conn.prepareStatement(query1);
+                PreparedStatement ps2 = conn.prepareStatement(query2);
+                PreparedStatement ps3 = conn.prepareStatement(query3)
+        ) {
+            ps1.setInt(1, daysBeforeExpiry);
+            ResultSet rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                Report report = fetchAndSetReportData(rs1, ps2, ps3);
+                reportList.add(report);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        return reportList;
+    }
 
-        return reports;
+    private Report fetchAndSetReportData(ResultSet rs1, PreparedStatement ps2, PreparedStatement ps3) throws SQLException {
+        Report report = new Report();
+        report.setCustomerId(rs1.getInt("customerId"));
+        report.setCustomerName(rs1.getString("customerName"));
+        report.setCustomerAddress(rs1.getString("customerAddress"));
+        report.setCustomerEmail(rs1.getString("customerEmail"));
+        report.setCustomerType(rs1.getString("customerType"));
+        report.setInstallationId(rs1.getInt("installationId"));
+        report.setTechnicianId(rs1.getInt("technicianId"));
+        report.setTechnicianName(rs1.getString("technicianName"));
+        report.setInstallationType(rs1.getString("installationType"));
+        report.setDescription(rs1.getString("description"));
+        report.setCreatedDate(rs1.getDate("createdDate").toLocalDate());
+        report.setExpiryDate(rs1.getDate("expiryDate").toLocalDate());
+
+        ps2.setInt(1, report.getInstallationId());
+        ResultSet rs2 = ps2.executeQuery();
+        List<Device> devices = new ArrayList<>();
+        while (rs2.next()) {
+            Device device = new Device();
+            // Populate device object
+            devices.add(device);
+        }
+        report.setDevices(devices);
+
+        ps3.setInt(1, report.getInstallationId());
+        ResultSet rs3 = ps3.executeQuery();
+        List<Picture> pictures = new ArrayList<>();
+        while (rs3.next()) {
+            Picture picture = new Picture();
+            // Populate picture object
+            pictures.add(picture);
+        }
+        report.setPictures(pictures);
+
+        return report;
     }
 
 
-
-
-
     public boolean updateReport(Report report) {
-        System.out.println("updateReport called");
+        Connection connection = null;
+        String sqlDeleteDevices = "DELETE FROM Devices WHERE InstallationId = ?";
+        String sqlInsertDevice = "INSERT INTO Devices (Name, DeviceTypeId, Username, Password, InstallationId) VALUES (?, ?, ?, ?, ?)";
+        String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
+        String sqlInsertPicture = "INSERT INTO Picture (PictureName, ImageData, InstallationId) VALUES (?, ?, ?)";
+        String sqlUpdateInstallation = "UPDATE Installation SET Description = ? WHERE ID = ?";
+
         try {
-            conn.setAutoCommit(false);
+            connection = dbConnector.getConnection();
 
-            // Update Customer
-            String sqlCustomer = "UPDATE Customer " +
-                    "SET Name = ?, Address = ?, Email = ?, Type = ? " +
-                    "WHERE ID = ?";
-            try (PreparedStatement stmtCustomer = conn.prepareStatement(sqlCustomer)) {
-                stmtCustomer.setString(1, report.getCustomerName());
-                stmtCustomer.setString(2, report.getCustomerAddress());
-                stmtCustomer.setString(3, report.getCustomerEmail());
-                stmtCustomer.setString(4, report.getCustomerType());
-                stmtCustomer.setInt(5, report.getCustomerId());
+            try (PreparedStatement statementDeleteDevices = connection.prepareStatement(sqlDeleteDevices);
+                 PreparedStatement statementInsertDevice = connection.prepareStatement(sqlInsertDevice);
+                 PreparedStatement statementDeletePictures = connection.prepareStatement(sqlDeletePictures);
+                 PreparedStatement statementInsertPicture = connection.prepareStatement(sqlInsertPicture);
+                 PreparedStatement statementUpdateInstallation = connection.prepareStatement(sqlUpdateInstallation)) {
 
-                //My debugger XD
-                System.out.println("Executing SQL (Customer): " + sqlCustomer);
-                System.out.println("Values: " + report.getCustomerName() + ", " + report.getCustomerAddress() + ", " + report.getCustomerEmail() + ", " + report.getCustomerType() + ", " + report.getCustomerId());
-                stmtCustomer.executeUpdate();
-            }
+                // Turn off auto-commit
+                connection.setAutoCommit(false);
 
-            // Update Installation
-            String sqlInstallation = "UPDATE Installation " +
-                    "SET TechnicianId = ?, InstallationType = ?, Username = ?, Password = ?, Description = ?, InstallationDate = ?, ExpiryDate = ? " + "WHERE ID = ?";
-            try (PreparedStatement stmtInstallation = conn.prepareStatement(sqlInstallation)) {
-                stmtInstallation.setInt(1, report.getTechnicianId());
-                stmtInstallation.setString(2, report.getInstallationType());
-                stmtInstallation.setString(3, report.getUsername());
-                stmtInstallation.setString(4, report.getPassword());
-                stmtInstallation.setString(5, report.getDescription());
-                stmtInstallation.setDate(6, java.sql.Date.valueOf(report.getCreatedDate()));
-                stmtInstallation.setDate(7, java.sql.Date.valueOf(report.getExpiryDate()));
-                stmtInstallation.setInt(8, report.getInstallationId());
-                //My debugger again XD
-                System.out.println("Executing SQL (Installation): " + sqlInstallation);
-                System.out.println("Values: " + report.getTechnicianId() + ", " + report.getInstallationType() + ", " + report.getUsername() + ", " + report.getPassword() + ", " + report.getDescription() + ", " + report.getCreatedDate() + ", " + report.getExpiryDate() + ", " + report.getInstallationId());
-                stmtInstallation.executeUpdate();
-            }
+                // Delete existing devices and add new ones if new devices are not null
+                if (report.getDevices() != null) {
+                    statementDeleteDevices.setInt(1, report.getInstallationId());
+                    statementDeleteDevices.executeUpdate();
 
-            // Update Picture 1
-            if (report.getPicture1Data() != null) {
-                String sqlPicture1 = "UPDATE Picture " +
-                        "SET PictureName = ?, ImageData = ? " +
-                        "WHERE InstallationId = ? AND PictureName = ?";
-                try (PreparedStatement stmtPicture1 = conn.prepareStatement(sqlPicture1)) {
-                    stmtPicture1.setString(1, report.getPicture1Name());
-                    stmtPicture1.setBytes(2, report.getPicture1Data());
-                    stmtPicture1.setInt(3, report.getInstallationId());
-                    stmtPicture1.setString(4, report.getPicture1Name());
-                    stmtPicture1.executeUpdate();
+                    for (Device device : report.getDevices()) {
+                        statementInsertDevice.setString(1, device.getName());
+                        statementInsertDevice.setInt(2, device.getDeviceTypeId());
+                        statementInsertDevice.setString(3, device.getUsername());
+                        statementInsertDevice.setString(4, device.getPassword());
+                        statementInsertDevice.setInt(5, report.getInstallationId());
+                        statementInsertDevice.addBatch();
+                    }
+                    statementInsertDevice.executeBatch();
                 }
-            }
 
-            // Update Picture 2
-            if (report.getPicture2Data() != null) {
-                String sqlPicture2 = "UPDATE Picture " +
-                        "SET PictureName = ?, ImageData = ? " +
-                        "WHERE InstallationId = ? AND PictureName = ?";
-                try (PreparedStatement stmtPicture2 = conn.prepareStatement(sqlPicture2)) {
-                    stmtPicture2.setString(1, report.getPicture2Name());
-                    stmtPicture2.setBytes(2, report.getPicture2Data());
-                    stmtPicture2.setInt(3, report.getInstallationId());
-                    stmtPicture2.setString(4, report.getPicture2Name());
-                    stmtPicture2.executeUpdate();
+                // Delete existing pictures and add new ones if new pictures are not null
+                if (report.getPictures() != null) {
+                    statementDeletePictures.setInt(1, report.getInstallationId());
+                    statementDeletePictures.executeUpdate();
+
+                    for (Picture picture : report.getPictures()) {
+                        statementInsertPicture.setString(1, picture.getPictureName());
+                        statementInsertPicture.setBytes(2, picture.getImageData()); // Assuming byte array for picture
+                        statementInsertPicture.setInt(3, report.getInstallationId());
+                        statementInsertPicture.addBatch();
+                    }
+                    statementInsertPicture.executeBatch();
                 }
+
+                // Update report
+                statementUpdateInstallation.setString(1, report.getDescription());
+                statementUpdateInstallation.setInt(2, report.getInstallationId());
+                int affectedRows = statementUpdateInstallation.executeUpdate();
+
+                // Commit changes
+                connection.commit();
+
+                return affectedRows == 1;
+
             }
-
-            conn.commit();
-            return true;
-
-        } catch (Exception e) {
-            try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    // Rollback changes on exception
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
             e.printStackTrace();
             return false;
         } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            if (connection != null) {
+                try {
+                    // Close the connection
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
+
+
+
+
 
     public boolean deleteReport(int installationId) {
-        boolean result = false;
+        Connection connection = null;
+        try {
+            connection = dbConnector.getConnection();
 
-        String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
-        String sqlDeleteInstallation = "DELETE FROM Installation WHERE ID = ?";
+            // Turn off auto-commit
+            connection.setAutoCommit(false);
 
-        try (PreparedStatement stmtDeletePictures = conn.prepareStatement(sqlDeletePictures);
-             PreparedStatement stmtDeleteInstallation = conn.prepareStatement(sqlDeleteInstallation)) {
+            // Delete linked devices
+            String sqlDeleteDevices = "DELETE FROM Devices WHERE InstallationId = ?";
+            PreparedStatement statementDeleteDevices = connection.prepareStatement(sqlDeleteDevices);
+            statementDeleteDevices.setInt(1, installationId);
+            statementDeleteDevices.executeUpdate();
 
-            // Start a transaction
-            conn.setAutoCommit(false);
+            // Delete linked pictures
+            String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
+            PreparedStatement statementDeletePictures = connection.prepareStatement(sqlDeletePictures);
+            statementDeletePictures.setInt(1, installationId);
+            statementDeletePictures.executeUpdate();
 
-            // Delete pictures associated with the installation
-            stmtDeletePictures.setInt(1, installationId);
-            stmtDeletePictures.executeUpdate();
+            // Delete installation
+            String sqlDeleteInstallation = "DELETE FROM Installation WHERE ID = ?";
+            PreparedStatement statementDeleteInstallation = connection.prepareStatement(sqlDeleteInstallation);
+            statementDeleteInstallation.setInt(1, installationId);
+            int affectedRows = statementDeleteInstallation.executeUpdate();
 
-            // Delete the installation record
-            stmtDeleteInstallation.setInt(1, installationId);
-            int affectedRows = stmtDeleteInstallation.executeUpdate();
+            // Commit changes
+            connection.commit();
 
-            // Commit the transaction
-            conn.commit();
-
-            // Set auto-commit back to true
-            conn.setAutoCommit(true);
-
-            if (affectedRows > 0) {
-                result = true;
-            }
-
+            return affectedRows == 1;
         } catch (SQLException e) {
-            try {
-                // Rollback the transaction if any error occurred
-                conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
             e.printStackTrace();
+            if (connection != null) {
+                try {
+                    // Rollback changes on exception
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            if (connection != null) {
+                try {
+                    // Turn auto-commit back on
+                    connection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
-
-        return result;
     }
-
 }
+
 

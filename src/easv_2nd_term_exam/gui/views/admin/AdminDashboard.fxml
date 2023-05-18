@@ -12,6 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1300.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.admin.AdminDashboardController">
@@ -36,21 +37,6 @@
                   <Insets bottom="50.0" />
                </VBox.margin>
             </Label>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewUser" prefHeight="40.0" prefWidth="298.0" text="New User">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets left="50.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images_resource/add_96px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
             <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showAllUsers" prefHeight="40.0" prefWidth="298.0" text="All Users">
                <padding>
                   <Insets left="50.0" />
@@ -65,31 +51,43 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin></Button>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showTechnicians" prefHeight="40.0" prefWidth="298.0" text="Technicians">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showCustomers" prefHeight="40.0" prefWidth="298.0" text="All Customers">
                <padding>
                   <Insets left="50.0" />
                </padding>
                <graphic>
                   <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images_resource/workers_96px.png" />
+                        <Image url="@../images_resource/queue_96px.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showProjectManagers" prefHeight="40.0" prefWidth="298.0" text="Project Managers">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showReports" prefHeight="40.0" prefWidth="298.0" text="Show reports">
                <padding>
                   <Insets left="50.0" />
                </padding>
                <graphic>
                   <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images_resource/working_with_papers_96px.png" />
+                        <Image url="@../images_resource/documents_96px.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showSalesPersons" prefHeight="40.0" prefWidth="298.0" text="Sales-Persons">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showInstallationTypes" prefHeight="40.0" prefWidth="298.0" text="Types Of Installations">
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images_resource/Tools_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#showDeviceTypes" prefHeight="40.0" prefWidth="298.0" text="Types Of Devices">
                <padding>
                   <Insets left="50.0" />
                </padding>
@@ -118,145 +116,334 @@
             </Button>
          </children>
       </VBox>
-      <TabPane fx:id="adminTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="231.0" HBox.hgrow="ALWAYS">
-        <tabs>
-          <Tab fx:id="allUsersTab" text="ALL USERS">
-               <content>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <children>
-                        <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" HBox.hgrow="ALWAYS">
+         <children>
+            <TabPane fx:id="usersTabPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="182.0" visible="false">
+               <tabs>
+                  <Tab fx:id="allUsersTab" onSelectionChanged="#showAllUsersTab" text="ALL USERS">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <TableView fx:id="userTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="userIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="userNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
-                                    <TableColumn fx:id="userEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
-                                    <TableColumn fx:id="uUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
-                                    <TableColumn fx:id="userRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
-                                 </columns>
-                              </TableView>
-                              <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                       <buttons>
-                                          <Button mnemonicParsing="false" onAction="#updateUser" prefHeight="35.0" prefWidth="100.0" text="Update" />
-                                          <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="35.0" text="Delete" />
-                                       </buttons>
-                                    </ButtonBar>
+                                    <TableView fx:id="userTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="userIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="userNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="userEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="uUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                          <TableColumn fx:id="userRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="94.0" prefWidth="343.0">
+                                             <buttons>
+                                                <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewUser" prefHeight="35.0" prefWidth="100.0" text="New User" />
+                                                <Button mnemonicParsing="false" onAction="#updateUser" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                                <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="35.0" text="Delete" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
+                              </VBox>
                            </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
-            <Tab fx:id="techTab" text="Technicians">
-               <content>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <children>
-                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="techTab" text="Technicians">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <TableView fx:id="techTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="techIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="techNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
-                                    <TableColumn fx:id="techEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
-                                    <TableColumn fx:id="techUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
-                                    <TableColumn fx:id="techRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
-                                 </columns>
-                              </TableView>
-                              <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                              <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                       <buttons>
-                                          <Button mnemonicParsing="false" onAction="#updateTechnician" prefHeight="35.0" prefWidth="100.0" text="Update" />
-                                          <Button mnemonicParsing="false" onAction="#deleteTechnician" prefHeight="35.0" text="Delete" />
-                                       </buttons>
-                                    </ButtonBar>
+                                    <TableView fx:id="techTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="techIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="techNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="techEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="techUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                          <TableColumn fx:id="techRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                             <buttons>
+                                                <Button mnemonicParsing="false" onAction="#updateTechnician" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                                <Button mnemonicParsing="false" onAction="#deleteTechnician" prefHeight="35.0" text="Delete" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
+                              </VBox>
                            </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
-            <Tab fx:id="managerTab" text="Project Managers">
-               <content>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <children>
-                        <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="managerTab" text="Project Managers">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <TableView fx:id="managerTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="manIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="manNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
-                                    <TableColumn fx:id="manEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
-                                    <TableColumn fx:id="manUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
-                                    <TableColumn fx:id="manRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
-                                 </columns>
-                              </TableView>
-                              <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                       <buttons>
-                                          <Button mnemonicParsing="false" onAction="#updateManager" prefHeight="35.0" prefWidth="100.0" text="Update" />
-                                          <Button mnemonicParsing="false" onAction="#deleteManager" prefHeight="35.0" text="Delete" />
-                                       </buttons>
-                                    </ButtonBar>
+                                    <TableView fx:id="managerTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="manIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="manNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="manEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="manUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                          <TableColumn fx:id="manRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                             <buttons>
+                                                <Button mnemonicParsing="false" onAction="#updateManager" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                                <Button mnemonicParsing="false" onAction="#deleteManager" prefHeight="35.0" text="Delete" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
+                              </VBox>
                            </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
-            <Tab fx:id="salesPersonsTab" text="Sale's-Persons">
-               <content>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <children>
-                        <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="salesPersonsTab" text="Sale's-Persons">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <TableView fx:id="salesPersonTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="salesPersonsIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="salesPersonsNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
-                                    <TableColumn fx:id="salesPersonsEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
-                                    <TableColumn fx:id="salesPersonsUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
-                                    <TableColumn fx:id="salesPersonsRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
-                                 </columns>
-                              </TableView>
-                              <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                       <buttons>
-                                          <Button mnemonicParsing="false" onAction="#updateSalesPerson" prefHeight="35.0" prefWidth="100.0" text="Update" />
-                                          <Button mnemonicParsing="false" onAction="#deleteSalesPersons" prefHeight="35.0" text="Delete" />
-                                       </buttons>
-                                    </ButtonBar>
+                                    <TableView fx:id="salesPersonTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="salesPersonsIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="salesPersonsNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="salesPersonsEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="salesPersonsUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                          <TableColumn fx:id="salesPersonsRoleColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                                             <buttons>
+                                                <Button mnemonicParsing="false" onAction="#updateSalesPerson" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                                <Button mnemonicParsing="false" onAction="#deleteSalesPersons" prefHeight="35.0" text="Delete" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
+                              </VBox>
                            </children>
-                        </VBox>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="deletedUsersTab" onSelectionChanged="#showDeletedUsers" text="Deleted Users">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <TableView fx:id="userTableView1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="userIdColumn1" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="userNameColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="userEmailColumn1" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="uUsernameColumn1" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Username" />
+                                          <TableColumn fx:id="userRoleColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Role" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="94.0" prefWidth="126.0">
+                                             <buttons>
+                                                <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#restoreUser" prefHeight="35.0" prefWidth="116.0" text="Restore User" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <TabPane fx:id="customersPane" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="475.0">
+               <tabs>
+                  <Tab fx:id="allCustomersTab" onSelectionChanged="#showActiveCustomers" text="Customers">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <TableView fx:id="customerTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="customerIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="customerNameColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="customerEmailColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="customerFirstAddressColumn" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="First Address" />
+                                          <TableColumn fx:id="customerSecondAddressColumn" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Second Address" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="100.0" prefWidth="431.0">
+                                             <buttons>
+                                                <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewCustomer" prefHeight="35.0" text="New Customer" />
+                                                <Button mnemonicParsing="false" onAction="#updateCustomer" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                                <Button mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0" text="Delete" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="deletedCustomersTab" onSelectionChanged="#showDeletedCustomers" text="Deleted Customers">
+                     <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <TableView fx:id="customerTableView1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                                       <columns>
+                                          <TableColumn fx:id="customerIdColumn1" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="customerNameColumn2" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="customerEmailColumn2" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="customerFirstAddressColumn1" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="First Address" />
+                                          <TableColumn fx:id="customerSecondAddressColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Second Address" />
+                                       </columns>
+                                    </TableView>
+                                    <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <ButtonBar prefHeight="94.0" prefWidth="160.0">
+                                             <buttons>
+                                                <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#restoreCustomer" prefHeight="35.0" text="Restore Customer" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <AnchorPane fx:id="installationTypesPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false">
+               <children>
+                  <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TableView fx:id="installationTypeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="installationTypeIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="installationTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="900.0" prefWidth="-1.0" text="Installation Type" />
+                           </columns>
+                        </TableView>
+                        <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <ButtonBar prefHeight="100.0" prefWidth="461.0">
+                                 <buttons>
+                                    <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewInstallationType" prefHeight="35.0" text="New Installation" />
+                                    <Button mnemonicParsing="false" onAction="#updateInstallationType" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                    <Button mnemonicParsing="false" onAction="#deleteInstallationType" prefHeight="35.0" text="Delete" />
+                                 </buttons>
+                              </ButtonBar>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
                      </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
-        </tabs>
-      </TabPane>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="deviceTypesPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false">
+               <children>
+                  <VBox maxHeight="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TableView fx:id="deviceTypeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="deviceTypeIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="deviceTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="900.0" prefWidth="-1.0" text="Installation Type" />
+                           </columns>
+                        </TableView>
+                        <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <ButtonBar prefHeight="100.0" prefWidth="393.0">
+                                 <buttons>
+                                    <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#addNewDeviceType" prefHeight="35.0" text="New Device" />
+                                    <Button mnemonicParsing="false" onAction="#updateDeviceType" prefHeight="35.0" prefWidth="100.0" text="Update" />
+                                    <Button mnemonicParsing="false" onAction="#deleteDeviceType" prefHeight="35.0" text="Delete" />
+                                 </buttons>
+                              </ButtonBar>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="reportPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="installationIdColumn" maxWidth="1.7976931348623157E308" minWidth="112.0" prefWidth="-1.0" text="Installation ID" />
+                        <TableColumn fx:id="installationTypeColumn" maxWidth="1.7976931348623157E308" minWidth="132.0" prefWidth="-1.0" text="Installation Type" />
+                        <TableColumn fx:id="customerNameColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Customer Nme" />
+                        <TableColumn fx:id="customerEmailColumn1" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Email" />
+                        <TableColumn fx:id="customerAddressColumn" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Address" />
+                        <TableColumn fx:id="technicianIdColumn" maxWidth="1.7976931348623157E308" minWidth="108.0" prefWidth="-1.0" text="Technician ID" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" layoutX="76.0" layoutY="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#downloadReport" text="Download Report" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="15.0" top="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
    </children>
 </HBox>

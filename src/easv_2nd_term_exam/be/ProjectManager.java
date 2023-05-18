@@ -16,8 +16,8 @@ public class ProjectManager extends User {
      * @param username The username of the project manager
      * @param password The password of the project manager
      */
-    public ProjectManager(int id, String name, String email, String username, String password) {
-        super(id, name, email, username, password);
+    public ProjectManager(int id, String name, String email, String username, String password, boolean isDeleted) {
+        super(id, name, email, username, password, isDeleted);
         setRole(UserRole.PROJECT_MANAGER);
     }
 

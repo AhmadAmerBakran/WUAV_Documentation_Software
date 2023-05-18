@@ -9,6 +9,9 @@ public class ModelManager {
     private PictureModel pictureModel;
 
     private ReportModel reportModel;
+    private DeviceTypeModel deviceTypeModel;
+    private DevicesModel devicesModel;
+    private InstallationTypeModel installationTypeModel;
 
     public ModelManager() throws Exception {
         adminModel = new AdminModel();
@@ -17,6 +20,33 @@ public class ModelManager {
         logInModel = new LogInModel();
         pictureModel = new PictureModel();
         reportModel = new ReportModel();
+        deviceTypeModel = new DeviceTypeModel();
+        devicesModel = new DevicesModel();
+        installationTypeModel = new InstallationTypeModel();
+    }
+
+    public DeviceTypeModel getDeviceTypeModel() {
+        return deviceTypeModel;
+    }
+
+    public void setDeviceTypeModel(DeviceTypeModel deviceTypeModel) {
+        this.deviceTypeModel = deviceTypeModel;
+    }
+
+    public DevicesModel getDevicesModel() {
+        return devicesModel;
+    }
+
+    public void setDevicesModel(DevicesModel devicesModel) {
+        this.devicesModel = devicesModel;
+    }
+
+    public InstallationTypeModel getInstallationTypeModel() {
+        return installationTypeModel;
+    }
+
+    public void setInstallationTypeModel(InstallationTypeModel installationTypeModel) {
+        this.installationTypeModel = installationTypeModel;
     }
 
     public AdminModel getAdminModel() {

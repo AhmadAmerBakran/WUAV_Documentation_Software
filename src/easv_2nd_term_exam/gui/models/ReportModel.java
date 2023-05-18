@@ -5,6 +5,8 @@ import easv_2nd_term_exam.bll.ReportManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.SQLException;
+
 public class ReportModel {
 
     private final ReportManager reportManager;
@@ -19,22 +21,22 @@ public class ReportModel {
         expiringReports = FXCollections.observableArrayList();
     }
 
-    public ObservableList<Report> getAllTechnicianReports(int technicianId) {
+    public ObservableList<Report> getAllTechnicianReports(int technicianId) throws SQLException {
         technicianReports.setAll(reportManager.getAllTechnicianReports(technicianId));
         return technicianReports;
     }
 
-    public ObservableList<Report> getAllReports() {
+    public ObservableList<Report> getAllReports() throws SQLException {
         allReports.setAll(reportManager.getAllReports());
         return allReports;
     }
 
-    public ObservableList<Report> getExpiringReports(int daysBeforeExpiring) {
+    public ObservableList<Report> getExpiringReports(int daysBeforeExpiring) throws SQLException {
         expiringReports.setAll(reportManager.getExpiringReports(daysBeforeExpiring));
         return expiringReports;
     }
 
-    public boolean updateReport(Report report) {
+    public boolean updateReport(Report report) throws SQLException {
         boolean result = reportManager.updateReport(report);
         if (result) {
             int index = allReports.indexOf(report);
@@ -45,7 +47,7 @@ public class ReportModel {
         return result;
     }
 
-    public boolean deleteReport(int installationId) {
+    public boolean deleteReport(int installationId) throws SQLException {
         boolean result = reportManager.deleteReport(installationId);
         if (result) {
             allReports.removeIf(report -> report.getInstallationId() == installationId);

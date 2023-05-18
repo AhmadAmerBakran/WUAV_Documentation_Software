@@ -2,7 +2,6 @@ package easv_2nd_term_exam.gui.controllers.projectManager;
 
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
-import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
@@ -11,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -29,9 +27,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class UpdateReportViewController implements Initializable {
@@ -60,7 +57,7 @@ public class UpdateReportViewController implements Initializable {
     private ImageView drawingView, uploadedImageView;
 
     @FXML
-    private ComboBox<InstallationType> installationTypeBox;
+    private ComboBox<String> installationTypeBox;
 
 
     @FXML
@@ -77,7 +74,7 @@ public class UpdateReportViewController implements Initializable {
         modelManager = modelManagerLoader.getModelManager();
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         customerTypeBox.getItems().setAll(CustomerType.values());
-        installationTypeBox.getItems().setAll(InstallationType.values());
+        installationTypeBox.getItems().setAll(modelManager.getInstallationTypeModel().getInstallationTypeNames());
     }
     @FXML
     void cancelUpdating(ActionEvent event) {
@@ -186,7 +183,7 @@ public class UpdateReportViewController implements Initializable {
         String installationDescription = descriptionArea.getText();
         LocalDate createdDate = datePicker.getValue();
         LocalDate expiryDate = expireDatePicker.getValue();
-        InstallationType installationType = installationTypeBox.getValue();
+        String installationType = installationTypeBox.getValue();
         int customerId = Integer.parseInt(customerIdField.getText());
         int installationId = Integer.parseInt(installationIdField.getText());
        /* Image diagramImage = new Image(diagramPathLabel.getText());
@@ -212,15 +209,19 @@ public class UpdateReportViewController implements Initializable {
         tobeUpdated.setCustomerEmail(customerEmail);
         tobeUpdated.setCustomerType(String.valueOf(type));
         tobeUpdated.setTechnicianId(technicianId);
-        tobeUpdated.setInstallationType(String.valueOf(installationType));
-        tobeUpdated.setUsername(deviceUsername);
-        tobeUpdated.setPassword(devicePassword);
+        tobeUpdated.setInstallationType(installationType);
+        /**tobeUpdated.setUsername(deviceUsername);
+        tobeUpdated.setPassword(devicePassword);*/
         tobeUpdated.setDescription(installationDescription);
         tobeUpdated.setCustomerId(customerId);
         tobeUpdated.setInstallationId(installationId);
         tobeUpdated.setCreatedDate(createdDate);
         tobeUpdated.setExpiryDate(expiryDate);
-        modelManager.getReportModel().updateReport(tobeUpdated);
+        try {
+            modelManager.getReportModel().updateReport(tobeUpdated);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         deleteFilesFromDirectory(createPackagePath());
 
 
@@ -331,11 +332,11 @@ public class UpdateReportViewController implements Initializable {
         this.uploadedImageView = uploadedImageView;
     }
 
-    public ComboBox<InstallationType> getInstallationTypeBox() {
+    public ComboBox<String> getInstallationTypeBox() {
         return installationTypeBox;
     }
 
-    public void setInstallationTypeBox(ComboBox<InstallationType> installationTypeBox) {
+    public void setInstallationTypeBox(ComboBox<String> installationTypeBox) {
         this.installationTypeBox = installationTypeBox;
     }
 

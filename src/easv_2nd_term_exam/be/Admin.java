@@ -16,8 +16,8 @@ public class Admin extends User {
      * @param username The username of the admin
      * @param password The password of the admin
      */
-    public Admin(int id, String name, String email, String username, String password) {
-        super(id, name, email, username, password);
+    public Admin(int id, String name, String email, String username, String password, boolean isDeleted) {
+        super(id, name, email, username, password, isDeleted);
         setRole(UserRole.ADMIN);
     }
 

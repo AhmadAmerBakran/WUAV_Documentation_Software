@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SalesPersonDashboard implements Initializable {
@@ -63,7 +64,11 @@ public class SalesPersonDashboard implements Initializable {
 
     private void setUpReportTableView()
     {
-        reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
+        try {
+            reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         installationIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
         technicianIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("technicianId"));
         installationTypeColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));

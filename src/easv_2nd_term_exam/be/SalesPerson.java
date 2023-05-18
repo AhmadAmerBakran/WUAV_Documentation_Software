@@ -16,8 +16,8 @@ public class SalesPerson extends User {
      * @param username The username of the salesperson
      * @param password The password of the salesperson
      */
-    public SalesPerson(int id, String name, String email, String username, String password) {
-        super(id, name, email, username, password);
+    public SalesPerson(int id, String name, String email, String username, String password, boolean isDeleted) {
+        super(id, name, email, username, password, isDeleted);
         setRole(UserRole.SALES_PERSON);
     }
 
@@ -32,4 +32,6 @@ public class SalesPerson extends User {
         super(name, email, username, password);
         setRole(UserRole.SALES_PERSON);
     }
+
+
 }

@@ -34,8 +34,6 @@ public class PdfReportGenerator {
 
 
 
-
-
     public static void generatePdfReport(Report report, Stage primaryStage) {
         try {
             FileChooser fileChooser = new FileChooser();
@@ -207,8 +205,8 @@ public class PdfReportGenerator {
         document.add(additionalInfoParagraph);
 
         Paragraph deviceInfoParagraph = new Paragraph()
-                .add("Device Username: ").add(new Text(report.getUsername()).setBold())
-                .add("\nDevice Password: ").add(new Text(report.getPassword()).setBold())
+                /**.add("Device Username: ").add(new Text(report.getUsername()).setBold())
+                .add("\nDevice Password: ").add(new Text(report.getPassword()).setBold())*/
                 .setFontSize(12)
                 .setFixedPosition(document.getLeftMargin(), additionalInfoYPosition - 40, UnitValue.createPercentValue(100));
 

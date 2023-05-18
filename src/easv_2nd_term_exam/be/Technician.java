@@ -1,7 +1,3 @@
-/**
- * Represents a technician in the system.
- * This class is a subclass of User with a specific role of UserRole.TECHNICIAN.
- */
 package easv_2nd_term_exam.be;
 
 import easv_2nd_term_exam.enums.UserRole;
@@ -15,9 +11,10 @@ public class Technician extends User {
      * @param email The email address of the technician
      * @param username The username of the technician
      * @param password The password of the technician
+     * @param isDeleted The deletion status of the technician
      */
-    public Technician(int id, String name, String email, String username, String password) {
-        super(id, name, email, username, password);
+    public Technician(int id, String name, String email, String username, String password, boolean isDeleted) {
+        super(id, name, email, username, password, isDeleted);
         setRole(UserRole.TECHNICIAN);
     }
 

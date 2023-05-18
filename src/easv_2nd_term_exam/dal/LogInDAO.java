@@ -17,9 +17,8 @@ public class LogInDAO {
         dbConnector = new DBConnector();
     }
 
-
     public User userLogIn(String username, String password) {
-        String sql = "SELECT * FROM Employee WHERE Username = ?;";
+        String sql = "SELECT * FROM Employee WHERE Username = ? AND IsDeleted = 0;";
 
         try (Connection connection = dbConnector.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
@@ -32,6 +31,7 @@ public class LogInDAO {
                     String name = result.getString("Name");
                     String email = result.getString("Email");
                     String role = result.getString("Role");
+                    boolean isDeleted = result.getBoolean("IsDeleted");
 
                     // Check if the provided password matches the hashed password from the database
                     if (!BCrypt.checkpw(password, hashedPassword)) {
@@ -41,13 +41,13 @@ public class LogInDAO {
                     UserRole userRole = UserRole.valueOf(role);
                     switch (userRole) {
                         case ADMIN:
-                            return new Admin(id, name, email, username, password);
+                            return new Admin(id, name, email, username, password, isDeleted);
                         case TECHNICIAN:
-                            return new Technician(id, name, email, username, password);
+                            return new Technician(id, name, email, username, password, isDeleted);
                         case PROJECT_MANAGER:
-                            return new ProjectManager(id, name, email, username, password);
+                            return new ProjectManager(id, name, email, username, password, isDeleted);
                         case SALES_PERSON:
-                            return new SalesPerson(id, name, email, username, password);
+                            return new SalesPerson(id, name, email, username, password, isDeleted);
                         default:
                             return null;
                     }
@@ -61,6 +61,4 @@ public class LogInDAO {
             throw new RuntimeException("Error while trying to login.", e);
         }
     }
-
-
 }

@@ -8,7 +8,8 @@ import java.util.List;
 public interface ICustomerDAO {
     Customer createCustomer(Customer customer) throws Exception;
     Customer getCustomer(int id) throws Exception;
-    List<Customer> getAllCustomers() throws Exception;
+    List<Customer> getAllActiveCustomers() throws Exception;
+    List<Customer> getDeletedCustomers() throws SQLException;
     void updateCustomer(Customer customer) throws Exception;
     void deleteCustomer(int id) throws Exception;
     Customer findCustomerByEmail(String email) throws SQLException;

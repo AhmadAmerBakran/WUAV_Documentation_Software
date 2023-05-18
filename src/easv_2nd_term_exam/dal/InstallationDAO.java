@@ -3,7 +3,6 @@ package easv_2nd_term_exam.dal;
 import easv_2nd_term_exam.be.Installation;
 import easv_2nd_term_exam.dal.connector.DBConnector;
 import easv_2nd_term_exam.dal.interfaces.IInstallationDAO;
-import easv_2nd_term_exam.enums.InstallationType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,18 +18,16 @@ public class InstallationDAO implements IInstallationDAO {
 
     @Override
     public Installation createInstallation(Installation installation) throws SQLException {
-        String sql = "INSERT INTO Installation (CustomerId, TechnicianId, Username, Password, Description, InstallationType, InstallationDate, ExpiryDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Installation (CustomerId, TechnicianId, Description, InstallationTypeId, InstallationDate, ExpiryDate) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, installation.getCustomerId());
             pstmt.setInt(2, installation.getTechnicianId());
-            pstmt.setString(3, installation.getUsername());
-            pstmt.setString(4, installation.getPassword());
-            pstmt.setString(5, installation.getDescription());
-            pstmt.setString(6, installation.getInstallationType().toString());
-            pstmt.setDate(7, java.sql.Date.valueOf(installation.getCreatedDate()));
-            pstmt.setDate(8, java.sql.Date.valueOf(installation.getExpiryDate()));
+            pstmt.setString(3, installation.getDescription());
+            pstmt.setInt(4, installation.getInstallationTypeId());
+            pstmt.setDate(5, java.sql.Date.valueOf(installation.getCreatedDate()));
+            pstmt.setDate(6, java.sql.Date.valueOf(installation.getExpiryDate()));
 
             pstmt.executeUpdate();
 
@@ -59,10 +56,8 @@ public class InstallationDAO implements IInstallationDAO {
                             rs.getInt("ID"),
                             rs.getInt("CustomerId"),
                             rs.getInt("TechnicianId"),
-                            rs.getString("Username"),
-                            rs.getString("Password"),
                             rs.getString("Description"),
-                            InstallationType.valueOf(rs.getString("InstallationType"))
+                            rs.getInt("InstallationTypeId")
                     );
                     installation.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
                     installation.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
@@ -79,16 +74,13 @@ public class InstallationDAO implements IInstallationDAO {
         try (Connection connection = dbConnector.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
                 Installation installation = new Installation(
                         rs.getInt("ID"),
                         rs.getInt("CustomerId"),
                         rs.getInt("TechnicianId"),
-                        rs.getString("Username"),
-                        rs.getString("Password"),
                         rs.getString("Description"),
-                        InstallationType.valueOf(rs.getString("InstallationType"))
+                        rs.getInt("InstallationTypeId")
                 );
                 installation.setCreatedDate(rs.getDate("InstallationDate").toLocalDate());
                 installation.setExpiryDate(rs.getDate("ExpiryDate").toLocalDate());
@@ -96,27 +88,25 @@ public class InstallationDAO implements IInstallationDAO {
             }
         }
         return installations;
+
     }
 
     @Override
     public void updateInstallation(Installation installation) throws SQLException {
-        String sql = "UPDATE Installation SET CustomerId = ?, TechnicianId = ?, Username = ?, Password = ?, Description = ?, InstallationType = ?, InstallationDate = ?, ExpiryDate = ? WHERE ID = ?";
+        String sql = "UPDATE Installation SET CustomerId = ?, TechnicianId = ?, Description = ?, InstallationTypeId = ?, InstallationDate = ?, ExpiryDate = ? WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, installation.getCustomerId());
             pstmt.setInt(2, installation.getTechnicianId());
-            pstmt.setString(3, installation.getUsername());
-            pstmt.setString(4, installation.getPassword());
-            pstmt.setString(5, installation.getDescription());
-            pstmt.setString(6, installation.getInstallationType().toString());
-            pstmt.setDate(7, java.sql.Date.valueOf(installation.getCreatedDate()));
-            pstmt.setDate(8, java.sql.Date.valueOf(installation.getExpiryDate()));
-            pstmt.setInt(9, installation.getId());
-
+            pstmt.setString(3, installation.getDescription());
+            pstmt.setInt(4, installation.getInstallationTypeId());
+            pstmt.setDate(5, java.sql.Date.valueOf(installation.getCreatedDate()));
+            pstmt.setDate(6, java.sql.Date.valueOf(installation.getExpiryDate()));
+            pstmt.setInt(7, installation.getId());
             pstmt.executeUpdate();
         }
     }
-
+    @Override
     public void deleteInstallation(int id) throws SQLException {
         String sql = "DELETE FROM Installation WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
@@ -126,4 +116,5 @@ public class InstallationDAO implements IInstallationDAO {
             pstmt.executeUpdate();
         }
     }
+
 }

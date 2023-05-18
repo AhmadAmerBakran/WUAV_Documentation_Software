@@ -1,12 +1,11 @@
 package easv_2nd_term_exam.gui.controllers;
 
-import easv_2nd_term_exam.gui.controllers.admin.AddUserController;
-import easv_2nd_term_exam.gui.controllers.admin.AdminDashboardController;
-import easv_2nd_term_exam.gui.controllers.admin.EditUserController;
+import easv_2nd_term_exam.gui.controllers.admin.*;
 import easv_2nd_term_exam.gui.controllers.login.LoginViewController;
 import easv_2nd_term_exam.gui.controllers.projectManager.ProjectManagerDashboardController;
 import easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController;
 import easv_2nd_term_exam.gui.controllers.salesPerson.SalesPersonDashboard;
+import easv_2nd_term_exam.gui.controllers.technician.AddDeviceController;
 import easv_2nd_term_exam.gui.controllers.technician.DrawingLayoutController;
 import easv_2nd_term_exam.gui.controllers.technician.TechnicianDashboardController;
 
@@ -23,6 +22,11 @@ public class ControllerManager {
     private LoginViewController loginViewController;
 
     private AdminDashboardController adminDashboardController;
+    private AddCustomerController addCustomerController;
+    private AddInstallationTypeController addInstallationTypeController;
+    private EditInstallationTypeController editInstallationTypeController;
+    private AddDeviceTypeController addDeviceTypeController;
+    private AddDeviceController addDeviceController;
 
 
 
@@ -34,6 +38,46 @@ public class ControllerManager {
             instance = new ControllerManager();
         }
         return instance;
+    }
+
+    public AddDeviceController getAddDeviceController() {
+        return addDeviceController;
+    }
+
+    public void setAddDeviceController(AddDeviceController addDeviceController) {
+        this.addDeviceController = addDeviceController;
+    }
+
+    public AddDeviceTypeController getAddDeviceTypeController() {
+        return addDeviceTypeController;
+    }
+
+    public void setAddDeviceTypeController(AddDeviceTypeController addDeviceTypeController) {
+        this.addDeviceTypeController = addDeviceTypeController;
+    }
+
+    public EditInstallationTypeController getEditInstallationTypeController() {
+        return editInstallationTypeController;
+    }
+
+    public void setEditInstallationTypeController(EditInstallationTypeController editInstallationTypeController) {
+        this.editInstallationTypeController = editInstallationTypeController;
+    }
+
+    public AddInstallationTypeController getAddInstallationTypeController() {
+        return addInstallationTypeController;
+    }
+
+    public void setAddInstallationTypeController(AddInstallationTypeController addInstallationTypeController) {
+        this.addInstallationTypeController = addInstallationTypeController;
+    }
+
+    public AddCustomerController getAddCustomerController() {
+        return addCustomerController;
+    }
+
+    public void setAddCustomerController(AddCustomerController addCustomerController) {
+        this.addCustomerController = addCustomerController;
     }
 
     public ProjectManagerDashboardController getProjectManagerDashboardController() {

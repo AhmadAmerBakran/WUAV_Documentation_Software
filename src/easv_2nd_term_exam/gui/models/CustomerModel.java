@@ -13,9 +13,10 @@ public class CustomerModel {
     private CustomerManager customerManager;
     private ObservableList<Customer> customers;
 
-    public CustomerModel() {
+    public CustomerModel() throws Exception {
         customerManager = new CustomerManager();
         customers = FXCollections.observableArrayList();
+        customers.setAll(customerManager.getAllActiveCustomers());
     }
 
     public Customer findCustomerByEmail(String email) throws SQLException {
@@ -23,7 +24,7 @@ public class CustomerModel {
     }
 
     public void loadCustomers() throws Exception {
-        List<Customer> customerList = customerManager.getAllCustomers();
+        List<Customer> customerList = customerManager.getAllActiveCustomers();
         customers.setAll(customerList);
     }
 
@@ -50,5 +51,10 @@ public class CustomerModel {
 
     public Customer updateCustomerByEmail(Customer customer) throws Exception {
         return customerManager.updateCustomerByEmail(customer);
+    }
+
+    public List<Customer> getDeletedCustomers() throws SQLException
+    {
+        return FXCollections.observableArrayList(customerManager.getDeletedCustomers());
     }
 }

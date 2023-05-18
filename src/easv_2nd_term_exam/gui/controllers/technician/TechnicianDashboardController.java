@@ -2,12 +2,14 @@ package easv_2nd_term_exam.gui.controllers.technician;
 
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
-import easv_2nd_term_exam.enums.InstallationType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.FileUtility;
 import easv_2nd_term_exam.util.PdfReportGenerator;
-import javafx.embed.swing.SwingFXUtils;
+import easv_2nd_term_exam.util.PictureUtility;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,16 +21,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,81 +39,140 @@ import java.util.ResourceBundle;
 public class TechnicianDashboardController implements Initializable {
 
     @FXML
-    private TextField customerAddressField, customerEmailField, customerNameField, devicePasswordField, deviceUsernameField, techEmailField, techIdField, techNameField;
+    private TextField customerAddressField, customerEmailField, customerNameField,
+            techEmailField, techIdField, techNameField, billingAddressField;
 
     @FXML
-    private TabPane technicianTabPane;
+    private AnchorPane reportPane;
     @FXML
-    private AnchorPane technicianPane;
+    private BorderPane technicianInfoPane, customerInfoPane, installationInfoPane, installationPhotoPane;
     @FXML
     private DatePicker datePicker, expireDatePicker;
     @FXML
-    private ComboBox<InstallationType> installationTypeBox;
+    private ComboBox < InstallationType > installationTypeBox;
     @FXML
-    private ComboBox<CustomerType> customerTypeBox;
+    private ComboBox < CustomerType > customerTypeBox;
     @FXML
     private Label userLabel, diagramPathLabel, uploadedPictureLabel;
     @FXML
     private TextArea descriptionArea;
     @FXML
-    private TableView<Report> reportTableView;
+    private TableView < Report > reportTableView;
     @FXML
-    private TableColumn<Report, Integer> installationIdColumn;
+    private TableColumn < Report, Integer > installationIdColumn;
     @FXML
-    private TableColumn<Report, String> installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn;
+    private TableColumn < Report, String > installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn;
+
+    @FXML
+    private TableView < Customer > customerTableView;
+
+    @FXML
+    private TableColumn < Customer, Integer > customerIdColumnS;
+
+    @FXML
+    private TableColumn < Customer, String > customerNameColumnS, customerEmailColumnS,
+            customerFirstAddressColumnS, customerSecondAddressColumnS;
+
+    @FXML
+    private TableView < DeviceType > deviceTypeTableView;
+
+    @FXML
+    private TableColumn < DeviceType, Integer > deviceTypeIdColumn;
+
+    @FXML
+    private TableColumn < DeviceType, String > deviceTypeNameColumn;
+
+    @FXML
+    private VBox newCustomerVBox;
+    @FXML
+    private HBox billingAddressHBox;
 
     private ModelManager modelManager;
     private Report selectedReport;
-
-
+    private Customer selectedCustomer;
+    private DeviceType selectedDeviceType;
+    private ObservableList <Device> devices;
     private User loggedUser;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        devices = FXCollections.observableArrayList();
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
         try {
             modelManager = new ModelManager();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(e);
         }
-        installationTypeBox.getItems().setAll(InstallationType.values());
+        installationTypeBox.getItems().setAll(modelManager.getInstallationTypeModel().getInstallationTypes());
         customerTypeBox.getItems().setAll(CustomerType.values());
         ControllerManager.getInstance().setTechnicianDashboardController(this);
-        switchTchPane(false, true);
+        handleViewSwitch(true, false, false, false, false);
         loggedUser = ControllerManager.getInstance().getLoginViewController().getLoggedUser();
         datePicker.setValue(LocalDate.now());
         expireDatePicker.setValue(datePicker.getValue().plusMonths(48));
         fillTechnicianData();
+        customerTypeBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == CustomerType.B2B) {
+                billingAddressHBox.setVisible(true);
+            } else {
+                billingAddressHBox.setVisible(false);
+                billingAddressField.clear();
+            }
+        });
         setUpReportTableView();
+        setUpCustomerTableView();
+        setUpDeviceTypeTableView();
+        newCustomerVBox.setVisible(false);
 
     }
 
-    private void switchTchPane(boolean dashboard, boolean startBoard)
-    {
-        technicianPane.setVisible(startBoard);
-        technicianTabPane.setVisible(dashboard);
+    private void handleViewSwitch(boolean reportOverview, boolean technicianInfoOverview, boolean customerInfoOverview, boolean installationInfoOverview, boolean installationPhotoOverview) {
+        reportPane.setVisible(reportOverview);
+        technicianInfoPane.setVisible(technicianInfoOverview);
+        customerInfoPane.setVisible(customerInfoOverview);
+        installationInfoPane.setVisible(installationInfoOverview);
+        installationPhotoPane.setVisible(installationPhotoOverview);
 
     }
 
-    private void fillTechnicianData()
-    {
+    public ObservableList <Device> getDevices() {
+        return devices;
+    }
+
+    private void fillTechnicianData() {
         userLabel.setText(loggedUser.getName());
         techIdField.setText(String.valueOf(loggedUser.getId()));
         techNameField.setText(loggedUser.getName());
         techEmailField.setText(loggedUser.getEmail());
     }
 
-    private void setUpReportTableView()
-    {
-        reportTableView.getItems().setAll(modelManager.getReportModel().getAllTechnicianReports(loggedUser.getId()));
-        installationIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
-        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
-        customerNameColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
-        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
-        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
+    private void setUpReportTableView() {
+        try {
+            reportTableView.getItems().setAll(modelManager.getReportModel().getAllTechnicianReports(loggedUser.getId()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        installationIdColumn.setCellValueFactory(new PropertyValueFactory < Report, Integer > ("installationId"));
+        installationTypeColumn.setCellValueFactory(new PropertyValueFactory < Report, String > ("installationType"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory < Report, String > ("customerName"));
+        customerEmailColumn.setCellValueFactory(new PropertyValueFactory < Report, String > ("customerEmail"));
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory < Report, String > ("customerAddress"));
     }
 
+    private void setUpDeviceTypeTableView() {
+        deviceTypeTableView.getItems().setAll(modelManager.getDeviceTypeModel().getDeviceTypes());
+        deviceTypeIdColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, Integer > ("id"));
+        deviceTypeNameColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, String > ("name"));
 
+    }
 
+    private void setUpCustomerTableView() {
+        customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        customerIdColumnS.setCellValueFactory(new PropertyValueFactory < Customer, Integer > ("id"));
+        customerNameColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("name"));
+        customerEmailColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("email"));
+        customerFirstAddressColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("address"));
+        customerSecondAddressColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("billingAddress"));
+    }
 
     @FXML
     private void handleLogout(ActionEvent event) {
@@ -147,7 +208,6 @@ public class TechnicianDashboardController implements Initializable {
             throw new RuntimeException(e);
         }
 
-
         Scene scene = new Scene(root, 800, 600);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -155,13 +215,14 @@ public class TechnicianDashboardController implements Initializable {
         stage.show();
     }
 
+
+
     @FXML
     private void openFileChooser(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a picture");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp"));
 
-        // Open the FileChooser dialog and get the selected file
         File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
         if (selectedFile != null) {
             String packagePath = createPackagePath();
@@ -170,9 +231,13 @@ public class TechnicianDashboardController implements Initializable {
                 targetDirectory.mkdirs();
             }
 
-            // Check if the file with the same name already exists and avoid overwriting
-            File targetFile = findUniqueOutputFile(packagePath, selectedFile.getName());
-            copySelectedFile(selectedFile, targetFile);
+            File targetFile = FileUtility.findUniqueOutputFile(packagePath, selectedFile.getName());
+            try {
+                FileUtility.copySelectedFile(selectedFile, targetFile);
+                uploadedPictureLabel.setText(targetFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -182,207 +247,99 @@ public class TechnicianDashboardController implements Initializable {
         return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
     }
 
-
-    private File findUniqueOutputFile(String packagePath, String fileName) {
-        int counter = 1;
-        String baseFilename = fileName.substring(0, fileName.lastIndexOf("."));
-        String extension = fileName.substring(fileName.lastIndexOf("."));
-        File outputFile = new File(packagePath + baseFilename + extension);
-
-        while (outputFile.exists()) {
-            outputFile = new File(packagePath + baseFilename + "_" + counter + extension);
-            counter++;
-        }
-        return outputFile;
-    }
-
-    private void copySelectedFile(File selectedFile, File targetFile) {
-        try {
-            Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            // Set the absolute path of the targetFile to the label
-            uploadedPictureLabel.setText(targetFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
     public Label getDiagramPathLabel() {
         return diagramPathLabel;
     }
 
     @FXML
-    private void cancel(ActionEvent event) {
-    }
-
+    private void cancel(ActionEvent event) {}
     @FXML
     private void saveReport(ActionEvent event) {
-        if (validateFields()) {
-            String customerName = customerNameField.getText();
-            String customerEmail = customerEmailField.getText();
-            String customerAddress = customerAddressField.getText();
-            CustomerType type = customerTypeBox.getValue();
-            Customer customer = null;
+        String customerName = customerNameField.getText();
+        String customerEmail = customerEmailField.getText();
+        String customerAddress = customerAddressField.getText();
+        CustomerType type = customerTypeBox.getValue();
+        String customerSecondAddress = billingAddressField.getText();
+        Customer customer = null;
 
-            try {
-                customer = modelManager.getCustomerModel().findCustomerByEmail(customerEmail);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            if (customer == null) {
-                customer = new Customer(customerName, customerAddress, customerEmail, type);
-                try {
-                    modelManager.getCustomerModel().createCustomer(customer);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                customer.setName(customerName);
-                customer.setAddress(customerAddress);
-                customer.setType(type);
-                try {
-                    modelManager.getCustomerModel().updateCustomerByEmail(customer);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            int customerId = customer.getId();
-            int technicianId = Integer.parseInt(techIdField.getText());
-            String deviceUsername = deviceUsernameField.getText();
-            String devicePassword = devicePasswordField.getText();
-            String installationDescription = descriptionArea.getText();
-            InstallationType installationType = installationTypeBox.getValue();
-            Installation newInstallation = new Installation(customerId, technicianId, deviceUsername, devicePassword, installationDescription, installationType);
-            newInstallation.setCreatedDate(datePicker.getValue());
-            newInstallation.setExpiryDate(expireDatePicker.getValue());
-
-            try {
-                modelManager.getInstallationModel().createInstallation(newInstallation);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            int installationId = newInstallation.getId();
-            Image diagramImage = new Image(diagramPathLabel.getText());
-            Image uploadedImage = new Image(uploadedPictureLabel.getText());
-            List<Picture> pictures = new ArrayList<>();
-
-            byte[] diagramImageData = imageToByteArray(diagramImage);
-            byte[] uploadedImageData = imageToByteArray(uploadedImage);
-
-            if (diagramImageData != null) {
-                Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
-                pictures.add(diagramPicture);
-            }
-
-            if (uploadedImageData != null) {
-                Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
-                pictures.add(uploadedPicture);
-            }
-
-            try {
-                modelManager.getPictureModel().createPictures(pictures);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            deleteFilesFromDirectory(createPackagePath());
-        }
-    }
-
-
-    private boolean validateFields() {
-        boolean isValid = true;
-        List<String> emptyFields = new ArrayList<>();
-
-        if (customerNameField.getText().trim().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Customer Name");
-        }
-
-        if (customerEmailField.getText().trim().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Customer Email");
-        }
-
-        if (customerAddressField.getText().trim().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Customer Address");
-        }
-
-        if (customerTypeBox.getValue() == null) {
-            isValid = false;
-            emptyFields.add("Customer Type");
-        }
-
-        if (installationTypeBox.getValue() == null) {
-            isValid = false;
-            emptyFields.add("Installation Type");
-        }
-
-        if (uploadedPictureLabel.getText().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Uploaded Picture");
-        }
-
-        if (diagramPathLabel.getText().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Diagram Path");
-        }
-
-        if (descriptionArea.getText().trim().isEmpty()) {
-            isValid = false;
-            emptyFields.add("Installation Description");
-        }
-
-        if (!isValid) {
-            showAlert(emptyFields);
-            return false;
-        }
-
-        if (deviceUsernameField.getText().trim().isEmpty() || devicePasswordField.getText().trim().isEmpty()) {
-            return DialogUtility.showDeviceFieldsReminder();
-        }
-
-        return true;
-    }
-
-
-
-    private void showAlert(List<String> emptyFields) {
-        String errorMessage = "The following fields are empty:\n";
-        for (String field : emptyFields) {
-            errorMessage += "- " + field + "\n";
-        }
-        DialogUtility.showInformationDialog(errorMessage);
-    }
-
-    private byte[] imageToByteArray(Image image) {
         try {
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            customer = modelManager.getCustomerModel().findCustomerByEmail(customerEmail);
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
         }
+
+        if (customer == null) {
+            customer = new Customer(customerName, customerAddress, customerEmail, type);
+            customer.setBillingAddress(customerSecondAddress);
+            try {
+                modelManager.getCustomerModel().createCustomer(customer);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+        } else {
+            customer.setName(customerName);
+            customer.setAddress(customerAddress);
+            customer.setType(type);
+            customer.setBillingAddress(customerSecondAddress);
+            try {
+                modelManager.getCustomerModel().updateCustomerByEmail(customer);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);;
+            }
+        }
+
+        int customerId = customer.getId();
+        int technicianId = Integer.parseInt(techIdField.getText());
+        String installationDescription = descriptionArea.getText();
+        InstallationType installationType = installationTypeBox.getValue();
+        Installation newInstallation = new Installation(customerId, technicianId, installationDescription, installationType.getId());
+        newInstallation.setCreatedDate(datePicker.getValue());
+        newInstallation.setExpiryDate(expireDatePicker.getValue());
+
+        try {
+            modelManager.getInstallationModel().createInstallation(newInstallation);
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
+
+        int installationId = newInstallation.getId();
+        Image diagramImage = new Image(diagramPathLabel.getText());
+        Image uploadedImage = new Image(uploadedPictureLabel.getText());
+        List < Picture > pictures = new ArrayList < > ();
+
+        byte[] diagramImageData = PictureUtility.imageToByteArray(diagramImage);
+        byte[] uploadedImageData = PictureUtility.imageToByteArray(uploadedImage);
+
+        if (diagramImageData != null) {
+            Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
+            pictures.add(diagramPicture);
+        }
+
+        if (uploadedImageData != null) {
+            Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
+            pictures.add(uploadedPicture);
+        }
+
+        try {
+            modelManager.getPictureModel().createPictures(pictures);
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
+        deleteFilesFromDirectory(createPackagePath());
+        for (Device d: devices) {
+            d.setInstallationId(installationId);
+        }
+        modelManager.getDevicesModel().createDevices(devices);
     }
-
-
     @FXML
-    private void createNewReport(ActionEvent event)
-    {
-        switchTchPane(true, false);
+    private void createNewReport(ActionEvent event) {
+        handleViewSwitch(false, true, false, false, false);
 
     }
 
     @FXML
     private void showMyReports(ActionEvent event) {
-        switchTchPane(false, true);
+        handleViewSwitch(true, false, false, false, false);
     }
 
     private void deleteFilesFromDirectory(String directoryPath) {
@@ -390,7 +347,7 @@ public class TechnicianDashboardController implements Initializable {
         if (directory.exists() && directory.isDirectory()) {
             File[] files = directory.listFiles();
             if (files != null) {
-                for (File file : files) {
+                for (File file: files) {
                     if (!file.isDirectory()) {
                         file.delete();
                     }
@@ -401,7 +358,7 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void removeAllPhotos(ActionEvent event) {
-        deleteFilesFromDirectory(createPackagePath());
+        FileUtility.deleteFilesFromDirectory(createPackagePath());
         diagramPathLabel.setText(null);
         uploadedPictureLabel.setText(null);
     }
@@ -417,5 +374,70 @@ public class TechnicianDashboardController implements Initializable {
         } else {
             DialogUtility.showInformationDialog("Please select a report to download.");
         }
+    }
+
+    @FXML
+    private void selectCustomer(ActionEvent event) {
+
+        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+        newCustomerVBox.setVisible(true);
+        clearCustomerFields();
+        customerAddressField.setText(selectedCustomer.getAddress());
+        customerEmailField.setText(selectedCustomer.getEmail());
+        customerNameField.setText(selectedCustomer.getName());
+        customerTypeBox.setValue(selectedCustomer.getType());
+        billingAddressField.setText(selectedCustomer.getBillingAddress());
+    }
+
+    @FXML
+    private void addNewCustomer(ActionEvent event) {
+        newCustomerVBox.setVisible(true);
+        clearCustomerFields();
+    }
+    private void clearCustomerFields() {
+        customerAddressField.clear();
+        customerEmailField.clear();
+        customerNameField.clear();
+        billingAddressField.clear();
+        customerTypeBox.setValue(null);
+
+    }
+
+    @FXML
+    private void addDeviceToInstallation(ActionEvent event) {
+        selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
+        openNewWindow("/easv_2nd_term_exam/gui/views/technician/AddDeviceView.fxml", "Add Device To Installation");
+        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
+        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+
+    }
+    private void openNewWindow(String fxmlPath, String title) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void nextToCustomerInfo(ActionEvent event) {
+        handleViewSwitch(false, false, true, false, false);
+
+    }
+
+    @FXML
+    private void nextToInstallationInfo(ActionEvent event) {
+        handleViewSwitch(false, false, false, true, false);
+    }
+
+    @FXML
+    private void nextToInstallationPhotos(ActionEvent event) {
+        handleViewSwitch(false, false, false, false, true);
     }
 }

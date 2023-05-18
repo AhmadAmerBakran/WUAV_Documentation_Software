@@ -21,16 +21,21 @@ public class AdminManager {
         return adminDAO.getAllUsers();
     }
 
+    public List<User> getDeletedUsers()
+    {
+        return adminDAO.getDeletedUsers();
+    }
+
     public List<Technician> getAllTechnicians() {
-        return adminDAO.getAllTechnicians();
+        return adminDAO.getAllActiveTechnicians();
     }
 
     public List<ProjectManager> getAllProjectManagers() {
-        return adminDAO.getAllProjectManagers();
+        return adminDAO.getAllActiveProjectManagers();
     }
 
     public List<SalesPerson> getAllSalesPersons() {
-        return adminDAO.getAllSalesPersons();
+        return adminDAO.getAllActiveSalesPersons();
     }
 
     public User addUser(User user) {
@@ -43,5 +48,9 @@ public class AdminManager {
 
     public boolean deleteUser(int id) {
         return adminDAO.deleteUser(id);
+    }
+
+    public boolean restoreUser(int id) {
+        return adminDAO.restoreUser(id);
     }
 }

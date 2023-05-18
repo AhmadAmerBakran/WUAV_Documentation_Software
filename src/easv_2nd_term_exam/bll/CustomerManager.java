@@ -28,8 +28,12 @@ public class CustomerManager {
         return customerDAO.getCustomer(id);
     }
 
-    public List<Customer> getAllCustomers() throws Exception {
-        return customerDAO.getAllCustomers();
+    public List<Customer> getAllActiveCustomers() throws Exception {
+        return customerDAO.getAllActiveCustomers();
+    }
+    public List<Customer> getDeletedCustomers() throws SQLException
+    {
+        return customerDAO.getDeletedCustomers();
     }
 
     public void updateCustomer(Customer customer) throws Exception {
