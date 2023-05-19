@@ -160,6 +160,17 @@ public class CustomerDAO implements ICustomerDAO {
         }
     }
 
+    @Override
+    public void restoreCustomer(int id) throws SQLException {
+        String sql = "UPDATE Customer SET IsDeleted = 0 WHERE ID = ?";
+        try (Connection connection = dbConnector.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+
     private Customer constructCustomer(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("ID");
         String name = resultSet.getString("Name");

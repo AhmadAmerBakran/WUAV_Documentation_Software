@@ -43,6 +43,9 @@ public class CustomerManager {
     public void deleteCustomer(int id) throws Exception {
         customerDAO.deleteCustomer(id);
     }
+    public void restoreCustomer(int id) throws SQLException {
+        customerDAO.restoreCustomer(id);
+    }
 
     public Customer updateCustomerByEmail(Customer customer) throws SQLException {
         return customerDAO.updateCustomerByEmail(customer);

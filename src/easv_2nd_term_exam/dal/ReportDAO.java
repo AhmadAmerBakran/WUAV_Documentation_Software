@@ -209,7 +209,8 @@ public class ReportDAO {
         String sqlInsertDevice = "INSERT INTO Devices (Name, DeviceTypeId, Username, Password, InstallationId) VALUES (?, ?, ?, ?, ?)";
         String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
         String sqlInsertPicture = "INSERT INTO Picture (PictureName, ImageData, InstallationId) VALUES (?, ?, ?)";
-        String sqlUpdateInstallation = "UPDATE Installation SET Description = ? WHERE ID = ?";
+        String sqlUpdateInstallation = "UPDATE Installation SET Description = ?, InstallationDate = ?, ExpiryDate = ?, InstallationTypeId = ? WHERE ID = ?";
+        String sqlUpdateCustomer = "UPDATE Customer SET Name = ?, Email = ?, Address = ?, Type = ?, BillingAddress = ? WHERE ID = ?";
 
         try {
             connection = dbConnector.getConnection();
@@ -218,7 +219,8 @@ public class ReportDAO {
                  PreparedStatement statementInsertDevice = connection.prepareStatement(sqlInsertDevice);
                  PreparedStatement statementDeletePictures = connection.prepareStatement(sqlDeletePictures);
                  PreparedStatement statementInsertPicture = connection.prepareStatement(sqlInsertPicture);
-                 PreparedStatement statementUpdateInstallation = connection.prepareStatement(sqlUpdateInstallation)) {
+                 PreparedStatement statementUpdateInstallation = connection.prepareStatement(sqlUpdateInstallation);
+                 PreparedStatement statementUpdateCustomer = connection.prepareStatement(sqlUpdateCustomer)) {
 
                 // Turn off auto-commit
                 connection.setAutoCommit(false);
@@ -253,9 +255,21 @@ public class ReportDAO {
                     statementInsertPicture.executeBatch();
                 }
 
-                // Update report
+                // Update customer information
+                statementUpdateCustomer.setString(1, report.getCustomerName());
+                statementUpdateCustomer.setString(2, report.getCustomerEmail());
+                statementUpdateCustomer.setString(3, report.getCustomerAddress());
+                statementUpdateCustomer.setString(4, report.getCustomerType());
+                statementUpdateCustomer.setString(5, report.getBillingAddress());
+                statementUpdateCustomer.setInt(6, report.getCustomerId());
+                statementUpdateCustomer.executeUpdate();
+
+                // Update report and dates
                 statementUpdateInstallation.setString(1, report.getDescription());
-                statementUpdateInstallation.setInt(2, report.getInstallationId());
+                statementUpdateInstallation.setDate(2, java.sql.Date.valueOf(report.getCreatedDate()));
+                statementUpdateInstallation.setDate(3, java.sql.Date.valueOf(report.getExpiryDate()));
+                statementUpdateInstallation.setInt(4, report.getInstallationTypeId());
+                statementUpdateInstallation.setInt(5, report.getInstallationId());
                 int affectedRows = statementUpdateInstallation.executeUpdate();
 
                 // Commit changes
@@ -286,6 +300,7 @@ public class ReportDAO {
             }
         }
     }
+
 
 
 

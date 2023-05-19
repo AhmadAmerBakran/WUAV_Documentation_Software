@@ -6,11 +6,12 @@ import java.util.List;
 public class Report {
     private int customerId;
     private String customerName;
-    private String customerAddress;
+    private String customerAddress, billingAddress;
     private String customerEmail;
     private String customerType;
     private int installationId;
     private int technicianId;
+    private int installationTypeId;
     private String technicianName;
     private String installationType;
     private List<Device> devices;
@@ -23,8 +24,24 @@ public class Report {
 
     }
 
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
     public int getCustomerId() {
         return customerId;
+    }
+
+    public int getInstallationTypeId() {
+        return installationTypeId;
+    }
+
+    public void setInstallationTypeId(int installationTypeId) {
+        this.installationTypeId = installationTypeId;
     }
 
     public void setCustomerId(int customerId) {

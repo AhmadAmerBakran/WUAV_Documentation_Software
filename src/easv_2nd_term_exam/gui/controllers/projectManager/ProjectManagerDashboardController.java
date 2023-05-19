@@ -1,5 +1,6 @@
 package easv_2nd_term_exam.gui.controllers.projectManager;
 
+import easv_2nd_term_exam.be.InstallationType;
 import easv_2nd_term_exam.be.Report;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.enums.CustomerType;
@@ -207,16 +208,18 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getTechNameField().setText(selectedReport.getTechnicianName());
         controller.getCustomerNameField().setText(selectedReport.getCustomerName());
         controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
+        controller.getBillingAddressField().setText(selectedReport.getBillingAddress());
         controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
+        controller.getInstallationIdLabel().setText(String.valueOf(selectedReport.getInstallationId()));
         controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
-        controller.getInstallationTypeBox().setValue(selectedReport.getInstallationType());
-        /**controller.getDeviceUsernameField().setText(selectedReport.getUsername());
-        controller.getDevicePasswordField().setText(selectedReport.getPassword());*/
+
+        InstallationType installationType = new InstallationType();
+        installationType.setName(selectedReport.getInstallationType());
+        controller.getInstallationTypeBox().setValue(installationType);
         controller.getDatePicker().setValue(selectedReport.getCreatedDate());
         controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
         controller.getDescriptionArea().setText(selectedReport.getDescription());
         controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
-        controller.getInstallationIdField().setText(String.valueOf(selectedReport.getInstallationId()));
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setTitle("Update Installation/Report");
@@ -268,13 +271,13 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     private void updateExpiredReport(ActionEvent event) {
-        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
         if (selectedReport == null) {
             DialogUtility.showInformationDialog("Please select a report to update.");
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportViewOld.fxml"));
         Parent root = null;
         try {
             root = loader.load();
@@ -288,14 +291,10 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
         controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
         controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
-        controller.getInstallationTypeBox().setValue(selectedReport.getInstallationType());
-        /**controller.getDeviceUsernameField().setText(selectedReport.getUsername());
-        controller.getDevicePasswordField().setText(selectedReport.getPassword());*/
         controller.getDatePicker().setValue(selectedReport.getCreatedDate());
         controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
         controller.getDescriptionArea().setText(selectedReport.getDescription());
         controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
-        controller.getInstallationIdField().setText(String.valueOf(selectedReport.getInstallationId()));
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setTitle("Update Installation/Report");

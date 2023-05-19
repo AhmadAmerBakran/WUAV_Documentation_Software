@@ -430,11 +430,18 @@ public class AdminDashboardController implements Initializable {
         selectedUser = userTableView1.getSelectionModel().getSelectedItem();
         modelManager.getAdminModel().restoreUser(selectedUser.getId());
         setUpDeletedUsersTableView();
-
     }
 
     @FXML
     private void restoreCustomer(ActionEvent event) {
+        selectedCustomer = customerTableView1.getSelectionModel().getSelectedItem();
+        try {
+            modelManager.getCustomerModel().restoreCustomer(selectedCustomer.getId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        setUpDeletedUsersTableView();
+        setUpCustomerTableView();
     }
 
     @FXML

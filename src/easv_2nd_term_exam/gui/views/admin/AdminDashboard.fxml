@@ -338,8 +338,8 @@
                                     <TableView fx:id="customerTableView1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
                                        <columns>
                                           <TableColumn fx:id="customerIdColumn1" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                                          <TableColumn fx:id="customerNameColumn2" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
-                                          <TableColumn fx:id="customerEmailColumn2" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
+                                          <TableColumn fx:id="customerNameColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Name" />
+                                          <TableColumn fx:id="customerEmailColumn1" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="Email" />
                                           <TableColumn fx:id="customerFirstAddressColumn1" maxWidth="1.7976931348623157E308" minWidth="242.0" prefWidth="-1.0" text="First Address" />
                                           <TableColumn fx:id="customerSecondAddressColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Second Address" />
                                        </columns>
@@ -424,12 +424,12 @@
                <children>
                   <TableView fx:id="reportTableView" layoutX="253.0" layoutY="182.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columns>
-                        <TableColumn fx:id="installationIdColumn" maxWidth="1.7976931348623157E308" minWidth="112.0" prefWidth="-1.0" text="Installation ID" />
-                        <TableColumn fx:id="installationTypeColumn" maxWidth="1.7976931348623157E308" minWidth="132.0" prefWidth="-1.0" text="Installation Type" />
-                        <TableColumn fx:id="customerNameColumn1" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Customer Nme" />
-                        <TableColumn fx:id="customerEmailColumn1" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Email" />
-                        <TableColumn fx:id="customerAddressColumn" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Address" />
-                        <TableColumn fx:id="technicianIdColumn" maxWidth="1.7976931348623157E308" minWidth="108.0" prefWidth="-1.0" text="Technician ID" />
+                        <TableColumn fx:id="installationIdColumnR" maxWidth="1.7976931348623157E308" minWidth="112.0" prefWidth="-1.0" text="Installation ID" />
+                        <TableColumn fx:id="installationTypeColumnR" maxWidth="1.7976931348623157E308" minWidth="132.0" prefWidth="-1.0" text="Installation Type" />
+                        <TableColumn fx:id="customerNameColumnR" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Customer Nme" />
+                        <TableColumn fx:id="customerEmailColumnR" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Email" />
+                        <TableColumn fx:id="customerAddressColumnR" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Customer Address" />
+                        <TableColumn fx:id="technicianIdColumnR" maxWidth="1.7976931348623157E308" minWidth="108.0" prefWidth="-1.0" text="Technician ID" />
                      </columns>
                   </TableView>
                   <HBox alignment="CENTER" layoutX="76.0" layoutY="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

@@ -12,11 +12,14 @@ public class CustomerModel {
 
     private CustomerManager customerManager;
     private ObservableList<Customer> customers;
+    private ObservableList<Customer> deletedCustomers;
 
     public CustomerModel() throws Exception {
         customerManager = new CustomerManager();
         customers = FXCollections.observableArrayList();
         customers.setAll(customerManager.getAllActiveCustomers());
+        deletedCustomers = FXCollections.observableArrayList();
+        deletedCustomers.setAll(customerManager.getDeletedCustomers());
     }
 
     public Customer findCustomerByEmail(String email) throws SQLException {
@@ -31,7 +34,10 @@ public class CustomerModel {
     public ObservableList<Customer> getCustomers() {
         return customers;
     }
-
+    public ObservableList<Customer> getDeletedCustomers() throws SQLException
+    {
+        return deletedCustomers;
+    }
     public Customer createCustomer(Customer customer) throws Exception {
         Customer createdCustomer = customerManager.createCustomer(customer);
         customers.add(createdCustomer);
@@ -49,12 +55,13 @@ public class CustomerModel {
         customers.removeIf(c -> c.getId() == id);
     }
 
+    public void restoreCustomer(int id) throws Exception {
+        customerManager.restoreCustomer(id);
+    }
+
     public Customer updateCustomerByEmail(Customer customer) throws Exception {
         return customerManager.updateCustomerByEmail(customer);
     }
 
-    public List<Customer> getDeletedCustomers() throws SQLException
-    {
-        return FXCollections.observableArrayList(customerManager.getDeletedCustomers());
-    }
+
 }
