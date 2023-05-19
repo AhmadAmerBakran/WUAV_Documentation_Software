@@ -17,7 +17,7 @@ public class ReportDAO {
     public List<Report> getAllTechnicianReports(int technicianId) {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
-                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "c.Email AS customerEmail, c.Type AS customerType, c.BillingAddress AS billingAddress, " +
                 "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
                 "it.Name AS installationType, i.Description AS description, " +
                 "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
@@ -47,6 +47,7 @@ public class ReportDAO {
                 report.setCustomerId(rs1.getInt("customerId"));
                 report.setCustomerName(rs1.getString("customerName"));
                 report.setCustomerAddress(rs1.getString("customerAddress"));
+                report.setBillingAddress(rs1.getString("billingAddress"));
                 report.setCustomerEmail(rs1.getString("customerEmail"));
                 report.setCustomerType(rs1.getString("customerType"));
                 report.setInstallationId(rs1.getInt("installationId"));
@@ -93,7 +94,7 @@ public class ReportDAO {
     public List<Report> getAllReports() {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
-                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "c.Email AS customerEmail, c.Type AS customerType, c.BillingAddress AS billingAddress, " +
                 "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
                 "it.Name AS installationType, i.Description AS description, " +
                 "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
@@ -129,7 +130,7 @@ public class ReportDAO {
     public List<Report> getExpiringReports(int daysBeforeExpiry) {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
-                "c.Email AS customerEmail, c.Type AS customerType, " +
+                "c.Email AS customerEmail, c.Type AS customerType, c.BillingAddress AS billingAddress, " +
                 "i.ID AS installationId, e.ID AS technicianId, e.Name AS technicianName, " +
                 "it.Name AS installationType, i.Description AS description, " +
                 "i.InstallationDate AS createdDate, i.ExpiryDate AS expiryDate " +
@@ -169,6 +170,7 @@ public class ReportDAO {
         report.setCustomerId(rs1.getInt("customerId"));
         report.setCustomerName(rs1.getString("customerName"));
         report.setCustomerAddress(rs1.getString("customerAddress"));
+        report.setBillingAddress(rs1.getString("billingAddress"));
         report.setCustomerEmail(rs1.getString("customerEmail"));
         report.setCustomerType(rs1.getString("customerType"));
         report.setInstallationId(rs1.getInt("installationId"));
@@ -178,6 +180,7 @@ public class ReportDAO {
         report.setDescription(rs1.getString("description"));
         report.setCreatedDate(rs1.getDate("createdDate").toLocalDate());
         report.setExpiryDate(rs1.getDate("expiryDate").toLocalDate());
+
 
         ps2.setInt(1, report.getInstallationId());
         ResultSet rs2 = ps2.executeQuery();
