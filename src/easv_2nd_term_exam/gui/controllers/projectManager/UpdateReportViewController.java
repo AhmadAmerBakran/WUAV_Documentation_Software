@@ -44,6 +44,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class UpdateReportViewController implements Initializable {
 
@@ -314,9 +315,6 @@ public class UpdateReportViewController implements Initializable {
     public TextArea getDescriptionArea() {
         return descriptionArea;
     }
-    public ImageView getInstallationPictureView() {
-        return installationPictureView;
-    }
 
     public ComboBox < InstallationType > getInstallationTypeBox() {
         return installationTypeBox;
@@ -341,14 +339,22 @@ public class UpdateReportViewController implements Initializable {
     private void deleteCurrentImage(ActionEvent event) {
         try {
             modelManager.getPictureModel().deletePicture(pictures.get(currentIndex).getId());
+            // Update the pictures and images lists immediately after the deletion
+            pictures = modelManager.getPictureModel().getPicturesByInstallationId(Integer.parseInt(installationIdLabel.getText()));
+            images = pictures.stream().map(picture -> new Image(new ByteArrayInputStream(picture.getImageData()))).collect(Collectors.toList());
+
+            if (pictures.isEmpty()) {
+                currentIndex = -1;
+            } else if (currentIndex >= pictures.size()) {
+                currentIndex--;
+            }
+            // Ensure there is an image to display
+            if (currentIndex >= 0) {
+                displayImage(currentIndex);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        if (currentIndex >= images.size()) {
-            currentIndex--;
-        }
-
-        showInstallationImages();
     }
 
     @FXML
@@ -380,6 +386,10 @@ public class UpdateReportViewController implements Initializable {
 
         try {
             modelManager.getPictureModel().createPictures(newPictures);
+            pictures = modelManager.getPictureModel().getPicturesByInstallationId(Integer.parseInt(installationIdLabel.getText()));
+            images = pictures.stream().map(picture -> new Image(new ByteArrayInputStream(picture.getImageData()))).collect(Collectors.toList());
+            currentIndex = images.size() - 1;
+            displayImage(currentIndex);
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
