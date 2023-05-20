@@ -7,6 +7,8 @@ import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
 import easv_2nd_term_exam.util.FileUtility;
+import easv_2nd_term_exam.util.PictureUtility;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,18 +27,21 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,27 +54,25 @@ public class UpdateReportViewController implements Initializable {
     private HBox billingAddressHBox;
 
     @FXML
-    private TableColumn<Customer, String> customerEmailColumnS;
-
-
-    @FXML
-    private TableColumn<Customer, String> customerFirstAddressColumnS;
+    private TableColumn < Customer, String > customerEmailColumnS;
 
     @FXML
-    private TableColumn<Customer, Integer> customerIdColumnS;
-
-
-    @FXML
-    private TableColumn<Customer, String> customerNameColumnS;
+    private TableColumn < Customer, String > customerFirstAddressColumnS;
 
     @FXML
-    private TableColumn<Customer, String> customerSecondAddressColumnS;
+    private TableColumn < Customer, Integer > customerIdColumnS;
 
     @FXML
-    private TableView<Customer> customerTableView;
+    private TableColumn < Customer, String > customerNameColumnS;
 
     @FXML
-    private ComboBox<CustomerType> customerTypeBox;
+    private TableColumn < Customer, String > customerSecondAddressColumnS;
+
+    @FXML
+    private TableView < Customer > customerTableView;
+
+    @FXML
+    private ComboBox < CustomerType > customerTypeBox;
 
     @FXML
     private DatePicker datePicker;
@@ -78,19 +81,16 @@ public class UpdateReportViewController implements Initializable {
     private TextArea descriptionArea;
 
     @FXML
-    private TableColumn<DeviceType, Integer> deviceTypeIdColumn;
+    private TableColumn < DeviceType, Integer > deviceTypeIdColumn;
 
     @FXML
-    private TableColumn<DeviceType, String> deviceTypeNameColumn;
+    private TableColumn < DeviceType, String > deviceTypeNameColumn;
 
     @FXML
-    private TableView<DeviceType> deviceTypeTableView;
+    private TableView < DeviceType > deviceTypeTableView;
 
     @FXML
-    private Label diagramPathLabel;
-
-    @FXML
-    private ImageView drawingView;
+    private ImageView installationPictureView;
 
     @FXML
     private DatePicker expireDatePicker;
@@ -98,9 +98,8 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     private BorderPane techPane, customerInfoPane, installationInfoPane, installationPhotoPane;
 
-
     @FXML
-    private ComboBox<InstallationType> installationTypeBox;
+    private ComboBox < InstallationType > installationTypeBox;
 
     @FXML
     private VBox newCustomerVBox;
@@ -111,29 +110,29 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     private Label installationIdLabel;
 
-
     @FXML
     private TextField techIdField;
 
     @FXML
     private TextField techNameField;
 
-
     @FXML
-    private Label uploadedPictureLabel;
+    private AnchorPane picturesPane;
 
     private DeviceType selectedDeviceType;
 
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
     private User loggedUser;
-    private ObservableList<Device> devices;
-
-
-
+    private ObservableList < Device > devices;
+    private List < Image > images = new ArrayList < > ();
+    List < Picture > pictures = new ArrayList < > ();
+    private int currentIndex = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        installationPictureView.fitWidthProperty().bind(picturesPane.widthProperty());
+        installationPictureView.fitHeightProperty().bind(picturesPane.heightProperty().subtract(100));
         devices = FXCollections.observableArrayList();
         ControllerManager.getInstance().setUpdateReportViewController(this);
         modelManagerLoader = ModelManagerLoader.getInstance();
@@ -155,7 +154,7 @@ public class UpdateReportViewController implements Initializable {
     }
     private void setUpDeviceTypeTableView() {
         deviceTypeTableView.getItems().setAll(modelManager.getDeviceTypeModel().getDeviceTypes());
-        deviceTypeIdColumn.setCellValueFactory(new PropertyValueFactory<DeviceType, Integer >("id"));
+        deviceTypeIdColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, Integer > ("id"));
         deviceTypeNameColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, String > ("name"));
 
     }
@@ -169,7 +168,7 @@ public class UpdateReportViewController implements Initializable {
     }
     private void setUpCustomerTableView() {
         customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
-        customerIdColumnS.setCellValueFactory(new PropertyValueFactory <Customer, Integer > ("id"));
+        customerIdColumnS.setCellValueFactory(new PropertyValueFactory < Customer, Integer > ("id"));
         customerNameColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("name"));
         customerEmailColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("email"));
         customerFirstAddressColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("address"));
@@ -195,7 +194,8 @@ public class UpdateReportViewController implements Initializable {
         selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
         openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateDevicesView.fxml", "Add Device To Installation");
         ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
-        ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeNameField().setText(selectedDeviceType.getName());}
+        ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+    }
 
     public DatePicker getExpireDatePicker() {
         return expireDatePicker;
@@ -221,58 +221,13 @@ public class UpdateReportViewController implements Initializable {
     void nextToInstallationInfo(ActionEvent event) {
         handleViewSwitch(false, false, true, false);
 
-
     }
 
     @FXML
     void nextToInstallationPhotos(ActionEvent event) {
         handleViewSwitch(false, false, false, true);
+        showInstallationImages();
 
-    }
-
-    @FXML
-    void openDrawingLayout(ActionEvent event) {
-
-    }
-
-    @FXML
-    private void openFileChooser(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a picture");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp"));
-
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) event.getSource()).getScene().getWindow());
-
-        if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
-                String packagePath = createPackagePath();
-                File targetDirectory = new File(packagePath);
-                if (!targetDirectory.exists()) {
-                    targetDirectory.mkdirs();
-                }
-
-                File targetFile = FileUtility.findUniqueOutputFile(packagePath, selectedFile.getName());
-                try {
-                    FileUtility.copySelectedFile(selectedFile, targetFile);
-                    // uploadedPictureLabel.setText(targetFile.getAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    @FXML
-    void removeAllPhotos(ActionEvent event) {
-        FileUtility.deleteFilesFromDirectory(createPackagePath());
-        diagramPathLabel.setText(null);
-        uploadedPictureLabel.setText(null);
-
-    }
-    private String createPackagePath() {
-        String projectPath = System.getProperty("user.dir") + File.separator + "src";
-        String sanitizedUserName = loggedUser.getName().replace(" ", "_");
-        return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
     }
 
     @FXML
@@ -321,7 +276,6 @@ public class UpdateReportViewController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
-
     }
 
     @FXML
@@ -331,10 +285,6 @@ public class UpdateReportViewController implements Initializable {
 
     public TextField getCustomerNameField() {
         return customerNameField;
-    }
-
-    public void setCustomerNameField(TextField customerNameField) {
-        this.customerNameField = customerNameField;
     }
 
     public TextField getCustomerAddressField() {
@@ -349,106 +299,132 @@ public class UpdateReportViewController implements Initializable {
         return billingAddressField;
     }
 
-    public void setBillingAddressField(TextField billingAddressField) {
-        this.billingAddressField = billingAddressField;
-    }
-    /*public TextField getInstallationIdField() {
-        return installationIdField;
-    }*/
-
-    public void setCustomerAddressField(TextField customerAddressField) {
-        this.customerAddressField = customerAddressField;
-    }
-
     public TextField getCustomerEmailField() {
         return customerEmailField;
     }
 
-    public void setCustomerEmailField(TextField customerEmailField) {
-        this.customerEmailField = customerEmailField;
-    }
-
-    public ComboBox<CustomerType> getCustomerTypeBox() {
+    public ComboBox < CustomerType > getCustomerTypeBox() {
         return customerTypeBox;
-    }
-
-    public void setCustomerTypeBox(ComboBox<CustomerType> customerTypeBox) {
-        this.customerTypeBox = customerTypeBox;
     }
 
     public DatePicker getDatePicker() {
         return datePicker;
     }
 
-    public void setDatePicker(DatePicker datePicker) {
-        this.datePicker = datePicker;
-    }
-
     public TextArea getDescriptionArea() {
         return descriptionArea;
     }
-
-    public void setDescriptionArea(TextArea descriptionArea) {
-        this.descriptionArea = descriptionArea;
+    public ImageView getInstallationPictureView() {
+        return installationPictureView;
     }
 
-    public Label getDiagramPathLabel() {
-        return diagramPathLabel;
-    }
-
-    public void setDiagramPathLabel(Label diagramPathLabel) {
-        this.diagramPathLabel = diagramPathLabel;
-    }
-
-    public Label getUploadedPictureLabel() {
-        return uploadedPictureLabel;
-    }
-
-    public void setUploadedPictureLabel(Label uploadedPictureLabel) {
-        this.uploadedPictureLabel = uploadedPictureLabel;
-    }
-
-    public ImageView getDrawingView() {
-        return drawingView;
-    }
-
-    public void setDrawingView(ImageView drawingView) {
-        this.drawingView = drawingView;
-    }
-
-
-    public ComboBox<InstallationType> getInstallationTypeBox() {
+    public ComboBox < InstallationType > getInstallationTypeBox() {
         return installationTypeBox;
-    }
-
-    public void setInstallationTypeBox(ComboBox<InstallationType> installationTypeBox) {
-        this.installationTypeBox = installationTypeBox;
     }
 
     public TextField getTechNameField() {
         return techNameField;
     }
 
-    public void setTechNameField(TextField techNameField) {
-        this.techNameField = techNameField;
-    }
-
     public TextField getTechIdField() {
         return techIdField;
-    }
-
-    public void setTechIdField(TextField techIdField) {
-        this.techIdField = techIdField;
     }
 
     public Label getInstallationIdLabel() {
         return installationIdLabel;
     }
-    public ObservableList <Device> getDevices() {
+    public ObservableList < Device > getDevices() {
         return devices;
     }
 
-    public void setInstallationIdLabel(Label installationIdLabel) {
-        this.installationIdLabel = installationIdLabel;
+    @FXML
+    private void deleteCurrentImage(ActionEvent event) {
+        try {
+            modelManager.getPictureModel().deletePicture(pictures.get(currentIndex).getId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (currentIndex >= images.size()) {
+            currentIndex--;
+        }
+
+        showInstallationImages();
+    }
+
+    @FXML
+    private void uploadMoreImages(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a picture");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp"));
+
+        List < File > selectedFiles = fileChooser.showOpenMultipleDialog(((Node) event.getSource()).getScene().getWindow());
+        List < Picture > newPictures = new ArrayList < > ();
+
+        if (selectedFiles != null) {
+            for (File selectedFile: selectedFiles) {
+                try {
+                    Image image = new Image(new FileInputStream(selectedFile));
+                    byte[] imageData = PictureUtility.imageToByteArray(image);
+
+                    if (imageData != null) {
+                        Picture picture = new Picture(Integer.parseInt(installationIdLabel.getText()), "Uploaded Image", imageData);
+                        newPictures.add(picture);
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            showInstallationImages();
+        }
+
+        try {
+            modelManager.getPictureModel().createPictures(newPictures);
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
+    }
+
+    private void showInstallationImages() {
+        pictures.clear();
+        images.clear();
+        try {
+            pictures = modelManager.getPictureModel().getPicturesByInstallationId(Integer.parseInt(installationIdLabel.getText()));
+            for (Picture picture: pictures) {
+                images.add(new Image(new ByteArrayInputStream(picture.getImageData())));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        displayImage(currentIndex);
+    }
+    @FXML
+    private void previousImage() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            animateImageChange();
+        }
+    }
+
+    @FXML
+    private void nextImage() {
+        if (currentIndex < images.size() - 1) {
+            currentIndex++;
+            animateImageChange();
+        }
+    }
+
+    private void displayImage(int index) {
+        installationPictureView.setImage(images.get(index));
+    }
+
+    private void animateImageChange() {
+        FadeTransition ft = new FadeTransition(Duration.millis(500), installationPictureView);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.3);
+        ft.setCycleCount(2);
+        ft.setAutoReverse(true);
+        ft.setOnFinished(event -> displayImage(currentIndex));
+        ft.play();
     }
 }
