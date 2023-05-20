@@ -2,7 +2,6 @@ package easv_2nd_term_exam.gui.controllers.technician;
 
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,9 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,11 +77,8 @@ public class DrawingLayoutController implements Initializable {
     @FXML
     private void saveLayout(ActionEvent event) {
         WritableImage image = captureCanvasPaneSnapshot();
-        String packagePath = createPackagePath();
-        File outputFile = findUniqueOutputFile(packagePath);
-        saveImageToFile(image, outputFile);
+        ControllerManager.getInstance().getTechnicianDashboardController().addImage(image);
 
-        updateTechnicianDashboardImagePath(outputFile);
         closeDrawingLayoutWindow();
     }
 
@@ -93,42 +86,6 @@ public class DrawingLayoutController implements Initializable {
         return canvasPane.snapshot(new SnapshotParameters(), null);
     }
 
-    private String createPackagePath() {
-        String projectPath = System.getProperty("user.dir") + File.separator + "src";
-        String sanitizedUserName = loggedUser.getName().replace(" ", "_");
-        return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
-    }
-
-    private File findUniqueOutputFile(String packagePath) {
-        File packageDir = new File(packagePath);
-        if (!packageDir.exists()) {
-            packageDir.mkdirs();
-        }
-
-        String baseFilename = "drawing_output";
-        String extension = ".png";
-        int counter = 1;
-        File outputFile = new File(packagePath + baseFilename + extension);
-
-        while (outputFile.exists()) {
-            outputFile = new File(packagePath + baseFilename + "_" + counter + extension);
-            counter++;
-        }
-        return outputFile;
-    }
-
-    private void saveImageToFile(WritableImage image, File outputFile) {
-        try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateTechnicianDashboardImagePath(File outputFile) {
-        // Set the absolute path of the outputFile to the label
-        ControllerManager.getInstance().getTechnicianDashboardController().getDiagramPathLabel().setText(outputFile.getAbsolutePath());
-    }
 
 
     private void closeDrawingLayoutWindow() {

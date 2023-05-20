@@ -196,6 +196,7 @@ public class UpdateReportViewController implements Initializable {
         openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateDevicesView.fxml", "Add Device To Installation");
         ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
         ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeNameField().setText(selectedDeviceType.getName());}
+
     public DatePicker getExpireDatePicker() {
         return expireDatePicker;
     }

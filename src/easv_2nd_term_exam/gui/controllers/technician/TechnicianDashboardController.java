@@ -94,6 +94,7 @@ public class TechnicianDashboardController implements Initializable {
     private Customer selectedCustomer;
     private DeviceType selectedDeviceType;
     private ObservableList <Device> devices;
+    private List<Image> images = new ArrayList<>();
     private User loggedUser;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -217,6 +218,9 @@ public class TechnicianDashboardController implements Initializable {
         stage.show();
     }
 
+    public void addImage(Image image) {
+        this.images.add(image);
+    }
 
 
     @FXML
@@ -229,22 +233,16 @@ public class TechnicianDashboardController implements Initializable {
 
         if (selectedFiles != null) {
             for (File selectedFile : selectedFiles) {
-                String packagePath = createPackagePath();
-                File targetDirectory = new File(packagePath);
-                if (!targetDirectory.exists()) {
-                    targetDirectory.mkdirs();
-                }
-
-                File targetFile = FileUtility.findUniqueOutputFile(packagePath, selectedFile.getName());
                 try {
-                    FileUtility.copySelectedFile(selectedFile, targetFile);
-                    // uploadedPictureLabel.setText(targetFile.getAbsolutePath());
-                } catch (IOException e) {
+                    Image image = new Image(new FileInputStream(selectedFile));
+                    images.add(image);
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
 
 
     private String createPackagePath() {
@@ -309,19 +307,13 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         int installationId = newInstallation.getId();
-        File[] files = new File(createPackagePath()).listFiles();
         List<Picture> pictures = new ArrayList<>();
-        if(files != null) {
-            for(File file: files) {
-                try {
-                    Image image = new Image(new FileInputStream(file));
-                    byte[] imageData = PictureUtility.imageToByteArray(image);
-                    if (imageData != null) {
-                        Picture picture = new Picture(installationId, "Uploaded Image", imageData);
-                        pictures.add(picture);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+        if(!images.isEmpty()) {
+            for(Image image: images) {
+                byte[] imageData = PictureUtility.imageToByteArray(image);
+                if (imageData != null) {
+                    Picture picture = new Picture(installationId, "Uploaded Image", imageData);
+                    pictures.add(picture);
                 }
             }
         }
@@ -331,6 +323,7 @@ public class TechnicianDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
+
 
         deleteFilesFromDirectory(createPackagePath());
 
