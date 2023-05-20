@@ -11,6 +11,7 @@ import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.AreaBreakType;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
+import easv_2nd_term_exam.be.Device;
 import easv_2nd_term_exam.be.Picture;
 import easv_2nd_term_exam.be.Report;
 import easv_2nd_term_exam.gui.models.ModelManager;
@@ -48,22 +49,20 @@ public class PdfReportGenerator {
                     PdfDocument pdfDocument = new PdfDocument(writer);
                     Document document = new Document(pdfDocument, PageSize.A4);
 
-                    // Load logo image
                     ImageData logoImageData = ImageDataFactory.create(PdfReportGenerator.class.getResource("/easv_2nd_term_exam/gui/views/images_resource/Logo_WUAV.png").toString());
                     com.itextpdf.layout.element.Image logoImage = new com.itextpdf.layout.element.Image(logoImageData).scaleToFit(100, 100);
 
-                    // Page 1
                     generatePage1(document, report, logoImage);
 
-                    // Page 2
                     document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     generatePage2(document, report, logoImage);
 
-                    // Page 3
+                    document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    generateDevicesPage(document, report);
+
                     document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     generatePage3(document, report, logoImage);
 
-                    // Close document
                     document.close();
                 } catch (IOException e) {
                     showExceptionDialog(e);
@@ -78,59 +77,64 @@ public class PdfReportGenerator {
     private static void generatePage1(Document document, Report report, com.itextpdf.layout.element.Image logoImage) {
         addPageHeader(document, report, logoImage);
         addPage1Content(document, report);
-        addPageFooter(document, report);
     }
-
 
     private static void generatePage2(Document document, Report report, com.itextpdf.layout.element.Image logoImage) throws Exception {
         List<Picture> pictures = modelManager.getPictureModel().getPicturesByInstallationId(report.getInstallationId());
-        addPageHeader(document, report, logoImage);
         addPage2Content(document, report, pictures);
+    }
+
+    private static void generateDevicesPage(Document document, Report report) {
+        Paragraph installedDevicesTitle = new Paragraph("Installed Devices:")
+                .setFontSize(14)
+                .setBold()
+                .setTextAlignment(TextAlignment.LEFT);
+        document.add(installedDevicesTitle);
+
+        addDevicesTable(document, report);
     }
 
 
 
     private static void addPageHeader(Document document, Report report, com.itextpdf.layout.element.Image logoImage) {
         Table headerTable = new Table(2).useAllAvailableWidth();
-        headerTable.addCell(new Cell().add(logoImage).setBorder(Border.NO_BORDER));
 
-        StringBuilder headerInfo = new StringBuilder();
-        headerInfo.append("Report ID: ").append(report.getInstallationId()).append("\n");
-        headerInfo.append("Customer ID: ").append(report.getCustomerId()).append("\n");
-        headerInfo.append("Created Date: ").append(report.getCreatedDate()).append("\n");
-        headerInfo.append("Expiry Date: ").append(report.getExpiryDate());
+        StringBuilder companyInfo = new StringBuilder();
+        companyInfo.append("WUAV A/S\n");
+        companyInfo.append("info@wuav.dk\n");
+        companyInfo.append("Murervej 7,\n");
+        companyInfo.append(" 6710 Esbjerg V\n");
+        companyInfo.append("CVR: 26855667\n\n");
 
-        headerTable.addCell(new Cell()
-                .add(new Paragraph(headerInfo.toString()).setTextAlignment(TextAlignment.RIGHT))
-                .setBorder(Border.NO_BORDER));
+        Cell logoAndCompanyInfoCell = new Cell();
+        logoAndCompanyInfoCell.add(logoImage);
+        logoAndCompanyInfoCell.add(new Paragraph(companyInfo.toString()));
+        logoAndCompanyInfoCell.setBorder(Border.NO_BORDER);
+
+        headerTable.addCell(logoAndCompanyInfoCell);
+
+        StringBuilder reportInfo = new StringBuilder();
+        reportInfo.append("Report ID: ").append(report.getInstallationId()).append("\n");
+        reportInfo.append("Created Date: ").append(report.getCreatedDate()).append("\n");
+        reportInfo.append("Expiry Date: ").append(report.getExpiryDate()).append("\n");
+        reportInfo.append("Customer ID: ").append(report.getCustomerId()).append("\n");
+        reportInfo.append("Customer Name: ").append(report.getCustomerName()).append("\n");
+        reportInfo.append("Customer Email: ").append(report.getCustomerEmail()).append("\n");
+        reportInfo.append("Customer Address: ").append(report.getCustomerAddress());
+
+
+
+        Cell reportInfoCell = new Cell()
+                .add(new Paragraph(reportInfo.toString()).setTextAlignment(TextAlignment.RIGHT))
+                .setBorder(Border.NO_BORDER);
+
+        headerTable.addCell(reportInfoCell);
 
         document.add(headerTable);
     }
 
-    private static void addPageFooter(Document document, Report report) {
-        Table footerTable = new Table(2).useAllAvailableWidth();
 
-        StringBuilder footerLeft = new StringBuilder();
-        footerLeft.append("WUAV A/S\n");
-        footerLeft.append("info@wuav.dk\n");
-        footerLeft.append("Murervej 7, 6710 Esbjerg V\n");
-        footerLeft.append("CVR: 26855667");
 
-        footerTable.addCell(new Cell()
-                .add(new Paragraph(footerLeft.toString()))
-                .setBorder(Border.NO_BORDER));
-
-        StringBuilder footerRight = new StringBuilder();
-        footerRight.append("Customer Name: ").append(report.getCustomerName()).append("\n");
-        footerRight.append("Customer Email: ").append(report.getCustomerEmail()).append("\n");
-        footerRight.append("Customer Address: ").append(report.getCustomerAddress());
-
-        footerTable.addCell(new Cell()
-                .add(new Paragraph(footerRight.toString()).setTextAlignment(TextAlignment.RIGHT))
-                .setBorder(Border.NO_BORDER));
-
-        document.add(footerTable);
-    }
 
 
     private static void addPage2Content(Document document, Report report, List<Picture> pictures) {
@@ -141,9 +145,7 @@ public class PdfReportGenerator {
             if (firstTimeAddingPictures) {
                 firstTimeAddingPictures = false;
             } else {
-                // Create a new page for each pair of pictures after the first
                 document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                // ...add page header, footer, etc...
             }
 
             Paragraph picturesTitle = new Paragraph("Some pictures of the installation")
@@ -154,7 +156,6 @@ public class PdfReportGenerator {
 
             document.add(picturesTitle);
 
-            // Add the first picture of the pair
             byte[] imageData1 = pictures.get(i).getImageData();
             Image pdfImage1 = new Image(ImageDataFactory.create(imageData1))
                     .setWidth(UnitValue.createPercentValue(50))
@@ -162,7 +163,6 @@ public class PdfReportGenerator {
 
             document.add(pdfImage1);
 
-            // Add the second picture of the pair, if it exists
             if (i + 1 < pictures.size()) {
                 byte[] imageData2 = pictures.get(i + 1).getImageData();
                 Image pdfImage2 = new Image(ImageDataFactory.create(imageData2))
@@ -177,7 +177,7 @@ public class PdfReportGenerator {
 
 
     private static void addPage1Content(Document document, Report report) {
-        float middleOfPageYPosition = document.getPageEffectiveArea(PageSize.A4).getHeight() / 2 + 60;
+        float middleOfPageYPosition = document.getPageEffectiveArea(PageSize.A4).getHeight() / 2 + 120;
 
         Paragraph installationType = new Paragraph("Installation Type: " + report.getInstallationType())
                 .setFontSize(14)
@@ -228,8 +228,6 @@ public class PdfReportGenerator {
         document.add(additionalInfoParagraph);
 
         Paragraph deviceInfoParagraph = new Paragraph()
-                /**.add("Device Username: ").add(new Text(report.getUsername()).setBold())
-                .add("\nDevice Password: ").add(new Text(report.getPassword()).setBold())*/
                 .setFontSize(12)
                 .setFixedPosition(document.getLeftMargin(), additionalInfoYPosition - 40, UnitValue.createPercentValue(100));
 
@@ -265,6 +263,29 @@ public class PdfReportGenerator {
 
         document.add(supportInfo);
 
-        addPageFooter(document, report);
     }
+
+    private static void addDevicesTable(Document document, Report report) {
+        List<Device> devices = report.getDevices();
+
+        if (devices != null && !devices.isEmpty()) {
+            float[] columnWidths = {1, 1, 1};
+            Table table = new Table(columnWidths);
+            table.setWidth(UnitValue.createPercentValue(100));
+
+            table.addHeaderCell(new Cell().add(new Paragraph("Device Name")).setBold());
+            table.addHeaderCell(new Cell().add(new Paragraph("Username")).setBold());
+            table.addHeaderCell(new Cell().add(new Paragraph("Password")).setBold());
+
+            for (Device device : devices) {
+                table.addCell(new Cell().add(new Paragraph(device.getName())));
+                table.addCell(new Cell().add(new Paragraph(device.getUsername())));
+                table.addCell(new Cell().add(new Paragraph(device.getPassword())));
+            }
+
+            document.add(table);
+        }
+    }
+
+
 }

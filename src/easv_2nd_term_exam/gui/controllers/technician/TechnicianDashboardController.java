@@ -290,7 +290,7 @@ public class TechnicianDashboardController implements Initializable {
             try {
                 modelManager.getCustomerModel().updateCustomerByEmail(customer);
             } catch (Exception e) {
-                DialogUtility.showExceptionDialog(e);;
+                DialogUtility.showExceptionDialog(e);
             }
         }
 
@@ -331,12 +331,20 @@ public class TechnicianDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
+
         deleteFilesFromDirectory(createPackagePath());
+
         for (Device d: devices) {
             d.setInstallationId(installationId);
         }
-        modelManager.getDevicesModel().createDevices(devices);
+
+        try {
+            modelManager.getDevicesModel().createDevices(devices);
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
     }
+
     @FXML
     private void createNewReport(ActionEvent event) {
         handleViewSwitch(false, true, false, false, false);
@@ -414,9 +422,9 @@ public class TechnicianDashboardController implements Initializable {
         selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
         openNewWindow("/easv_2nd_term_exam/gui/views/technician/AddDeviceView.fxml", "Add Device To Installation");
         ControllerManager.getInstance().getAddDeviceController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
-        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeNameField().setText(selectedDeviceType.getName());}
 
-    }
+
     private void openNewWindow(String fxmlPath, String title) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = null;

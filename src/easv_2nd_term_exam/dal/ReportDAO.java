@@ -64,7 +64,10 @@ public class ReportDAO {
                 List<Device> devices = new ArrayList<>();
                 while (rs2.next()) {
                     Device device = new Device();
-
+                    device.setId(rs2.getInt("ID"));
+                    device.setName(rs2.getString("Name"));
+                    device.setUsername(rs2.getString("Username"));
+                    device.setPassword(rs2.getString("Password"));
                     devices.add(device);
                 }
                 report.setDevices(devices);
@@ -187,8 +190,13 @@ public class ReportDAO {
         List<Device> devices = new ArrayList<>();
         while (rs2.next()) {
             Device device = new Device();
+            device.setId(rs2.getInt("ID"));
+            device.setName(rs2.getString("Name"));
+            device.setUsername(rs2.getString("Username"));
+            device.setPassword(rs2.getString("Password"));
             devices.add(device);
         }
+
         report.setDevices(devices);
 
         ps3.setInt(1, report.getInstallationId());
