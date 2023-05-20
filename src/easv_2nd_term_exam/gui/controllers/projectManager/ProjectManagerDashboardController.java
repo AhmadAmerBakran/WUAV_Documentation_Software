@@ -128,36 +128,15 @@ public class ProjectManagerDashboardController implements Initializable {
         }
     }
 
-
-
-
-
     private void showReportsPane(boolean allReports, boolean expiredReports) {
         allProjectsPane.setVisible(allReports);
         expiredProjectPane.setVisible(expiredReports);
     }
 
+
+
     @FXML
-    void downloadReport(ActionEvent event) {
-        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        if (selectedReport != null) {
-            Node source = (Node) event.getSource();
-            Stage primaryStage = (Stage) source.getScene().getWindow();
-
-            try {
-                PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
-            } catch (Exception e) {
-                DialogUtility.showExceptionDialog(e);
-            }
-
-        } else {
-            DialogUtility.showInformationDialog("Please select a report to download.");
-        }
-    }
-
-
-        @FXML
-    void handleLogout(ActionEvent event) {
+    private void handleLogout(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
         Parent root = null;
         try {
@@ -187,11 +166,46 @@ public class ProjectManagerDashboardController implements Initializable {
 
 
     }
+    @FXML
+    private void showExpiringReport(ActionEvent event) {
+        showReportsPane(false, true);
+    }
+
+
+    private void handleDownloadReport(Report report, ActionEvent event)
+    {
+        if (report != null) {
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+
+            try {
+                PdfReportGenerator.generatePdfReport(report, primaryStage);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+
+        } else {
+            DialogUtility.showInformationDialog("Please select a report to download.");
+        }
+    }
 
     @FXML
-    void updateReport(ActionEvent event) {
+    void downloadReport(ActionEvent event) {
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        if (selectedReport == null) {
+        handleDownloadReport(selectedReport, event);
+    }
+
+
+    @FXML
+    private void downloadExpiredReport(ActionEvent event) {
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+        handleDownloadReport(selectedReport, event);
+    }
+
+
+    private void handleUpdateReport(Report report)
+    {
+        if (report == null) {
             DialogUtility.showInformationDialog("Please select a report to update.");
             return;
         }
@@ -204,22 +218,22 @@ public class ProjectManagerDashboardController implements Initializable {
             throw new RuntimeException(e);
         }
         UpdateReportViewController controller = loader.getController();
-        controller.getTechIdField().setText(String.valueOf(selectedReport.getTechnicianId()));
-        controller.getTechNameField().setText(selectedReport.getTechnicianName());
-        controller.getCustomerNameField().setText(selectedReport.getCustomerName());
-        controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
-        controller.getBillingAddressField().setText(selectedReport.getBillingAddress());
-        controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
-        controller.getInstallationIdLabel().setText(String.valueOf(selectedReport.getInstallationId()));
-        controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
+        controller.getTechIdField().setText(String.valueOf(report.getTechnicianId()));
+        controller.getTechNameField().setText(report.getTechnicianName());
+        controller.getCustomerNameField().setText(report.getCustomerName());
+        controller.getCustomerAddressField().setText(report.getCustomerAddress());
+        controller.getBillingAddressField().setText(report.getBillingAddress());
+        controller.getCustomerEmailField().setText(report.getCustomerEmail());
+        controller.getInstallationIdLabel().setText(String.valueOf(report.getInstallationId()));
+        controller.getCustomerTypeBox().setValue(CustomerType.valueOf(report.getCustomerType()));
 
         InstallationType installationType = new InstallationType();
-        installationType.setName(selectedReport.getInstallationType());
+        installationType.setName(report.getInstallationType());
         controller.getInstallationTypeBox().setValue(installationType);
-        controller.getDatePicker().setValue(selectedReport.getCreatedDate());
-        controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
-        controller.getDescriptionArea().setText(selectedReport.getDescription());
-        controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
+        controller.getDatePicker().setValue(report.getCreatedDate());
+        controller.getExpireDatePicker().setValue(report.getExpiryDate());
+        controller.getDescriptionArea().setText(report.getDescription());
+        controller.getCustomerIdField().setText(String.valueOf(report.getCustomerId()));
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setTitle("Update Installation/Report");
@@ -229,19 +243,25 @@ public class ProjectManagerDashboardController implements Initializable {
 
 
     @FXML
-    private void showExpiredReport(ActionEvent event) {
-        showReportsPane(false, true);
+    private void updateReport(ActionEvent event) {
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        handleUpdateReport(selectedReport);
+    }
+    @FXML
+    private void updateExpiredReport(ActionEvent event) {
+        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
+        handleUpdateReport(selectedReport);
     }
 
-    @FXML
-    private void deleteReport(ActionEvent event) {
-        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        if (selectedReport != null) {
+
+    private void handleDeleteReport(Report report)
+    {
+        if (report != null) {
             if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this report?")) {
                 try {
-                    modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
+                    modelManager.getReportModel().deleteReport(report.getInstallationId());
                     DialogUtility.showInformationDialog("Report deleted successfully.");
-                    setUpReportTableView();
+                    setUpExpiringReportsTableView();
                 } catch (Exception e) {
                     DialogUtility.showExceptionDialog(e);
                 }
@@ -249,74 +269,18 @@ public class ProjectManagerDashboardController implements Initializable {
         } else {
             DialogUtility.showInformationDialog("Please select a report to delete.");
         }
+
     }
 
     @FXML
-    private void downloadExpiredReport(ActionEvent event) {
-        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
-        if (selectedReport != null) {
-            Node source = (Node) event.getSource();
-            Stage primaryStage = (Stage) source.getScene().getWindow();
-
-            try {
-                PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
-            } catch (Exception e) {
-                DialogUtility.showExceptionDialog(e);
-            }
-
-        } else {
-            DialogUtility.showInformationDialog("Please select a report to download.");
-        }
-    }
-
-    @FXML
-    private void updateExpiredReport(ActionEvent event) {
-        selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
-        if (selectedReport == null) {
-            DialogUtility.showInformationDialog("Please select a report to update.");
-            return;
-        }
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/projectManager/UpdateReportViewOld.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        UpdateReportViewController controller = loader.getController();
-        controller.getTechIdField().setText(String.valueOf(selectedReport.getTechnicianId()));
-        controller.getTechNameField().setText(selectedReport.getTechnicianName());
-        controller.getCustomerNameField().setText(selectedReport.getCustomerName());
-        controller.getCustomerAddressField().setText(selectedReport.getCustomerAddress());
-        controller.getCustomerEmailField().setText(selectedReport.getCustomerEmail());
-        controller.getCustomerTypeBox().setValue(CustomerType.valueOf(selectedReport.getCustomerType()));
-        controller.getDatePicker().setValue(selectedReport.getCreatedDate());
-        controller.getExpireDatePicker().setValue(selectedReport.getExpiryDate());
-        controller.getDescriptionArea().setText(selectedReport.getDescription());
-        controller.getCustomerIdField().setText(String.valueOf(selectedReport.getCustomerId()));
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Update Installation/Report");
-        stage.setScene(scene);
-        stage.show();
+    private void deleteReport(ActionEvent event) {
+        selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        handleDeleteReport(selectedReport);
     }
 
     @FXML
     private void deleteExpiredReport(ActionEvent event) {
         selectedReport = expiredReportTable.getSelectionModel().getSelectedItem();
-        if (selectedReport != null) {
-            if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this expiring report?")) {
-                try {
-                    modelManager.getReportModel().deleteReport(selectedReport.getInstallationId());
-                    DialogUtility.showInformationDialog("Expiring report deleted successfully.");
-                    setUpExpiringReportsTableView();
-                } catch (Exception e) {
-                    DialogUtility.showExceptionDialog(e);
-                }
-            }
-        } else {
-            DialogUtility.showInformationDialog("Please select an expiring report to delete.");
-        }
+        handleDeleteReport(selectedReport);
     }
 }
