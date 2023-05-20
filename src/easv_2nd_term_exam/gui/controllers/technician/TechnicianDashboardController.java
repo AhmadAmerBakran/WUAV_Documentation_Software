@@ -28,6 +28,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -223,23 +225,27 @@ public class TechnicianDashboardController implements Initializable {
         fileChooser.setTitle("Select a picture");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp"));
 
-        File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        if (selectedFile != null) {
-            String packagePath = createPackagePath();
-            File targetDirectory = new File(packagePath);
-            if (!targetDirectory.exists()) {
-                targetDirectory.mkdirs();
-            }
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) event.getSource()).getScene().getWindow());
 
-            File targetFile = FileUtility.findUniqueOutputFile(packagePath, selectedFile.getName());
-            try {
-                FileUtility.copySelectedFile(selectedFile, targetFile);
-                uploadedPictureLabel.setText(targetFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (selectedFiles != null) {
+            for (File selectedFile : selectedFiles) {
+                String packagePath = createPackagePath();
+                File targetDirectory = new File(packagePath);
+                if (!targetDirectory.exists()) {
+                    targetDirectory.mkdirs();
+                }
+
+                File targetFile = FileUtility.findUniqueOutputFile(packagePath, selectedFile.getName());
+                try {
+                    FileUtility.copySelectedFile(selectedFile, targetFile);
+                    // uploadedPictureLabel.setText(targetFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
 
     private String createPackagePath() {
         String projectPath = System.getProperty("user.dir") + File.separator + "src";
@@ -303,21 +309,21 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         int installationId = newInstallation.getId();
-        Image diagramImage = new Image(diagramPathLabel.getText());
-        Image uploadedImage = new Image(uploadedPictureLabel.getText());
-        List < Picture > pictures = new ArrayList < > ();
-
-        byte[] diagramImageData = PictureUtility.imageToByteArray(diagramImage);
-        byte[] uploadedImageData = PictureUtility.imageToByteArray(uploadedImage);
-
-        if (diagramImageData != null) {
-            Picture diagramPicture = new Picture(installationId, "Diagram Image", diagramImageData);
-            pictures.add(diagramPicture);
-        }
-
-        if (uploadedImageData != null) {
-            Picture uploadedPicture = new Picture(installationId, "Uploaded Image", uploadedImageData);
-            pictures.add(uploadedPicture);
+        File[] files = new File(createPackagePath()).listFiles();
+        List<Picture> pictures = new ArrayList<>();
+        if(files != null) {
+            for(File file: files) {
+                try {
+                    Image image = new Image(new FileInputStream(file));
+                    byte[] imageData = PictureUtility.imageToByteArray(image);
+                    if (imageData != null) {
+                        Picture picture = new Picture(installationId, "Uploaded Image", imageData);
+                        pictures.add(picture);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         try {

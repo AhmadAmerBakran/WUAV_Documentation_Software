@@ -58,29 +58,29 @@ public class ReportDAO {
                 report.setCreatedDate(rs1.getDate("createdDate").toLocalDate());
                 report.setExpiryDate(rs1.getDate("expiryDate").toLocalDate());
 
-                // Fetch Devices related to the Installation
+
                 ps2.setInt(1, report.getInstallationId());
                 ResultSet rs2 = ps2.executeQuery();
                 List<Device> devices = new ArrayList<>();
                 while (rs2.next()) {
                     Device device = new Device();
-                    // Populate device object
+
                     devices.add(device);
                 }
                 report.setDevices(devices);
 
-                // Fetch Pictures related to the Installation
+
                 ps3.setInt(1, report.getInstallationId());
                 ResultSet rs3 = ps3.executeQuery();
                 List<Picture> pictures = new ArrayList<>();
                 while (rs3.next()) {
                     Picture picture = new Picture();
-                    // Populate picture object
+
                     pictures.add(picture);
                 }
                 report.setPictures(pictures);
 
-                // Add report to list
+
                 reportList.add(report);
             }
         } catch (SQLException e) {
@@ -187,7 +187,6 @@ public class ReportDAO {
         List<Device> devices = new ArrayList<>();
         while (rs2.next()) {
             Device device = new Device();
-            // Populate device object
             devices.add(device);
         }
         report.setDevices(devices);
@@ -197,7 +196,7 @@ public class ReportDAO {
         List<Picture> pictures = new ArrayList<>();
         while (rs3.next()) {
             Picture picture = new Picture();
-            // Populate picture object
+
             pictures.add(picture);
         }
         report.setPictures(pictures);
@@ -225,10 +224,10 @@ public class ReportDAO {
                  PreparedStatement statementUpdateInstallation = connection.prepareStatement(sqlUpdateInstallation);
                  PreparedStatement statementUpdateCustomer = connection.prepareStatement(sqlUpdateCustomer)) {
 
-                // Turn off auto-commit
+
                 connection.setAutoCommit(false);
 
-                // Delete existing devices and add new ones if new devices are not null
+
                 if (report.getDevices() != null) {
                     statementDeleteDevices.setInt(1, report.getInstallationId());
                     statementDeleteDevices.executeUpdate();
@@ -244,21 +243,21 @@ public class ReportDAO {
                     statementInsertDevice.executeBatch();
                 }
 
-                // Delete existing pictures and add new ones if new pictures are not null
+
                 if (report.getPictures() != null) {
                     statementDeletePictures.setInt(1, report.getInstallationId());
                     statementDeletePictures.executeUpdate();
 
                     for (Picture picture : report.getPictures()) {
                         statementInsertPicture.setString(1, picture.getPictureName());
-                        statementInsertPicture.setBytes(2, picture.getImageData()); // Assuming byte array for picture
+                        statementInsertPicture.setBytes(2, picture.getImageData());
                         statementInsertPicture.setInt(3, report.getInstallationId());
                         statementInsertPicture.addBatch();
                     }
                     statementInsertPicture.executeBatch();
                 }
 
-                // Update customer information
+
                 statementUpdateCustomer.setString(1, report.getCustomerName());
                 statementUpdateCustomer.setString(2, report.getCustomerEmail());
                 statementUpdateCustomer.setString(3, report.getCustomerAddress());
@@ -267,7 +266,7 @@ public class ReportDAO {
                 statementUpdateCustomer.setInt(6, report.getCustomerId());
                 statementUpdateCustomer.executeUpdate();
 
-                // Update report and dates
+
                 statementUpdateInstallation.setString(1, report.getDescription());
                 statementUpdateInstallation.setDate(2, java.sql.Date.valueOf(report.getCreatedDate()));
                 statementUpdateInstallation.setDate(3, java.sql.Date.valueOf(report.getExpiryDate()));
@@ -275,7 +274,7 @@ public class ReportDAO {
                 statementUpdateInstallation.setInt(5, report.getInstallationId());
                 int affectedRows = statementUpdateInstallation.executeUpdate();
 
-                // Commit changes
+
                 connection.commit();
 
                 return affectedRows == 1;
@@ -284,7 +283,7 @@ public class ReportDAO {
         } catch (SQLException e) {
             if (connection != null) {
                 try {
-                    // Rollback changes on exception
+
                     connection.rollback();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -295,7 +294,7 @@ public class ReportDAO {
         } finally {
             if (connection != null) {
                 try {
-                    // Close the connection
+
                     connection.close();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -314,28 +313,27 @@ public class ReportDAO {
         try {
             connection = dbConnector.getConnection();
 
-            // Turn off auto-commit
+
             connection.setAutoCommit(false);
 
-            // Delete linked devices
+
             String sqlDeleteDevices = "DELETE FROM Devices WHERE InstallationId = ?";
             PreparedStatement statementDeleteDevices = connection.prepareStatement(sqlDeleteDevices);
             statementDeleteDevices.setInt(1, installationId);
             statementDeleteDevices.executeUpdate();
 
-            // Delete linked pictures
+
             String sqlDeletePictures = "DELETE FROM Picture WHERE InstallationId = ?";
             PreparedStatement statementDeletePictures = connection.prepareStatement(sqlDeletePictures);
             statementDeletePictures.setInt(1, installationId);
             statementDeletePictures.executeUpdate();
 
-            // Delete installation
+
             String sqlDeleteInstallation = "DELETE FROM Installation WHERE ID = ?";
             PreparedStatement statementDeleteInstallation = connection.prepareStatement(sqlDeleteInstallation);
             statementDeleteInstallation.setInt(1, installationId);
             int affectedRows = statementDeleteInstallation.executeUpdate();
 
-            // Commit changes
             connection.commit();
 
             return affectedRows == 1;
@@ -343,7 +341,6 @@ public class ReportDAO {
             e.printStackTrace();
             if (connection != null) {
                 try {
-                    // Rollback changes on exception
                     connection.rollback();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -353,7 +350,6 @@ public class ReportDAO {
         } finally {
             if (connection != null) {
                 try {
-                    // Turn auto-commit back on
                     connection.setAutoCommit(true);
                 } catch (SQLException ex) {
                     ex.printStackTrace();

@@ -132,26 +132,49 @@ public class PdfReportGenerator {
         document.add(footerTable);
     }
 
+
     private static void addPage2Content(Document document, Report report, List<Picture> pictures) {
-        Paragraph picturesTitle = new Paragraph("Some pictures of the installation")
-                .setFontSize(14)
-                .setBold()
-                .setTextAlignment(TextAlignment.CENTER)
-                .setMarginTop(20);
+        // This boolean will check if this is the first time adding pictures
+        boolean firstTimeAddingPictures = true;
 
-        document.add(picturesTitle);
+        for (int i = 0; i < pictures.size(); i += 2) {
+            if (firstTimeAddingPictures) {
+                firstTimeAddingPictures = false;
+            } else {
+                // Create a new page for each pair of pictures after the first
+                document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                // ...add page header, footer, etc...
+            }
 
-        for (Picture picture : pictures) {
-            byte[] imageData = picture.getImageData();
-            Image pdfImage = new Image(ImageDataFactory.create(imageData))
+            Paragraph picturesTitle = new Paragraph("Some pictures of the installation")
+                    .setFontSize(14)
+                    .setBold()
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setMarginTop(20);
+
+            document.add(picturesTitle);
+
+            // Add the first picture of the pair
+            byte[] imageData1 = pictures.get(i).getImageData();
+            Image pdfImage1 = new Image(ImageDataFactory.create(imageData1))
                     .setWidth(UnitValue.createPercentValue(50))
                     .setAutoScale(true);
 
-            document.add(pdfImage);
+            document.add(pdfImage1);
+
+            // Add the second picture of the pair, if it exists
+            if (i + 1 < pictures.size()) {
+                byte[] imageData2 = pictures.get(i + 1).getImageData();
+                Image pdfImage2 = new Image(ImageDataFactory.create(imageData2))
+                        .setWidth(UnitValue.createPercentValue(50))
+                        .setAutoScale(true);
+
+                document.add(pdfImage2);
+            }
         }
-
-
     }
+
+
 
     private static void addPage1Content(Document document, Report report) {
         float middleOfPageYPosition = document.getPageEffectiveArea(PageSize.A4).getHeight() / 2 + 60;
