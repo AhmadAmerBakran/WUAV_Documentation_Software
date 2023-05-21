@@ -7,16 +7,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="308.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateDevicesController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="308.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateInstallationDeviceController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label minWidth="110.0" text="Device Type ID:" HBox.hgrow="SOMETIMES">
+            <Label minWidth="110.0" text="Device ID:" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="deviceTypeIdField" alignment="CENTER" editable="false" HBox.hgrow="SOMETIMES">
+            <TextField fx:id="deviceIdFieldE" alignment="CENTER" editable="false" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
@@ -26,7 +26,7 @@
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="deviceTypeNameField" editable="false" HBox.hgrow="SOMETIMES">
+            <TextField fx:id="deviceNameFieldE" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
@@ -40,7 +40,7 @@
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="deviceUsernameField" promptText="Only if there is login info ..." HBox.hgrow="SOMETIMES">
+            <TextField fx:id="deviceUsernameFieldE" promptText="Only if there is login info ..." HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
@@ -50,7 +50,7 @@
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="devicePasswordField" promptText="Only if there is login info ..." HBox.hgrow="SOMETIMES">
+            <TextField fx:id="devicePasswordFieldE" promptText="Only if there is login info ..." HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
@@ -59,12 +59,12 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#cancelAdding" text="Cancel">
+            <Button mnemonicParsing="false" onAction="#cancelEditing" text="Cancel">
                <HBox.margin>
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#submitAdding" text="Submit">
+            <Button mnemonicParsing="false" onAction="#submitEditing" text="Submit">
                <HBox.margin>
                   <Insets left="15.0" right="15.0" />
                </HBox.margin>

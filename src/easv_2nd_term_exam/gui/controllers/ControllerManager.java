@@ -3,7 +3,8 @@ package easv_2nd_term_exam.gui.controllers;
 import easv_2nd_term_exam.gui.controllers.admin.*;
 import easv_2nd_term_exam.gui.controllers.login.LoginViewController;
 import easv_2nd_term_exam.gui.controllers.projectManager.ProjectManagerDashboardController;
-import easv_2nd_term_exam.gui.controllers.projectManager.UpdateDevicesController;
+import easv_2nd_term_exam.gui.controllers.projectManager.AddDevicesToInstallationController;
+import easv_2nd_term_exam.gui.controllers.projectManager.UpdateInstallationDeviceController;
 import easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController;
 import easv_2nd_term_exam.gui.controllers.salesPerson.SalesPersonDashboard;
 import easv_2nd_term_exam.gui.controllers.technician.AddDeviceController;
@@ -28,7 +29,9 @@ public class ControllerManager {
     private EditInstallationTypeController editInstallationTypeController;
     private AddDeviceTypeController addDeviceTypeController;
     private AddDeviceController addDeviceController;
-    private UpdateDevicesController updateDevicesController;
+    private AddDevicesToInstallationController addDevicesToInstallationController;
+
+    private UpdateInstallationDeviceController updateInstallationDeviceController;
 
 
     private ControllerManager() {
@@ -41,12 +44,20 @@ public class ControllerManager {
         return instance;
     }
 
-    public UpdateDevicesController getUpdateDevicesController() {
-        return updateDevicesController;
+    public UpdateInstallationDeviceController getUpdateInstallationDeviceController() {
+        return updateInstallationDeviceController;
     }
 
-    public void setUpdateDevicesController(UpdateDevicesController updateDevicesController) {
-        this.updateDevicesController = updateDevicesController;
+    public void setUpdateInstallationDeviceController(UpdateInstallationDeviceController updateInstallationDeviceController) {
+        this.updateInstallationDeviceController = updateInstallationDeviceController;
+    }
+
+    public AddDevicesToInstallationController getAddDevicesToInstallationController() {
+        return addDevicesToInstallationController;
+    }
+
+    public void setAddDevicesToInstallationController(AddDevicesToInstallationController addDevicesToInstallationController) {
+        this.addDevicesToInstallationController = addDevicesToInstallationController;
     }
 
     public AddDeviceController getAddDeviceController() {

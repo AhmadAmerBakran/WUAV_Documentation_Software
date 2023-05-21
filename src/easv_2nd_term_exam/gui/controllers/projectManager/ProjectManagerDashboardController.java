@@ -78,7 +78,7 @@ public class ProjectManagerDashboardController implements Initializable {
         userLabel.setText(loggedUser.getName());
     }
 
-    private void setUpReportTableView() {
+    public void setUpReportTableView() {
         try {
             reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
         } catch (SQLException e) {

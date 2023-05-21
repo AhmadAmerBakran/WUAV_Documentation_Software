@@ -6,7 +6,6 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
-import easv_2nd_term_exam.util.FileUtility;
 import easv_2nd_term_exam.util.PictureUtility;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
@@ -39,7 +38,6 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +78,16 @@ public class UpdateReportViewController implements Initializable {
 
     @FXML
     private TextArea descriptionArea;
+
+    @FXML
+    private TableView<Device> installationDevicesTableView;
+
+    @FXML
+    private TableColumn<Device, Integer> deviceIdColumn;
+
+    @FXML
+    private TableColumn<Device, String> deviceNameColumn, deviceUsernameColumn, devicePasswordColumn;
+
 
     @FXML
     private TableColumn < DeviceType, Integer > deviceTypeIdColumn;
@@ -125,6 +133,7 @@ public class UpdateReportViewController implements Initializable {
     private ModelManagerLoader modelManagerLoader;
     private ModelManager modelManager;
     private User loggedUser;
+    private Device selectedDevice;
     private ObservableList < Device > devices;
     private List < Image > images = new ArrayList < > ();
     List < Picture > pictures = new ArrayList < > ();
@@ -157,6 +166,15 @@ public class UpdateReportViewController implements Initializable {
         deviceTypeTableView.getItems().setAll(modelManager.getDeviceTypeModel().getDeviceTypes());
         deviceTypeIdColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, Integer > ("id"));
         deviceTypeNameColumn.setCellValueFactory(new PropertyValueFactory < DeviceType, String > ("name"));
+
+    }
+
+    public void setUpInstallationDeviceTableView() {
+        installationDevicesTableView.getItems().setAll(modelManager.getDevicesModel().getDevicesByInstallationId(Integer.parseInt(installationIdLabel.getText())));
+        deviceIdColumn.setCellValueFactory(new PropertyValueFactory<Device, Integer>("id"));
+        deviceNameColumn.setCellValueFactory(new PropertyValueFactory<Device, String>("name"));
+        deviceUsernameColumn.setCellValueFactory(new PropertyValueFactory<Device, String>("username"));
+        devicePasswordColumn.setCellValueFactory(new PropertyValueFactory<Device, String>("password"));
 
     }
 
@@ -193,9 +211,9 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     private void addDeviceToInstallation(ActionEvent event) {
         selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
-        openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateDevicesView.fxml", "Add Device To Installation");
-        ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
-        ControllerManager.getInstance().getUpdateDevicesController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+        openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/AddDevicesToInstallationView.fxml", "Add Device To Installation");
+        ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
+        ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
     }
 
     public DatePicker getExpireDatePicker() {
@@ -203,14 +221,17 @@ public class UpdateReportViewController implements Initializable {
     }
 
     @FXML
-    void addNewCustomer(ActionEvent event) {
+    private void addNewCustomer(ActionEvent event) {
 
     }
 
     @FXML
-    void cancel(ActionEvent event) {
-
+    private void cancel(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
+
 
     @FXML
     void nextToCustomerInfo(ActionEvent event) {
@@ -221,6 +242,7 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     void nextToInstallationInfo(ActionEvent event) {
         handleViewSwitch(false, false, true, false);
+        setUpInstallationDeviceTableView();
 
     }
 
@@ -228,56 +250,53 @@ public class UpdateReportViewController implements Initializable {
     void nextToInstallationPhotos(ActionEvent event) {
         handleViewSwitch(false, false, false, true);
         showInstallationImages();
-
     }
 
     @FXML
     void submitUpdating(ActionEvent event) {
-
-        String customerName = customerNameField.getText();
-        String customerEmail = customerEmailField.getText();
-        String customerAddress = customerAddressField.getText();
-        CustomerType type = customerTypeBox.getValue();
-        Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
-
-        int technicianId = Integer.parseInt(techIdField.getText());
-        String installationDescription = descriptionArea.getText();
-        LocalDate createdDate = datePicker.getValue();
-        LocalDate expiryDate = expireDatePicker.getValue();
-        InstallationType installationType = installationTypeBox.getValue();
-        int customerId = Integer.parseInt(customerIdField.getText());
-        int installationId = Integer.parseInt(installationIdLabel.getText());
-
-        Report tobeUpdated = new Report();
-        tobeUpdated.setCustomerName(customerName);
-        tobeUpdated.setBillingAddress(billingAddressField.getText());
-        tobeUpdated.setCustomerAddress(customerAddress);
-        tobeUpdated.setCustomerEmail(customerEmail);
-        tobeUpdated.setCustomerType(String.valueOf(type));
-        tobeUpdated.setTechnicianId(technicianId);
-        tobeUpdated.setInstallationId(installationId);
-        tobeUpdated.setInstallationTypeId(installationType.getId());
-
-        tobeUpdated.setDescription(installationDescription);
-        tobeUpdated.setCustomerId(customerId);
-        tobeUpdated.setCreatedDate(createdDate);
-        tobeUpdated.setExpiryDate(expiryDate);
-
         try {
+            String customerName = customerNameField.getText();
+            String customerEmail = customerEmailField.getText();
+            String customerAddress = customerAddressField.getText();
+            CustomerType type = customerTypeBox.getValue();
+            Customer newCustomer = new Customer(customerName, customerAddress, customerEmail, type);
+
+            int technicianId = Integer.parseInt(techIdField.getText());
+            String installationDescription = descriptionArea.getText();
+            LocalDate createdDate = datePicker.getValue();
+            LocalDate expiryDate = expireDatePicker.getValue();
+            InstallationType installationType = installationTypeBox.getValue();
+            int customerId = Integer.parseInt(customerIdField.getText());
+            int installationId = Integer.parseInt(installationIdLabel.getText());
+
+            Report tobeUpdated = new Report();
+            tobeUpdated.setCustomerName(customerName);
+            tobeUpdated.setBillingAddress(billingAddressField.getText());
+            tobeUpdated.setCustomerAddress(customerAddress);
+            tobeUpdated.setCustomerEmail(customerEmail);
+            tobeUpdated.setCustomerType(String.valueOf(type));
+            tobeUpdated.setTechnicianId(technicianId);
+            tobeUpdated.setInstallationId(installationId);
+            tobeUpdated.setInstallationTypeId(installationType.getId());
+
+            tobeUpdated.setDescription(installationDescription);
+            tobeUpdated.setCustomerId(customerId);
+            tobeUpdated.setCreatedDate(createdDate);
+            tobeUpdated.setExpiryDate(expiryDate);
+
             modelManager.getReportModel().updateReport(tobeUpdated);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        for (Device d: devices) {
-            d.setInstallationId(installationId);
-        }
 
-        try {
-            modelManager.getDevicesModel().createDevices(devices);
+            DialogUtility.showInformationDialog("Update successful.");
+            ControllerManager.getInstance().getProjectManagerDashboardController().setUpReportTableView();
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
     }
+
 
     @FXML
     void selectCustomer(ActionEvent event) {
@@ -348,7 +367,6 @@ public class UpdateReportViewController implements Initializable {
             } else if (currentIndex >= pictures.size()) {
                 currentIndex--;
             }
-            // Ensure there is an image to display
             if (currentIndex >= 0) {
                 displayImage(currentIndex);
             }
@@ -415,7 +433,6 @@ public class UpdateReportViewController implements Initializable {
             animateImageChange();
         }
     }
-
     @FXML
     private void nextImage() {
         if (currentIndex < images.size() - 1) {
@@ -423,11 +440,9 @@ public class UpdateReportViewController implements Initializable {
             animateImageChange();
         }
     }
-
     private void displayImage(int index) {
         installationPictureView.setImage(images.get(index));
     }
-
     private void animateImageChange() {
         FadeTransition ft = new FadeTransition(Duration.millis(500), installationPictureView);
         ft.setFromValue(1.0);
@@ -436,5 +451,45 @@ public class UpdateReportViewController implements Initializable {
         ft.setAutoReverse(true);
         ft.setOnFinished(event -> displayImage(currentIndex));
         ft.play();
+    }
+
+    @FXML
+    private void updateInstallationDevice(ActionEvent event) {
+        selectedDevice = installationDevicesTableView.getSelectionModel().getSelectedItem();
+        openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateInstallationDeviceView.fxml", "Update Installation Devices");
+        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceIdFieldE().setText(String.valueOf(selectedDevice.getId()));
+        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceNameFieldE().setText(selectedDevice.getName());
+        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceUsernameFieldE().setText(selectedDevice.getUsername());
+    }
+
+    @FXML
+    private void deleteInstallationDevice(ActionEvent event) {
+        selectedDevice = installationDevicesTableView.getSelectionModel().getSelectedItem();
+
+        if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this device?")) {
+            try {
+                modelManager.getDevicesModel().deleteDevice(selectedDevice.getId());
+                setUpInstallationDeviceTableView();
+                DialogUtility.showInformationDialog("Device deleted successfully.");
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+        }
+    }
+
+
+    @FXML
+    private void backToInstallationInfo(ActionEvent event) {
+        handleViewSwitch(false, false, true, false);
+    }
+
+    @FXML
+    private void backToCustomerInfo(ActionEvent event) {
+        handleViewSwitch(false, true, false, false);
+    }
+
+    @FXML
+    private void backToTechnicianInfo(ActionEvent event) {
+        handleViewSwitch(true, false, false, false);
     }
 }

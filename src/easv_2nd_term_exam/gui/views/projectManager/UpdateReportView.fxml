@@ -207,6 +207,11 @@
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <buttons>
+                  <Button mnemonicParsing="false" onAction="#backToTechnicianInfo" text="Back">
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </Button>
                   <Button mnemonicParsing="false" onAction="#nextToInstallationInfo" text="Next">
                      <padding>
                         <Insets left="20.0" right="20.0" />
@@ -252,19 +257,40 @@
                         </HBox>
                         <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="971.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="deviceTypeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" VBox.vgrow="SOMETIMES">
+                                    <TableView fx:id="deviceTypeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" VBox.vgrow="SOMETIMES">
                                        <columns>
-                                          <TableColumn fx:id="deviceTypeIdColumn" maxWidth="114.0" minWidth="150.0" prefWidth="-1.0" text="DeviceType ID" />
-                                          <TableColumn fx:id="deviceTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="781.0" prefWidth="-1.0" text="DeviceType Name" />
+                                          <TableColumn fx:id="deviceTypeIdColumn" maxWidth="85.0" minWidth="85.0" prefWidth="-1.0" text="DeviceType ID" />
+                                          <TableColumn fx:id="deviceTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="313.0" prefWidth="-1.0" text="DeviceType Name" />
                                        </columns>
                                     </TableView>
-                                    <Button mnemonicParsing="false" onAction="#addDeviceToInstallation" text="Add To Installation">
-                                       <VBox.margin>
-                                          <Insets bottom="50.0" top="50.0" />
-                                       </VBox.margin>
-                                    </Button>
+                                    <ButtonBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+                                      <buttons>
+                                          <Button mnemonicParsing="false" onAction="#addDeviceToInstallation" text="Add To Installation" />
+                                      </buttons>
+                                    </ButtonBar>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </HBox.margin>
+                              </VBox>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <TableView fx:id="installationDevicesTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" VBox.vgrow="SOMETIMES">
+                                       <columns>
+                                          <TableColumn fx:id="deviceIdColumn" maxWidth="100.0" minWidth="60.0" prefWidth="-1.0" text="Device ID" />
+                                          <TableColumn fx:id="deviceNameColumn" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Device Name" />
+                                          <TableColumn fx:id="deviceUsernameColumn" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Device Username" />
+                                          <TableColumn fx:id="devicePasswordColumn" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Device Password" />
+                                       </columns>
+                                    </TableView>
+                                    <ButtonBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+                                      <buttons>
+                                        <Button mnemonicParsing="false" onAction="#updateInstallationDevice" text="Update" />
+                                          <Button mnemonicParsing="false" onAction="#deleteInstallationDevice" text="Delete" />
+                                      </buttons>
+                                    </ButtonBar>
                                  </children>
                                  <HBox.margin>
                                     <Insets left="20.0" right="20.0" />
@@ -291,7 +317,7 @@
                               </Label>
                               <DatePicker fx:id="expireDatePicker" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="234.0" HBox.hgrow="ALWAYS">
                                  <HBox.margin>
-                                    <Insets top="15.0" />
+                                    <Insets right="20.0" top="15.0" />
                                  </HBox.margin>
                               </DatePicker>
                            </children>
@@ -306,7 +332,10 @@
                                     <Insets left="25.0" right="20.0" top="20.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextArea fx:id="descriptionArea" HBox.hgrow="ALWAYS" />
+                              <TextArea fx:id="descriptionArea" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin></TextArea>
                            </children>
                            <VBox.margin>
                               <Insets bottom="10.0" />
@@ -336,6 +365,11 @@
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <buttons>
+                  <Button mnemonicParsing="false" onAction="#backToCustomerInfo" text="Back">
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </Button>
                   <Button mnemonicParsing="false" onAction="#nextToInstallationPhotos" text="Next">
                      <padding>
                         <Insets left="20.0" right="20.0" />
@@ -395,6 +429,11 @@
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <buttons>
+                  <Button mnemonicParsing="false" onAction="#backToInstallationInfo" text="Back">
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </Button>
                   <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button mnemonicParsing="false" onAction="#submitUpdating" text="Save" />
                </buttons>

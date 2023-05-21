@@ -90,15 +90,13 @@ public class DevicesDAO implements IDevicesDAO {
 
     @Override
     public void updateDevice(Device device) throws SQLException {
-        String sql = "UPDATE Devices SET Name = ?, DeviceTypeId = ?, InstallationId = ?, Username = ?, Password = ? WHERE ID = ?";
+        String sql = "UPDATE Devices SET Name = ?, Username = ?, Password = ? WHERE ID = ?";
         try (Connection connection = dbConnector.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, device.getName());
-            pstmt.setInt(2, device.getDeviceTypeId());
-            pstmt.setInt(3, device.getInstallationId());
-            pstmt.setString(4, device.getUsername());
-            pstmt.setString(5, device.getPassword());
-            pstmt.setInt(6, device.getId());
+            pstmt.setString(2, device.getUsername());
+            pstmt.setString(3, device.getPassword());
+            pstmt.setInt(4, device.getId());
             pstmt.executeUpdate();
         }
     }
