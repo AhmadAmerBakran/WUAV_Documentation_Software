@@ -88,7 +88,7 @@ public class ProjectManagerDashboardController implements Initializable {
         setTableColumnsPrefWidth(reportTableView, installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
     }
 
-    private void setUpExpiringReportsTableView() {
+    public void setUpExpiringReportsTableView() {
         try {
             expiredReportTable.getItems().setAll(modelManager.getReportModel().getExpiringReports(30));
         } catch (SQLException e) {
@@ -137,23 +137,25 @@ public class ProjectManagerDashboardController implements Initializable {
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            DialogUtility.showExceptionDialog(e);
+        if (DialogUtility.showConfirmationDialog("Are you sure you want to logout?")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(scene);
+            stage.show();
+            Node source = (Node) event.getSource();
+            Stage currentStage = (Stage) source.getScene().getWindow();
+            currentStage.hide();
         }
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Login");
-        stage.setScene(scene);
-        stage.show();
-        Node source = (Node) event.getSource();
-        Stage currentStage = (Stage) source.getScene().getWindow();
-        currentStage.hide();
-
     }
+
 
     @FXML
     void showAllReports(ActionEvent event) {
@@ -163,8 +165,6 @@ public class ProjectManagerDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
-
-
     }
     @FXML
     private void showExpiringReport(ActionEvent event) {

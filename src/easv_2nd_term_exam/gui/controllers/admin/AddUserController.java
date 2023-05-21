@@ -7,6 +7,7 @@ import easv_2nd_term_exam.gui.models.AdminModel;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.util.DialogUtility;
 import easv_2nd_term_exam.util.PdfReportGenerator;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -63,6 +64,32 @@ public class AddUserController implements Initializable {
         String password = userPasswordField.getText();
         UserRole role = userTypeComboBox.getValue();
 
+        // Validate the input fields before creating the new user.
+        if (!ValidationUtility.isNotEmpty(userFullnameField)) {
+            DialogUtility.showInformationDialog("Full name field cannot be empty!");
+            return;
+        }
+        if (!ValidationUtility.isValidName(userFullnameField)) {
+            DialogUtility.showInformationDialog("Please enter a valid name.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(userEmailField) || !ValidationUtility.isValidEmail(userEmailField)) {
+            DialogUtility.showInformationDialog("Please enter a valid email address.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(uUsernameField)) {
+            DialogUtility.showInformationDialog("Username field cannot be empty!");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(userPasswordField)) {
+            DialogUtility.showInformationDialog("Password field cannot be empty!");
+            return;
+        }
+        if (!ValidationUtility.isComboBoxNotEmpty(userTypeComboBox)) {
+            DialogUtility.showInformationDialog("User role must be selected!");
+            return;
+        }
+
         // Create a new user object based on the selected user role
         User newUser = null;
         switch (role) {
@@ -95,6 +122,7 @@ public class AddUserController implements Initializable {
             DialogUtility.showExceptionDialog(new IllegalArgumentException("Invalid user role selected."));
         }
     }
+
 
 
 }

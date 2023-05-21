@@ -6,7 +6,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
-import easv_2nd_term_exam.util.PdfReportGenerator;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,7 +22,6 @@ public class EditUserController implements Initializable {
 
     @FXML
     private TextField uUsernameFieldE, userEmailFieldE, userFullnameFieldE, userPasswordFieldE;
-
 
     @FXML
     private ComboBox<UserRole> userTypeComboBox;
@@ -50,6 +49,31 @@ public class EditUserController implements Initializable {
 
     @FXML
     void submitEditing(ActionEvent event)  {
+        if (!ValidationUtility.isNotEmpty(userFullnameFieldE)) {
+            DialogUtility.showInformationDialog("Please enter a name.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(userEmailFieldE)) {
+            DialogUtility.showInformationDialog("Please enter an email.");
+            return;
+        }
+        if (!ValidationUtility.isValidEmail(userEmailFieldE)) {
+            DialogUtility.showInformationDialog("Please enter a valid email.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(uUsernameFieldE)) {
+            DialogUtility.showInformationDialog("Please enter a username.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(userPasswordFieldE)) {
+            DialogUtility.showInformationDialog("Please enter a password.");
+            return;
+        }
+        if (!ValidationUtility.isComboBoxNotEmpty(userTypeComboBox)) {
+            DialogUtility.showInformationDialog("Please select a user role.");
+            return;
+        }
+
         String name = userFullnameFieldE.getText();
         String email = userEmailFieldE.getText();
         String username = uUsernameFieldE.getText();
@@ -92,6 +116,7 @@ public class EditUserController implements Initializable {
         }
 
     }
+
 
 
 }

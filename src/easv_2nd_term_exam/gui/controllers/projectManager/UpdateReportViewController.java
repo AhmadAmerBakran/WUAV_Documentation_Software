@@ -186,7 +186,11 @@ public class UpdateReportViewController implements Initializable {
 
     }
     private void setUpCustomerTableView() {
-        customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        try {
+            customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         customerIdColumnS.setCellValueFactory(new PropertyValueFactory < Customer, Integer > ("id"));
         customerNameColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("name"));
         customerEmailColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("email"));
@@ -288,6 +292,7 @@ public class UpdateReportViewController implements Initializable {
 
             DialogUtility.showInformationDialog("Update successful.");
             ControllerManager.getInstance().getProjectManagerDashboardController().setUpReportTableView();
+            ControllerManager.getInstance().getProjectManagerDashboardController().setUpExpiringReportsTableView();
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();

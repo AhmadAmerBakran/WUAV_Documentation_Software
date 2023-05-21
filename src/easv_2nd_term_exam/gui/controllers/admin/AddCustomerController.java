@@ -49,9 +49,9 @@ public class AddCustomerController implements Initializable {
                 billingAddressVBox.setVisible(false);
             }
         });
-
-
     }
+
+
     @FXML
     private void cancelAdding(ActionEvent event) {
         ((Node)event.getSource()).getScene().getWindow().hide();

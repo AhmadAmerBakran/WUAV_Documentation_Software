@@ -90,6 +90,7 @@ public class AdminDashboardController implements Initializable {
     private ModelManager modelManager;
     private User selectedUser;
     private Customer selectedCustomer;
+    private DeviceType selectedDeviceType;
 
     private InstallationType selectedInstallationType;
 
@@ -124,7 +125,7 @@ public class AdminDashboardController implements Initializable {
         });
     }
 
-    private void setupTableViews() {
+    public void setupTableViews() {
         setupTableView(userTableView, modelManager.getAdminModel()::getUsers, userIdColumn, userNameColumn, uUsernameColumn, userEmailColumn, userRoleColumn);
         setupTableView(techTableView, modelManager.getAdminModel()::getTechnicians, techIdColumn, techNameColumn, techUsernameColumn, techEmailColumn, techRoleColumn);
         setupTableView(managerTableView, modelManager.getAdminModel()::getProjectManagers, manIdColumn, manNameColumn, manUsernameColumn, manEmailColumn, manRoleColumn);
@@ -141,7 +142,6 @@ public class AdminDashboardController implements Initializable {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // Set column widths to be proportional to the TableView width
         idColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.075));
         nameColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
         usernameColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
@@ -159,9 +159,13 @@ public class AdminDashboardController implements Initializable {
         userRoleColumn1.setCellValueFactory(new PropertyValueFactory<>("role"));
     }
 
-    private void setUpCustomerTableView()
+    public void setUpCustomerTableView()
     {
-        customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        try {
+            customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         customerIdColumn.setCellValueFactory(new PropertyValueFactory<Customer, Integer>("id"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("name"));
         customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("email"));
@@ -171,6 +175,7 @@ public class AdminDashboardController implements Initializable {
 
     private void setUpDeletedCustomersTableView()
     {
+
         try {
             customerTableView1.getItems().setAll(modelManager.getCustomerModel().getDeletedCustomers());
         } catch (SQLException e) {
@@ -183,13 +188,13 @@ public class AdminDashboardController implements Initializable {
         customerSecondAddressColumn1.setCellValueFactory(new PropertyValueFactory<Customer, String>("billingAddress"));
     }
 
-    private void setUpInstallationTypeTableView()
+    public void setUpInstallationTypeTableView()
     {
         installationTypeTableView.getItems().setAll(modelManager.getInstallationTypeModel().getInstallationTypes());
         installationTypeIdColumn.setCellValueFactory(new PropertyValueFactory<InstallationType, Integer>("id"));
         installationTypeNameColumn.setCellValueFactory(new PropertyValueFactory<InstallationType, String>("name"));
     }
-    private void setUpDeviceTypeTableView()
+    public void setUpDeviceTypeTableView()
     {
         deviceTypeTableView.getItems().setAll(modelManager.getDeviceTypeModel().getDeviceTypes());
         deviceTypeIdColumn.setCellValueFactory(new PropertyValueFactory<DeviceType, Integer>("id"));
@@ -225,9 +230,18 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        closeCurrentWindow(event);
-        openNewWindow("/easv_2nd_term_exam/gui/views/login/LoginView.fxml", "Login");
+        try {
+            boolean confirm = DialogUtility.showConfirmationDialog("Are you sure you want to logout?");
+            if (confirm) {
+                closeCurrentWindow(event);
+                openNewWindow("/easv_2nd_term_exam/gui/views/login/LoginView.fxml", "Login");
+                DialogUtility.showInformationDialog("Logout successful");
+            }
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(e);
+        }
     }
+
 
     private void openNewWindow(String fxmlPath, String title) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -270,7 +284,7 @@ public class AdminDashboardController implements Initializable {
             boolean confirmed = DialogUtility.showConfirmationDialog("Are you sure you want to delete " + selectedUser.getName() + " ?");
             if (confirmed) {
                 modelManager.getAdminModel().deleteUser(selectedUser.getId());
-                setupTableViews(); // Refresh the table view after deletion
+                setupTableViews();
             }
         } else {
             DialogUtility.showInformationDialog("Please select a user to delete.");
@@ -355,6 +369,21 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateCustomer(ActionEvent event) {
+        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditCustomerView.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        EditCustomerController controller = loader.getController();
+        controller.fillTextFieldsWithCustomer(selectedCustomer);
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Edit Customer");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
@@ -365,8 +394,9 @@ public class AdminDashboardController implements Initializable {
             try {
                 modelManager.getCustomerModel().deleteCustomer(selectedCustomer.getId());
                 DialogUtility.showInformationDialog("Customer deleted successfully.");
-                setUpDeletedCustomersTableView();
                 setUpCustomerTableView();
+                setUpDeletedCustomersTableView();
+
             } catch (Exception e) {
                 DialogUtility.showExceptionDialog(e);
             }
@@ -400,7 +430,24 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void deleteInstallationType(ActionEvent event) {
+        selectedInstallationType = installationTypeTableView.getSelectionModel().getSelectedItem();
+
+        if(selectedInstallationType != null) {
+            boolean confirm = DialogUtility.showConfirmationDialog("Are you sure you want to delete installation type " + selectedInstallationType.getName() + " ?");
+            if(confirm) {
+                try {
+                    modelManager.getInstallationTypeModel().deleteInstallationType(selectedInstallationType.getId());
+                    DialogUtility.showInformationDialog("Installation type deleted successfully");
+                    setUpInstallationTypeTableView();
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select an installation type to delete");
+        }
     }
+
 
     @FXML
     private void addNewDeviceType(ActionEvent event) {
@@ -410,11 +457,43 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateDeviceType(ActionEvent event) {
+        selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditDeviceTypeView.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        EditDeviceTypeController controller = loader.getController();
+        controller.fillTextFieldWithDeviceTypeData(selectedDeviceType);
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Edit Device Type");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
     private void deleteDeviceType(ActionEvent event) {
+        selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
+
+        if(selectedDeviceType != null) {
+            boolean confirm = DialogUtility.showConfirmationDialog("Are you sure you want to delete device type" + selectedDeviceType.getName() + " ?");
+            if(confirm) {
+                try {
+                    modelManager.getDeviceTypeModel().deleteDeviceType(selectedDeviceType.getId());
+                    DialogUtility.showInformationDialog("Device type deleted successfully");
+                    setUpDeviceTypeTableView();
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select a device type to delete");
+        }
     }
+
 
     @FXML
     private void showReports(ActionEvent event) {
@@ -428,21 +507,45 @@ public class AdminDashboardController implements Initializable {
     @FXML
     private void restoreUser(ActionEvent event) {
         selectedUser = userTableView1.getSelectionModel().getSelectedItem();
-        modelManager.getAdminModel().restoreUser(selectedUser.getId());
-        setUpDeletedUsersTableView();
+
+        if(selectedUser != null) {
+            boolean confirm = DialogUtility.showConfirmationDialog("Are you sure you want to restore user " + selectedUser.getName() + " ?");
+            if(confirm) {
+                try {
+                    modelManager.getAdminModel().restoreUser(selectedUser.getId());
+                    DialogUtility.showInformationDialog("User restored successfully");
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select a user to restore");
+        }
     }
+
 
     @FXML
     private void restoreCustomer(ActionEvent event) {
         selectedCustomer = customerTableView1.getSelectionModel().getSelectedItem();
-        try {
-            modelManager.getCustomerModel().restoreCustomer(selectedCustomer.getId());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+        if(selectedCustomer != null) {
+            boolean confirm = DialogUtility.showConfirmationDialog("Are you sure you want to restore customer " + selectedCustomer.getName() + " ?");
+            if(confirm) {
+                try {
+                    modelManager.getCustomerModel().restoreCustomer(selectedCustomer.getId());
+                    DialogUtility.showInformationDialog("Customer restored successfully");
+                    setUpDeletedCustomersTableView();
+                    setUpCustomerTableView();
+                } catch (Exception e) {
+                    DialogUtility.showExceptionDialog(e);
+                }
+            }
+        } else {
+            DialogUtility.showInformationDialog("Please select a customer to restore");
         }
-        setUpDeletedUsersTableView();
-        setUpCustomerTableView();
     }
+
+
 
     @FXML
     private void showActiveCustomers(Event event) {

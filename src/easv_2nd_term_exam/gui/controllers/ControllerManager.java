@@ -32,6 +32,8 @@ public class ControllerManager {
     private AddDevicesToInstallationController addDevicesToInstallationController;
 
     private UpdateInstallationDeviceController updateInstallationDeviceController;
+    private EditDeviceTypeController editDeviceTypeController;
+    private EditCustomerController editCustomerController;
 
 
     private ControllerManager() {
@@ -42,6 +44,22 @@ public class ControllerManager {
             instance = new ControllerManager();
         }
         return instance;
+    }
+
+    public EditCustomerController getEditCustomerController() {
+        return editCustomerController;
+    }
+
+    public void setEditCustomerController(EditCustomerController editCustomerController) {
+        this.editCustomerController = editCustomerController;
+    }
+
+    public EditDeviceTypeController getEditDeviceTypeController() {
+        return editDeviceTypeController;
+    }
+
+    public void setEditDeviceTypeController(EditDeviceTypeController editDeviceTypeController) {
+        this.editDeviceTypeController = editDeviceTypeController;
     }
 
     public UpdateInstallationDeviceController getUpdateInstallationDeviceController() {
@@ -172,5 +190,4 @@ public class ControllerManager {
     public LoginViewController getLoginViewController() {
         return loginViewController;
     }
-    // Add any other methods for interacting between the controllers here
 }

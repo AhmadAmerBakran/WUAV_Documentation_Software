@@ -31,12 +31,12 @@ public class CustomerModel {
         customers.setAll(customerList);
     }
 
-    public ObservableList<Customer> getCustomers() {
-        return customers;
+    public ObservableList<Customer> getCustomers() throws Exception {
+        return FXCollections.observableArrayList(customerManager.getAllActiveCustomers());
     }
     public ObservableList<Customer> getDeletedCustomers() throws SQLException
     {
-        return deletedCustomers;
+        return FXCollections.observableArrayList(customerManager.getDeletedCustomers());
     }
     public Customer createCustomer(Customer customer) throws Exception {
         Customer createdCustomer = customerManager.createCustomer(customer);

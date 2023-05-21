@@ -169,7 +169,11 @@ public class TechnicianDashboardController implements Initializable {
     }
 
     private void setUpCustomerTableView() {
-        customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        try {
+            customerTableView.getItems().setAll(modelManager.getCustomerModel().getCustomers());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         customerIdColumnS.setCellValueFactory(new PropertyValueFactory < Customer, Integer > ("id"));
         customerNameColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("name"));
         customerEmailColumnS.setCellValueFactory(new PropertyValueFactory < Customer, String > ("email"));
