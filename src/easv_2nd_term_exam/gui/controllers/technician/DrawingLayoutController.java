@@ -34,6 +34,10 @@ public class DrawingLayoutController implements Initializable {
 
     @FXML
     private ColorPicker colorPicker;
+    @FXML
+    private ImageView cameraIcon, speakerIcon, screenIcon, monitorIcon, amplifierIcon,
+            televisionIcon, projectorIcon, cctvIcon, recieverIcon, microphoneIcon;
+    private ImageView draggedIcon;
 
     @FXML
     private Canvas drawingCanvas;
@@ -78,6 +82,7 @@ public class DrawingLayoutController implements Initializable {
     private void saveLayout(ActionEvent event) {
         WritableImage image = captureCanvasPaneSnapshot();
         ControllerManager.getInstance().getTechnicianDashboardController().addImage(image);
+        ControllerManager.getInstance().getTechnicianDashboardController().displayImage(0);
 
         closeDrawingLayoutWindow();
     }
@@ -109,18 +114,31 @@ public class DrawingLayoutController implements Initializable {
 
 
 
-    @FXML
-    private ImageView cameraIcon;
-    @FXML
-    private ImageView speakerIcon;
-    @FXML
-    private ImageView screenIcon;
-    private ImageView draggedIcon;
+
 
     private void initializeIcons() {
-        cameraIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/wall_mount_camera_96px.png"));
-        speakerIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/speaker_96px.png"));
-        screenIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/widescreen_96px.png"));
+        cameraIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/videoCam.png"));
+        speakerIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/speaker.png"));
+        screenIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/screen.png"));
+        monitorIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/monitor.png"));
+        amplifierIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/amplifier.png"));
+        televisionIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/television.png"));
+        projectorIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/projector.png"));
+        cctvIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/cctv.png"));
+        recieverIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/reciever.png"));
+        microphoneIcon.setImage(new Image("/easv_2nd_term_exam/gui/views/images_resource/microphone.png"));
+        setDragDetectionHandler(cameraIcon, "camera");
+        setDragDetectionHandler(speakerIcon, "speaker");
+        setDragDetectionHandler(screenIcon, "screen");
+        setDragDetectionHandler(monitorIcon, "monitor");
+        setDragDetectionHandler(amplifierIcon, "amplifier");
+        setDragDetectionHandler(televisionIcon, "television");
+        setDragDetectionHandler(projectorIcon, "projector");
+        setDragDetectionHandler(cctvIcon, "cctv");
+        setDragDetectionHandler(recieverIcon, "reciever");
+        setDragDetectionHandler(microphoneIcon, "microphone");
+
+
         cameraIcon.setOnDragDetected(event -> {
             draggedIcon = cameraIcon;
             Dragboard db = cameraIcon.startDragAndDrop(TransferMode.ANY);
@@ -172,6 +190,8 @@ public class DrawingLayoutController implements Initializable {
         });
 
     }
+
+
 
     @FXML
     private void drawLine() {
@@ -265,5 +285,16 @@ public class DrawingLayoutController implements Initializable {
             case NONE:
                 break;
         }
+    }
+
+    private void setDragDetectionHandler(ImageView imageView, String imageKey) {
+        imageView.setOnDragDetected(event -> {
+            draggedIcon = imageView;
+            Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(imageKey);
+            db.setContent(content);
+            event.consume();
+        });
     }
 }

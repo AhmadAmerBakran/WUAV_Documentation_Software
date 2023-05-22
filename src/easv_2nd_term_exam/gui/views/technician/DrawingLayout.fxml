@@ -12,8 +12,15 @@
       <Pane BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="cameraIcon" fitHeight="32.0" fitWidth="32.0" layoutX="8.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="screenIcon" fitHeight="32.0" fitWidth="32.0" layoutX="50.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="speakerIcon" fitHeight="32.0" fitWidth="32.0" layoutX="92.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="screenIcon" fitHeight="32.0" fitWidth="32.0" layoutX="50.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="amplifierIcon" fitHeight="32.0" fitWidth="32.0" layoutX="134.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="cctvIcon" fitHeight="32.0" fitWidth="32.0" layoutX="176.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="microphoneIcon" fitHeight="32.0" fitWidth="32.0" layoutX="218.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="monitorIcon" fitHeight="32.0" fitWidth="32.0" layoutX="260.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="projectorIcon" fitHeight="32.0" fitWidth="32.0" layoutX="302.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="recieverIcon" fitHeight="32.0" fitWidth="32.0" layoutX="344.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="televisionIcon" fitHeight="32.0" fitWidth="32.0" layoutX="386.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </top>

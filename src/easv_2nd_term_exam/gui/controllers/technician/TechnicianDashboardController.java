@@ -4,10 +4,12 @@ import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
+import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
 import easv_2nd_term_exam.util.FileUtility;
 import easv_2nd_term_exam.util.PdfReportGenerator;
 import easv_2nd_term_exam.util.PictureUtility;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -27,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,7 +60,7 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private ComboBox < CustomerType > customerTypeBox;
     @FXML
-    private Label userLabel, diagramPathLabel, uploadedPictureLabel;
+    private Label userLabel;
     @FXML
     private TextArea descriptionArea;
     @FXML
@@ -86,9 +90,15 @@ public class TechnicianDashboardController implements Initializable {
     private TableColumn < DeviceType, String > deviceTypeNameColumn;
 
     @FXML
+    private ImageView installationPictureView;
+    @FXML
+    private AnchorPane picturesPane;
+
+    @FXML
     private VBox newCustomerVBox;
     @FXML
     private HBox billingAddressHBox;
+    private ModelManagerLoader modelManagerLoader;
 
     private ModelManager modelManager;
     private Report selectedReport;
@@ -97,15 +107,16 @@ public class TechnicianDashboardController implements Initializable {
     private ObservableList <Device> devices;
     private List<Image> images = new ArrayList<>();
     private User loggedUser;
+    private int currentIndex = 0;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        modelManagerLoader = ModelManagerLoader.getInstance();
+        modelManager = modelManagerLoader.getModelManager();
+        installationPictureView.fitWidthProperty().bind(picturesPane.widthProperty());
+        installationPictureView.fitHeightProperty().bind(picturesPane.heightProperty().subtract(100));
         devices = FXCollections.observableArrayList();
         selectedReport = reportTableView.getSelectionModel().getSelectedItem();
-        try {
-            modelManager = new ModelManager();
-        } catch (Exception e) {
-            DialogUtility.showExceptionDialog(e);
-        }
+
         installationTypeBox.getItems().setAll(modelManager.getInstallationTypeModel().getInstallationTypes());
         customerTypeBox.getItems().setAll(CustomerType.values());
         ControllerManager.getInstance().setTechnicianDashboardController(this);
@@ -241,6 +252,7 @@ public class TechnicianDashboardController implements Initializable {
                 try {
                     Image image = new Image(new FileInputStream(selectedFile));
                     images.add(image);
+                    displayImage(images.size()-1);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -256,15 +268,10 @@ public class TechnicianDashboardController implements Initializable {
         return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
     }
 
-    public Label getDiagramPathLabel() {
-        return diagramPathLabel;
-    }
 
     @FXML
     private void cancel(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        showMyReports(event);
     }
     @FXML
     private void saveReport(ActionEvent event) {
@@ -346,9 +353,8 @@ public class TechnicianDashboardController implements Initializable {
             DialogUtility.showExceptionDialog(e);
         }
 
-        Node source = (Node) event.getSource();
-        Stage currentStage = (Stage) source.getScene().getWindow();
-        currentStage.close();
+        setUpReportTableView();
+        showMyReports(event);
     }
 
     @FXML
@@ -374,13 +380,6 @@ public class TechnicianDashboardController implements Initializable {
                 }
             }
         }
-    }
-
-    @FXML
-    private void removeAllPhotos(ActionEvent event) {
-        FileUtility.deleteFilesFromDirectory(createPackagePath());
-        diagramPathLabel.setText(null);
-        uploadedPictureLabel.setText(null);
     }
 
     @FXML
@@ -470,5 +469,39 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private void nextToInstallationPhotos(ActionEvent event) {
         handleViewSwitch(false, false, false, false, true);
+    }
+
+    public void displayImage(int index) {
+        installationPictureView.setImage(images.get(index));
+    }
+
+    private void animateImageChange() {
+        FadeTransition ft = new FadeTransition(Duration.millis(500), installationPictureView);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.3);
+        ft.setCycleCount(2);
+        ft.setAutoReverse(true);
+        ft.setOnFinished(event -> displayImage(currentIndex));
+        ft.play();
+    }
+
+
+    @FXML
+    private void deleteCurrentImage(ActionEvent event) {
+    }
+
+    @FXML
+    private void previousImage() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            animateImageChange();
+        }
+    }
+    @FXML
+    private void nextImage() {
+        if (currentIndex < images.size() - 1) {
+            currentIndex++;
+            animateImageChange();
+        }
     }
 }

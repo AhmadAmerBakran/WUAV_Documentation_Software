@@ -25,12 +25,10 @@ public class Main extends Application {
         primaryStage.setTitle("Login to WUAV");
         primaryStage.setScene(scene);
 
-        // Create a fade-in transition for the stage
         FadeTransition fadeIn = new FadeTransition(Duration.millis(1500), root);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
 
-        // Show the stage and play the fade-in transition
         primaryStage.show();
         fadeIn.play();
     }

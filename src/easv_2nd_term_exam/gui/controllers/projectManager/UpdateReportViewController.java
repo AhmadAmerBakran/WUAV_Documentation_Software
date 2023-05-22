@@ -115,9 +115,6 @@ public class UpdateReportViewController implements Initializable {
     private VBox newCustomerVBox;
 
     @FXML
-    private Button removeDiagramBtn;
-
-    @FXML
     private Label installationIdLabel;
 
     @FXML

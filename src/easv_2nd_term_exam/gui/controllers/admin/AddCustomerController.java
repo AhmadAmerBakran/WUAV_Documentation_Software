@@ -107,7 +107,4 @@ public class AddCustomerController implements Initializable {
             DialogUtility.showExceptionDialog(e);
         }
     }
-
-
-
 }
