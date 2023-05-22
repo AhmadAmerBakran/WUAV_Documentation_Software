@@ -33,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -208,6 +209,8 @@ public class UpdateReportViewController implements Initializable {
         }
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();

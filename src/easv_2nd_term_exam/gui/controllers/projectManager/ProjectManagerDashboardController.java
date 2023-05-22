@@ -21,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -236,6 +237,7 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getCustomerIdField().setText(String.valueOf(report.getCustomerId()));
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Update Installation/Report");
         stage.setScene(scene);
         stage.show();

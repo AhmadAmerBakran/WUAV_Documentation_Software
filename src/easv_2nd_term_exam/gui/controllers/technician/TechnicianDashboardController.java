@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -260,7 +261,11 @@ public class TechnicianDashboardController implements Initializable {
     }
 
     @FXML
-    private void cancel(ActionEvent event) {}
+    private void cancel(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
     @FXML
     private void saveReport(ActionEvent event) {
         String customerName = customerNameField.getText();
@@ -340,6 +345,10 @@ public class TechnicianDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
+
+        Node source = (Node) event.getSource();
+        Stage currentStage = (Stage) source.getScene().getWindow();
+        currentStage.close();
     }
 
     @FXML
@@ -417,25 +426,36 @@ public class TechnicianDashboardController implements Initializable {
     @FXML
     private void addDeviceToInstallation(ActionEvent event) {
         selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
+        if (selectedDeviceType == null) {
+            DialogUtility.showInformationDialog("Please select a device type first.");
+            return;
+        }
+
         openNewWindow("/easv_2nd_term_exam/gui/views/technician/AddDeviceView.fxml", "Add Device To Installation");
         ControllerManager.getInstance().getAddDeviceController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
-        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeNameField().setText(selectedDeviceType.getName());}
-
+        ControllerManager.getInstance().getAddDeviceController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+    }
 
     private void openNewWindow(String fxmlPath, String title) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent root = null;
         try {
-            root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to load the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle(title);
-        stage.setScene(scene);
-        stage.show();
     }
+
     @FXML
     private void nextToCustomerInfo(ActionEvent event) {
         handleViewSwitch(false, false, true, false, false);
