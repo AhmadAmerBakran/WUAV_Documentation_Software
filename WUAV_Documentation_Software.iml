@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="commons-7.2.5" level="project" />
-    <orderEntry type="library" name="kernel-7.2.5" level="project" />
+    <orderEntry type="library" name="microsoft.sqlserver.mssql.jdbc" level="project" />
+    <orderEntry type="library" name="barcodes-7.2.5" level="project" />
   </component>
 </module>

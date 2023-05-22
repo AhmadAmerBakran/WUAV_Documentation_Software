@@ -347,8 +347,8 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         Node source = (Node) event.getSource();
-        Stage currentStage = (Stage) source.getScene().getWindow();
-        currentStage.close();
+        showMyReports(event);
+        setUpReportTableView();
     }
 
     @FXML
