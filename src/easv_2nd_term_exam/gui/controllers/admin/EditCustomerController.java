@@ -6,6 +6,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -61,32 +62,66 @@ public class EditCustomerController implements Initializable {
 
     @FXML
     void cancelEditing(ActionEvent event) {
+        ((Node)event.getSource()).getScene().getWindow().hide();
 
     }
 
     @FXML
     void submitEditing(ActionEvent event) {
+        if(!ValidationUtility.isNotEmpty(customerNameFieldE) ||
+                !ValidationUtility.isValidName(customerNameFieldE)) {
+            DialogUtility.showInformationDialog("Invalid or empty Name.");
+            return;
+        }
 
-        String name, email, address, billingAddress = null;
-        name = customerNameFieldE.getText();
-        email = customerEmailFieldE.getText();
-        address = customerAddressFieldE.getText();
+        if(!ValidationUtility.isNotEmpty(customerEmailFieldE) ||
+                !ValidationUtility.isValidEmail(customerEmailFieldE)) {
+            DialogUtility.showInformationDialog("Invalid or empty Email.");
+            return;
+        }
 
-        if(customerTypeComboBoxE.getValue() == CustomerType.B2B)
-        {
+        if(!ValidationUtility.isNotEmpty(customerAddressFieldE) ||
+                !ValidationUtility.isValidDanishAddress(customerAddressFieldE)) {
+            DialogUtility.showInformationDialog("Invalid or empty Address.");
+            return;
+        }
+
+        if(!ValidationUtility.isComboBoxNotEmpty(customerTypeComboBoxE)) {
+            DialogUtility.showInformationDialog("Customer type is not selected.");
+            return;
+        }
+
+        String name = customerNameFieldE.getText();
+        String email = customerEmailFieldE.getText();
+        String address = customerAddressFieldE.getText();
+        String billingAddress = null;
+        CustomerType type = customerTypeComboBoxE.getValue();
+
+        if(type == CustomerType.B2B) {
+            if(!ValidationUtility.isNotEmpty(customerAddressFieldBE)) {
+                DialogUtility.showInformationDialog("Billing Address is required for B2B customers.");
+                return;
+            }
             billingAddress = customerAddressFieldBE.getText();
         }
-        Customer customerToBeUpdated = new Customer(name, address, email, customerTypeComboBoxE.getValue());
-        customerToBeUpdated.setBillingAddress(billingAddress);
+
+        selectedCustomer.setName(name);
+        selectedCustomer.setAddress(address);
+        selectedCustomer.setEmail(email);
+        selectedCustomer.setType(type);
+        selectedCustomer.setBillingAddress(billingAddress);
 
         try {
-            modelManager.getCustomerModel().createCustomer(customerToBeUpdated);
+            modelManager.getCustomerModel().updateCustomer(selectedCustomer);
             DialogUtility.showInformationDialog("Customer updated successfully.");
             ((Node)event.getSource()).getScene().getWindow().hide();
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
     }
+
+
+
 
 }
 

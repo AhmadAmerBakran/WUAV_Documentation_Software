@@ -64,7 +64,6 @@ public class AddUserController implements Initializable {
         String password = userPasswordField.getText();
         UserRole role = userTypeComboBox.getValue();
 
-        // Validate the input fields before creating the new user.
         if (!ValidationUtility.isNotEmpty(userFullnameField)) {
             DialogUtility.showInformationDialog("Full name field cannot be empty!");
             return;
@@ -90,7 +89,6 @@ public class AddUserController implements Initializable {
             return;
         }
 
-        // Create a new user object based on the selected user role
         User newUser = null;
         switch (role) {
             case ADMIN:
@@ -111,7 +109,6 @@ public class AddUserController implements Initializable {
                 break;
         }
 
-        // Add the new user to the model
         if (newUser != null) {
             adminModel.addUser(newUser);
             DialogUtility.showInformationDialog("User added successfully!");

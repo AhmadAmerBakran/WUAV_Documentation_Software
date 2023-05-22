@@ -5,6 +5,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,17 +39,25 @@ public class EditInstallationTypeController implements Initializable {
 
     @FXML
     private void submitEditing(ActionEvent event) {
-        try {
-            if (selectedInstallationType != null) {
-                selectedInstallationType.setName(installationTypeFieldE.getText());
+        String installationTypeName = installationTypeFieldE.getText();
+        if (!ValidationUtility.isNotEmpty(installationTypeFieldE) || !ValidationUtility.isValidName(installationTypeFieldE)) {
+            DialogUtility.showInformationDialog("Invalid Installation Type name. Please enter a valid name.");
+            return;
+        }
+        if (selectedInstallationType != null) {
+            selectedInstallationType.setName(installationTypeName);
+            try {
                 modelManager.getInstallationTypeModel().updateInstallationType(selectedInstallationType);
-                DialogUtility.showInformationDialog("Installation Type successfully updated.");
+                DialogUtility.showInformationDialog("Installation Type updated successfully.");
+                ControllerManager.getInstance().getAdminDashboardController().setUpInstallationTypeTableView();
                 closeStage(event);
+            } catch (Exception e) {
+                DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
             }
-        } catch (Exception e) {
-            DialogUtility.showExceptionDialog(e);
         }
     }
+
+
 
     public void fillTextFieldWithInstallationTypeData(InstallationType installationType) {
         selectedInstallationType = installationType;

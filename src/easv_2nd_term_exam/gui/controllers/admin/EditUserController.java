@@ -80,33 +80,33 @@ public class EditUserController implements Initializable {
         String password = userPasswordFieldE.getText();
         UserRole role = userTypeComboBox.getValue();
 
-        User newUser = null;
+        User updatedUser = null;
         switch (role) {
             case ADMIN:
-                newUser = new Admin(name, email, username, password);
-                newUser.setRole(UserRole.ADMIN);
-                newUser.setId(controller.getSelectedUser().getId());
+                updatedUser = new Admin(name, email, username, password);
+                updatedUser.setRole(UserRole.ADMIN);
+                updatedUser.setId(controller.getSelectedUser().getId());
                 break;
             case TECHNICIAN:
-                newUser = new Technician(name, email, username, password);
-                newUser.setRole(UserRole.TECHNICIAN);
-                newUser.setId(controller.getSelectedUser().getId());
+                updatedUser = new Technician(name, email, username, password);
+                updatedUser.setRole(UserRole.TECHNICIAN);
+                updatedUser.setId(controller.getSelectedUser().getId());
                 break;
             case PROJECT_MANAGER:
-                newUser = new ProjectManager(name, email, username, password);
-                newUser.setRole(UserRole.PROJECT_MANAGER);
-                newUser.setId(controller.getSelectedUser().getId());
+                updatedUser = new ProjectManager(name, email, username, password);
+                updatedUser.setRole(UserRole.PROJECT_MANAGER);
+                updatedUser.setId(controller.getSelectedUser().getId());
                 break;
             case SALES_PERSON:
-                newUser = new SalesPerson(name, email, username, password);
-                newUser.setRole(UserRole.SALES_PERSON);
-                newUser.setId(controller.getSelectedUser().getId());
+                updatedUser = new SalesPerson(name, email, username, password);
+                updatedUser.setRole(UserRole.SALES_PERSON);
+                updatedUser.setId(controller.getSelectedUser().getId());
                 break;
         }
 
         // Add the new user to the model
-        if (newUser != null) {
-            modelManager.getAdminModel().updateUser(newUser);
+        if (updatedUser != null) {
+            modelManager.getAdminModel().updateUser(updatedUser);
             DialogUtility.showInformationDialog("User Updated successfully!");
             ControllerManager.getInstance().getAdminDashboardController().showAllUsers(event);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

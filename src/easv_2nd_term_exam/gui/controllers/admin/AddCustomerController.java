@@ -6,6 +6,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -60,21 +61,47 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     private void submitAdding(ActionEvent event) {
-        String name, email, address, billingAddress = null;
-        name = customerNameField.getText();
-        email = customerEmailField.getText();
-        address = customerAddressField.getText();
+        if (!ValidationUtility.isNotEmpty(customerNameField)) {
+            DialogUtility.showInformationDialog("Please enter a name.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(customerEmailField)) {
+            DialogUtility.showInformationDialog("Please enter an email.");
+            return;
+        }
+        if (!ValidationUtility.isValidEmail(customerEmailField)) {
+            DialogUtility.showInformationDialog("Please enter a valid email.");
+            return;
+        }
+        if (!ValidationUtility.isNotEmpty(customerAddressField)) {
+            DialogUtility.showInformationDialog("Please enter an address.");
+            return;
+        }
+        if (!ValidationUtility.isComboBoxNotEmpty(customerTypeComboBox)) {
+            DialogUtility.showInformationDialog("Please select a customer type.");
+            return;
+        }
 
-        if(customerTypeComboBox.getValue() == CustomerType.B2B)
-        {
+        String name = customerNameField.getText();
+        String email = customerEmailField.getText();
+        String address = customerAddressField.getText();
+        String billingAddress = null;
+
+        if(customerTypeComboBox.getValue() == CustomerType.B2B) {
+            if (!ValidationUtility.isNotEmpty(customerAddressFieldB)) {
+                DialogUtility.showInformationDialog("Please enter a billing address.");
+                return;
+            }
             billingAddress = customerAddressFieldB.getText();
         }
+
         Customer customerToBeCreated = new Customer(name, address, email, customerTypeComboBox.getValue());
         customerToBeCreated.setBillingAddress(billingAddress);
 
         try {
             modelManager.getCustomerModel().createCustomer(customerToBeCreated);
             DialogUtility.showInformationDialog("Customer created successfully.");
+            ControllerManager.getInstance().getAdminDashboardController().setUpCustomerTableView();
             ((Node)event.getSource()).getScene().getWindow().hide();
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);

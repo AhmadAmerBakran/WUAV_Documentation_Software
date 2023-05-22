@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class SalesPersonDashboard implements Initializable {
@@ -33,7 +34,7 @@ public class SalesPersonDashboard implements Initializable {
 
 
     @FXML
-    private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn;
+    private TableColumn<Report, Integer> installationIdColumn, technicianIdColumn, customerIdColumn;
 
 
     @FXML
@@ -62,19 +63,44 @@ public class SalesPersonDashboard implements Initializable {
 
     }
 
-    private void setUpReportTableView()
-    {
+    public void setUpReportTableView() {
         try {
             reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        installationIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("installationId"));
-        technicianIdColumn.setCellValueFactory(new PropertyValueFactory<Report, Integer>("technicianId"));
-        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("installationType"));
-        customerNameColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerName"));
-        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerEmail"));
-        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<Report, String>("customerAddress"));
+        setCellValueFactories(installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
+        setTableColumnsPrefWidth(reportTableView, installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn);
+    }
+
+
+    private void setCellValueFactories(TableColumn<Report, Integer> installationIdColumn, TableColumn<Report, Integer> technicianIdColumn, TableColumn<Report, String> installationTypeColumn, TableColumn<Report, String> customerNameColumn, TableColumn<Report, String> customerEmailColumn, TableColumn<Report, String> customerAddressColumn, TableColumn<Report, Integer> customerIdColumn) {
+        installationIdColumn.setCellValueFactory(new PropertyValueFactory<>("installationId"));
+        technicianIdColumn.setCellValueFactory(new PropertyValueFactory<>("technicianId"));
+        installationTypeColumn.setCellValueFactory(new PropertyValueFactory<>("installationType"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerEmailColumn.setCellValueFactory(new PropertyValueFactory<>("customerEmail"));
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<>("customerAddress"));
+        customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    }
+
+    private void setTableColumnsPrefWidth(TableView<Report> tableView, TableColumn<Report, Integer> installationIdColumn, TableColumn<Report, Integer> technicianIdColumn, TableColumn<Report, String> installationTypeColumn, TableColumn<Report, String> customerNameColumn, TableColumn<Report, String> customerEmailColumn, TableColumn<Report, String> customerAddressColumn, TableColumn<Report, Integer> customerIdColumn, TableColumn... extraColumns) {
+        double[] columnRatios = {0.09, 0.09, 0.14, 0.14, 0.14, 0.21, 0.19};
+        double[] columnRatiosWithExpiryDate = {0.08, 0.08, 0.12, 0.12, 0.12, 0.17, 0.13, 0.18};
+        TableColumn[] columns = {installationIdColumn, technicianIdColumn, installationTypeColumn, customerNameColumn, customerEmailColumn, customerAddressColumn, customerIdColumn};
+
+        if (extraColumns.length > 0) {
+            for (int i = 0; i < columns.length; i++) {
+                columns[i].prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatiosWithExpiryDate[i]));
+            }
+
+            TableColumn<Report, LocalDate> expiryDateColumn = extraColumns[0];
+            expiryDateColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatiosWithExpiryDate[7]));
+        } else {
+            for (int i = 0; i < columns.length; i++) {
+                columns[i].prefWidthProperty().bind(tableView.widthProperty().multiply(columnRatios[i]));
+            }
+        }
     }
     @FXML
     void downloadReport(ActionEvent event) {

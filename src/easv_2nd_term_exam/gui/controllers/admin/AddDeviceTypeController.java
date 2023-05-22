@@ -5,6 +5,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,18 +38,26 @@ public class AddDeviceTypeController implements Initializable {
 
     @FXML
     private void submitAdding(ActionEvent event) {
-
         String deviceTypeName = deviceNameField.getText();
+
+        if (!ValidationUtility.isNotEmpty(deviceNameField) || !ValidationUtility.isValidName(deviceNameField)) {
+            DialogUtility.showInformationDialog("Invalid Device Type name. Please enter a valid name.");
+            return;
+        }
+
         DeviceType deviceType = new DeviceType();
         deviceType.setName(deviceTypeName);
+
         try {
             modelManager.getDeviceTypeModel().createDeviceType(deviceType);
             DialogUtility.showInformationDialog("Device Type added successfully.");
+            ControllerManager.getInstance().getAdminDashboardController().setUpDeviceTypeTableView();
             closeStage(event);
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
     }
+
 
     private void closeStage(ActionEvent event) {
         Stage stage = (Stage) deviceNameField.getScene().getWindow();

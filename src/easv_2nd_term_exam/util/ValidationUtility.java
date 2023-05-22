@@ -8,13 +8,14 @@ public class ValidationUtility {
 
     // Regular Expressions for validation
     private static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-    private static final String DANISH_ADDRESS_REGEX = "[\\w\\s]+,\\s*\\d{3,4}\\s*[^\\d]{2,4}";
+    private static final String DANISH_ADDRESS_REGEX = "[\\p{L}\\s\\d]+,\\s*\\d{3,4}\\s*\\p{L}\\s*\\p{L}+";
     private static final String NAME_REGEX = "[a-zA-Z\\s]+";
 
     // Username, Password, DeviceName, InstallationName can use this
     public static boolean isNotEmpty(TextField field) {
-        return !field.getText().trim().isEmpty();
+        return field.getText() != null && !field.getText().trim().isEmpty();
     }
+
 
     // Email validation
     public static boolean isValidEmail(TextField field) {

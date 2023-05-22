@@ -46,9 +46,8 @@ public class CustomerModel {
 
     public void updateCustomer(Customer customer) throws Exception {
         customerManager.updateCustomer(customer);
-        int index = customers.indexOf(customer);
-        customers.set(index, customer);
     }
+
 
     public void deleteCustomer(int id) throws Exception {
         customerManager.deleteCustomer(id);

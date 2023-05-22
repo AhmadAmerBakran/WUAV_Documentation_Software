@@ -1,14 +1,12 @@
 package easv_2nd_term_exam.gui.controllers.admin;
 
-import easv_2nd_term_exam.be.Customer;
-import easv_2nd_term_exam.be.DeviceType;
-import easv_2nd_term_exam.be.InstallationType;
-import easv_2nd_term_exam.be.User;
+import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.enums.UserRole;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
+import easv_2nd_term_exam.util.PdfReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -20,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -81,6 +80,19 @@ public class AdminDashboardController implements Initializable {
             salesPersonsNameColumn, salesPersonsEmailColumn, salesPersonsUsernameColumn;
     @FXML
     private TableColumn<User, UserRole> userRoleColumn, techRoleColumn, manRoleColumn, salesPersonsRoleColumn, userRoleColumn1;
+
+
+    @FXML
+    private TableColumn<Report, String> customerAddressColumnR, customerEmailColumnR, customerNameColumnR, installationTypeColumnR;
+
+
+    @FXML
+    private TableColumn<Report, Integer> installationIdColumnR, technicianIdColumnR;
+
+
+    @FXML
+    private TableView<Report> reportTableView;
+
     @FXML
     private Label userLabel;
     @FXML
@@ -108,6 +120,7 @@ public class AdminDashboardController implements Initializable {
         setUpInstallationTypeTableView();
         setUpDeviceTypeTableView();
         setUpDeletedUsersTableView();
+        setUpReportTableView();
     }
 
     private void setupTableViewListeners() {
@@ -124,7 +137,19 @@ public class AdminDashboardController implements Initializable {
             }
         });
     }
-
+    public void setUpReportTableView() {
+        try {
+            reportTableView.getItems().setAll(modelManager.getReportModel().getAllReports());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        installationIdColumnR.setCellValueFactory(new PropertyValueFactory<>("installationId"));
+        technicianIdColumnR.setCellValueFactory(new PropertyValueFactory<>("technicianId"));
+        installationTypeColumnR.setCellValueFactory(new PropertyValueFactory<>("installationType"));
+        customerNameColumnR.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerEmailColumnR.setCellValueFactory(new PropertyValueFactory<>("customerEmail"));
+        customerAddressColumnR.setCellValueFactory(new PropertyValueFactory<>("customerAddress"));
+    }
     public void setupTableViews() {
         setupTableView(userTableView, modelManager.getAdminModel()::getUsers, userIdColumn, userNameColumn, uUsernameColumn, userEmailColumn, userRoleColumn);
         setupTableView(techTableView, modelManager.getAdminModel()::getTechnicians, techIdColumn, techNameColumn, techUsernameColumn, techEmailColumn, techRoleColumn);
@@ -235,7 +260,6 @@ public class AdminDashboardController implements Initializable {
             if (confirm) {
                 closeCurrentWindow(event);
                 openNewWindow("/easv_2nd_term_exam/gui/views/login/LoginView.fxml", "Login");
-                DialogUtility.showInformationDialog("Logout successful");
             }
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
@@ -244,19 +268,24 @@ public class AdminDashboardController implements Initializable {
 
 
     private void openNewWindow(String fxmlPath, String title) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent root = null;
         try {
-            root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to load the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle(title);
-        stage.setScene(scene);
-        stage.show();
     }
+
 
     @FXML
     private void showDeletedUsers()
@@ -369,39 +398,58 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateCustomer(ActionEvent event) {
-        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditCustomerView.fxml"));
-        Parent root = null;
         try {
-            root = loader.load();
+            selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer == null) {
+                DialogUtility.showInformationDialog("No Customer selected. Please select a Customer first.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditCustomerView.fxml"));
+            Parent root = loader.load();
+
+            EditCustomerController controller = loader.getController();
+            controller.fillTextFieldsWithCustomer(selectedCustomer);
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setTitle("Edit Customer");
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to load the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
-        EditCustomerController controller = loader.getController();
-        controller.fillTextFieldsWithCustomer(selectedCustomer);
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Edit Customer");
-        stage.setScene(scene);
-        stage.show();
     }
+
 
     @FXML
     private void deleteCustomer(ActionEvent event) {
-        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
-        boolean confirmed = DialogUtility.showConfirmationDialog("Are you sure you want to delete customer " + selectedCustomer.getName() + " ?");
-        if(confirmed) {
-            try {
+        try {
+            selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer == null) {
+                DialogUtility.showInformationDialog("No Customer selected. Please select a Customer first.");
+                return;
+            }
+
+            boolean confirmed = DialogUtility.showConfirmationDialog("Are you sure you want to delete customer " + selectedCustomer.getName() + " ?");
+            if(confirmed) {
                 modelManager.getCustomerModel().deleteCustomer(selectedCustomer.getId());
                 DialogUtility.showInformationDialog("Customer deleted successfully.");
                 setUpCustomerTableView();
                 setUpDeletedCustomersTableView();
-
-            } catch (Exception e) {
-                DialogUtility.showExceptionDialog(e);
             }
+        } catch (IOException e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to update the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
     }
+
 
 
     @FXML
@@ -411,22 +459,34 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateInstallationType(ActionEvent event) {
-        selectedInstallationType = installationTypeTableView.getSelectionModel().getSelectedItem();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditInstallationTypeView.fxml"));
-        Parent root = null;
         try {
-            root = loader.load();
+            selectedInstallationType = installationTypeTableView.getSelectionModel().getSelectedItem();
+            if (selectedInstallationType == null) {
+                DialogUtility.showInformationDialog("No Installation Type selected. Please select an Installation Type first.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditInstallationTypeView.fxml"));
+            Parent root = loader.load();
+
+            EditInstallationTypeController controller = loader.getController();
+            controller.fillTextFieldWithInstallationTypeData(selectedInstallationType);
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setTitle("Edit Installation Type");
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to load the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
-        EditInstallationTypeController controller = loader.getController();
-        controller.fillTextFieldWithInstallationTypeData(selectedInstallationType);
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Edit Installation Type");
-        stage.setScene(scene);
-        stage.show();
     }
+
 
     @FXML
     private void deleteInstallationType(ActionEvent event) {
@@ -457,22 +517,34 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void updateDeviceType(ActionEvent event) {
-        selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditDeviceTypeView.fxml"));
-        Parent root = null;
         try {
-            root = loader.load();
+            selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
+            if (selectedDeviceType == null) {
+                DialogUtility.showInformationDialog("No Device Type selected. Please select a Device Type first.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/admin/EditDeviceTypeView.fxml"));
+            Parent root = loader.load();
+
+            EditDeviceTypeController controller = loader.getController();
+            controller.fillTextFieldWithDeviceTypeData(selectedDeviceType);
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setTitle("Edit Device Type");
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(new RuntimeException("Failed to load the view.", e));
+        } catch (Exception e) {
+            DialogUtility.showExceptionDialog(new RuntimeException("An unexpected error occurred.", e));
         }
-        EditDeviceTypeController controller = loader.getController();
-        controller.fillTextFieldWithDeviceTypeData(selectedDeviceType);
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Edit Device Type");
-        stage.setScene(scene);
-        stage.show();
     }
+
 
     @FXML
     private void deleteDeviceType(ActionEvent event) {
@@ -502,6 +574,14 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void downloadReport(ActionEvent event) {
+        Report selectedReport = reportTableView.getSelectionModel().getSelectedItem();
+        if (selectedReport != null) {
+            Node source = (Node) event.getSource();
+            Stage primaryStage = (Stage) source.getScene().getWindow();
+            PdfReportGenerator.generatePdfReport(selectedReport, primaryStage);
+        } else {
+            DialogUtility.showInformationDialog("Please select a report to download.");
+        }
     }
 
     @FXML
