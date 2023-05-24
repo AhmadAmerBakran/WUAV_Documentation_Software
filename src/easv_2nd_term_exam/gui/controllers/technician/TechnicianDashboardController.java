@@ -101,8 +101,8 @@ public class TechnicianDashboardController implements Initializable {
     private Report selectedReport;
     private Customer selectedCustomer;
     private DeviceType selectedDeviceType;
-    private ObservableList <Device> devices;
-    private List<Image> images = new ArrayList<>();
+    private ObservableList < Device > devices;
+    private List < Image > images = new ArrayList < > ();
     private User loggedUser;
     private int currentIndex = 0;
     @Override
@@ -146,7 +146,7 @@ public class TechnicianDashboardController implements Initializable {
 
     }
 
-    public ObservableList <Device> getDevices() {
+    public ObservableList < Device > getDevices() {
         return devices;
     }
 
@@ -213,7 +213,6 @@ public class TechnicianDashboardController implements Initializable {
         }
     }
 
-
     @FXML
     private void openDrawingLayout(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/technician/DrawingLayout.fxml"));
@@ -235,21 +234,20 @@ public class TechnicianDashboardController implements Initializable {
         this.images.add(image);
     }
 
-
     @FXML
     private void openFileChooser(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a picture");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp"));
 
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) event.getSource()).getScene().getWindow());
+        List < File > selectedFiles = fileChooser.showOpenMultipleDialog(((Node) event.getSource()).getScene().getWindow());
 
         if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
+            for (File selectedFile: selectedFiles) {
                 try {
                     Image image = new Image(new FileInputStream(selectedFile));
                     images.add(image);
-                    displayImage(images.size()-1);
+                    displayImage(images.size() - 1);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -257,14 +255,11 @@ public class TechnicianDashboardController implements Initializable {
         }
     }
 
-
-
     private String createPackagePath() {
         String projectPath = System.getProperty("user.dir") + File.separator + "src";
         String sanitizedUserName = loggedUser.getName().replace(" ", "_");
         return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
     }
-
 
     @FXML
     private void cancel(ActionEvent event) {
@@ -320,9 +315,9 @@ public class TechnicianDashboardController implements Initializable {
         }
 
         int installationId = newInstallation.getId();
-        List<Picture> pictures = new ArrayList<>();
-        if(!images.isEmpty()) {
-            for(Image image: images) {
+        List < Picture > pictures = new ArrayList < > ();
+        if (!images.isEmpty()) {
+            for (Image image: images) {
                 byte[] imageData = PictureUtility.imageToByteArray(image);
                 if (imageData != null) {
                     Picture picture = new Picture(installationId, "Uploaded Image", imageData);
@@ -339,7 +334,6 @@ public class TechnicianDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
-
 
         deleteFilesFromDirectory(createPackagePath());
 
@@ -464,7 +458,6 @@ public class TechnicianDashboardController implements Initializable {
             return;
         }
 
-
         if (!ValidationUtility.isNotEmpty(techIdField)) {
             DialogUtility.showInformationDialog("Technician ID is required.");
             return;
@@ -476,7 +469,6 @@ public class TechnicianDashboardController implements Initializable {
         }
         handleViewSwitch(false, false, true, false, false);
     }
-
 
     @FXML
     private void nextToInstallationInfo(ActionEvent event) {
@@ -533,7 +525,6 @@ public class TechnicianDashboardController implements Initializable {
         handleViewSwitch(false, false, false, true, false);
     }
 
-
     @FXML
     private void nextToInstallationPhotos(ActionEvent event) {
         if (!ValidationUtility.isComboBoxNotEmpty(installationTypeBox)) {
@@ -564,7 +555,6 @@ public class TechnicianDashboardController implements Initializable {
         handleViewSwitch(false, false, false, false, true);
     }
 
-
     public void displayImage(int index) {
         installationPictureView.setImage(images.get(index));
     }
@@ -578,7 +568,6 @@ public class TechnicianDashboardController implements Initializable {
         ft.setOnFinished(event -> displayImage(currentIndex));
         ft.play();
     }
-
 
     @FXML
     private void deleteCurrentImage(ActionEvent event) {
@@ -602,7 +591,6 @@ public class TechnicianDashboardController implements Initializable {
             DialogUtility.showExceptionDialog(ex);
         }
     }
-
 
     @FXML
     private void previousImage() {

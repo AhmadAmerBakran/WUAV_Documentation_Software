@@ -7,6 +7,7 @@ import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
 import easv_2nd_term_exam.util.DialogUtility;
 import easv_2nd_term_exam.util.PictureUtility;
+import easv_2nd_term_exam.util.ValidationUtility;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,14 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -215,19 +209,28 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     private void addDeviceToInstallation(ActionEvent event) {
         selectedDeviceType = deviceTypeTableView.getSelectionModel().getSelectedItem();
-        openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/AddDevicesToInstallationView.fxml", "Add Device To Installation");
-        ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
-        ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+
+        if (selectedDeviceType == null) {
+            DialogUtility.showInformationDialog("Please select a device type before proceeding.");
+            return;
+        }
+
+        try {
+            openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/AddDevicesToInstallationView.fxml", "Add Device To Installation");
+
+            ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeIdField().setText(String.valueOf(selectedDeviceType.getId()));
+            ControllerManager.getInstance().getAddDevicesToInstallationController().getDeviceTypeNameField().setText(selectedDeviceType.getName());
+
+        } catch (Exception ex) {
+            DialogUtility.showExceptionDialog(ex);
+        }
     }
+
 
     public DatePicker getExpireDatePicker() {
         return expireDatePicker;
     }
 
-    @FXML
-    private void addNewCustomer(ActionEvent event) {
-
-    }
 
     @FXML
     private void cancel(ActionEvent event) {
@@ -236,22 +239,104 @@ public class UpdateReportViewController implements Initializable {
         stage.close();
     }
 
-
     @FXML
-    void nextToCustomerInfo(ActionEvent event) {
-        handleViewSwitch(false, true, false, false);
+    private void nextToCustomerInfo(ActionEvent event) {
 
+        if (!ValidationUtility.isNotEmpty(techIdField)) {
+            DialogUtility.showInformationDialog("Technician ID is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(techNameField)) {
+            DialogUtility.showInformationDialog("Technician Name is required.");
+            return;
+        }
+        handleViewSwitch(false, true, false, false);
     }
 
     @FXML
-    void nextToInstallationInfo(ActionEvent event) {
+    private void nextToInstallationInfo(ActionEvent event) {
+        if (!ValidationUtility.isNotEmpty(customerAddressField) &&
+                !ValidationUtility.isNotEmpty(customerEmailField) &&
+                !ValidationUtility.isNotEmpty(customerNameField) &&
+                !ValidationUtility.isNotEmpty(billingAddressField) &&
+                !ValidationUtility.isComboBoxNotEmpty(customerTypeBox)) {
+            DialogUtility.showInformationDialog("You must select a customer or create a new one before proceeding.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerAddressField)) {
+            DialogUtility.showInformationDialog("Customer Address is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidDanishAddress(customerAddressField)) {
+            DialogUtility.showInformationDialog("Customer Address is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerEmailField)) {
+            DialogUtility.showInformationDialog("Customer Email is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidEmail(customerEmailField)) {
+            DialogUtility.showInformationDialog("Customer Email is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerNameField)) {
+            DialogUtility.showInformationDialog("Customer Name is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidName(customerNameField)) {
+            DialogUtility.showInformationDialog("Customer Name is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isComboBoxNotEmpty(customerTypeBox)) {
+            DialogUtility.showInformationDialog("Customer Type is required.");
+            return;
+        }
+
+        if (customerTypeBox.getValue() == CustomerType.B2B) {
+            if (!ValidationUtility.isNotEmpty(billingAddressField)) {
+                DialogUtility.showInformationDialog("Billing Address is required for B2B customers.");
+                return;
+            }
+        }
         handleViewSwitch(false, false, true, false);
         setUpInstallationDeviceTableView();
-
     }
 
     @FXML
-    void nextToInstallationPhotos(ActionEvent event) {
+    private void nextToInstallationPhotos(ActionEvent event) {
+        if (!ValidationUtility.isComboBoxNotEmpty(installationTypeBox)) {
+            DialogUtility.showInformationDialog("Installation Type Box is empty. Please select an Installation Type.");
+            return;
+        }
+
+        if (installationDevicesTableView.getItems().isEmpty()) {
+            DialogUtility.showInformationDialog("Devices List is empty. Please add a Device.");
+            return;
+        }
+
+        if (!ValidationUtility.isTextAreaNotEmpty(descriptionArea)) {
+            DialogUtility.showInformationDialog("Description Area is empty. Please fill in the Description.");
+            return;
+        }
+
+        if (datePicker.getValue() == null) {
+            DialogUtility.showInformationDialog("Please select a Creating Date.");
+            return;
+        }
+
+        if (expireDatePicker.getValue() == null) {
+            DialogUtility.showInformationDialog("Expiration Date Picker is empty. Please select an Expiration Date.");
+            return;
+        }
+
         handleViewSwitch(false, false, false, true);
         showInstallationImages();
     }
@@ -300,12 +385,6 @@ public class UpdateReportViewController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
-    }
-
-
-    @FXML
-    void selectCustomer(ActionEvent event) {
-
     }
 
     public TextField getCustomerNameField() {
@@ -363,7 +442,6 @@ public class UpdateReportViewController implements Initializable {
     private void deleteCurrentImage(ActionEvent event) {
         try {
             modelManager.getPictureModel().deletePicture(pictures.get(currentIndex).getId());
-            // Update the pictures and images lists immediately after the deletion
             pictures = modelManager.getPictureModel().getPicturesByInstallationId(Integer.parseInt(installationIdLabel.getText()));
             images = pictures.stream().map(picture -> new Image(new ByteArrayInputStream(picture.getImageData()))).collect(Collectors.toList());
 
@@ -461,15 +539,30 @@ public class UpdateReportViewController implements Initializable {
     @FXML
     private void updateInstallationDevice(ActionEvent event) {
         selectedDevice = installationDevicesTableView.getSelectionModel().getSelectedItem();
-        openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateInstallationDeviceView.fxml", "Update Installation Devices");
-        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceIdFieldE().setText(String.valueOf(selectedDevice.getId()));
-        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceNameFieldE().setText(selectedDevice.getName());
-        ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceUsernameFieldE().setText(selectedDevice.getUsername());
+        if (selectedDevice == null) {
+            DialogUtility.showInformationDialog("Please select a device before proceeding.");
+            return;
+        }
+        try {
+            openNewWindow("/easv_2nd_term_exam/gui/views/projectManager/UpdateInstallationDeviceView.fxml", "Update Installation Devices");
+
+            ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceIdFieldE().setText(String.valueOf(selectedDevice.getId()));
+            ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceNameFieldE().setText(selectedDevice.getName());
+            ControllerManager.getInstance().getUpdateInstallationDeviceController().getDeviceUsernameFieldE().setText(selectedDevice.getUsername());
+
+        } catch (Exception ex) {
+            DialogUtility.showExceptionDialog(ex);
+        }
     }
+
 
     @FXML
     private void deleteInstallationDevice(ActionEvent event) {
         selectedDevice = installationDevicesTableView.getSelectionModel().getSelectedItem();
+        if (selectedDevice == null) {
+            DialogUtility.showInformationDialog("Please select a device before proceeding.");
+            return;
+        }
 
         if (DialogUtility.showConfirmationDialog("Are you sure you want to delete this device?")) {
             try {
@@ -481,6 +574,7 @@ public class UpdateReportViewController implements Initializable {
             }
         }
     }
+
 
 
     @FXML

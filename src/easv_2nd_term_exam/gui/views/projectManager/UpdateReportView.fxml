@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="600.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController">
+<StackPane prefHeight="600.0" prefWidth="999.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController">
    <children>
       <BorderPane fx:id="techPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <center>
@@ -94,19 +94,6 @@
                                     <TableColumn fx:id="customerSecondAddressColumnS" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Second Address" />
                                  </columns>
                               </TableView>
-                              <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <ButtonBar prefHeight="35.0" prefWidth="305.0">
-                                       <buttons>
-                                          <Button alignment="BASELINE_LEFT" graphicTextGap="25.0" mnemonicParsing="false" onAction="#selectCustomer" prefHeight="35.0" text="Select Customer" />
-                                          <Button mnemonicParsing="false" onAction="#addNewCustomer" prefHeight="35.0" prefWidth="100.0" text="New Customer" />
-                                       </buttons>
-                                    </ButtonBar>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
                            </children>
                         </VBox>
                         <VBox fx:id="newCustomerVBox" prefHeight="200.0" prefWidth="100.0">

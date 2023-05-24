@@ -170,6 +170,7 @@ public class ProjectManagerDashboardController implements Initializable {
     @FXML
     private void showExpiringReport(ActionEvent event) {
         showReportsPane(false, true);
+        setUpExpiringReportsTableView();
     }
 
 
