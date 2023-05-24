@@ -186,6 +186,7 @@
                <bottom>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <buttons>
+                        <Button mnemonicParsing="false" onAction="#backToReports" text="Back" />
                       <Button mnemonicParsing="false" onAction="#nextToCustomerInfo" text="Next">
                            <padding>
                               <Insets left="20.0" right="20.0" />
@@ -325,6 +326,7 @@
                <bottom>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <buttons>
+                        <Button mnemonicParsing="false" onAction="#backToTechnicianInfo" text="Back" />
                       <Button mnemonicParsing="false" onAction="#nextToInstallationInfo" text="Next">
                            <padding>
                               <Insets left="20.0" right="20.0" />
@@ -449,6 +451,7 @@
                <bottom>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <buttons>
+                        <Button mnemonicParsing="false" onAction="#backToCustomerInfo" text="Back" />
                       <Button mnemonicParsing="false" onAction="#nextToInstallationPhotos" text="Next">
                            <padding>
                               <Insets left="20.0" right="20.0" />
@@ -473,6 +476,7 @@
                <bottom>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <buttons>
+                        <Button mnemonicParsing="false" onAction="#backToInstallationInfo" text="Back" />
                         <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                         <Button mnemonicParsing="false" onAction="#saveReport" text="Save" />
                      </buttons>

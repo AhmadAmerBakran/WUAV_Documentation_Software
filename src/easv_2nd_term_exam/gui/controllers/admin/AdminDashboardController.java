@@ -594,6 +594,7 @@ public class AdminDashboardController implements Initializable {
                 try {
                     modelManager.getAdminModel().restoreUser(selectedUser.getId());
                     DialogUtility.showInformationDialog("User restored successfully");
+                    setUpDeletedUsersTableView();
                 } catch (Exception e) {
                     DialogUtility.showExceptionDialog(e);
                 }

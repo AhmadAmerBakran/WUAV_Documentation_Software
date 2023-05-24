@@ -399,7 +399,7 @@
                         <TableView fx:id="deviceTypeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="deviceTypeIdColumn" maxWidth="150.0" minWidth="100.0" prefWidth="75.0" text="ID" />
-                              <TableColumn fx:id="deviceTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="900.0" prefWidth="-1.0" text="Installation Type" />
+                              <TableColumn fx:id="deviceTypeNameColumn" maxWidth="1.7976931348623157E308" minWidth="900.0" prefWidth="-1.0" text="Device Type" />
                            </columns>
                         </TableView>
                         <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">

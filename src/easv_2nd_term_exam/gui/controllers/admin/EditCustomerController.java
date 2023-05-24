@@ -114,6 +114,7 @@ public class EditCustomerController implements Initializable {
         try {
             modelManager.getCustomerModel().updateCustomer(selectedCustomer);
             DialogUtility.showInformationDialog("Customer updated successfully.");
+            ControllerManager.getInstance().getAdminDashboardController().setUpCustomerTableView();
             ((Node)event.getSource()).getScene().getWindow().hide();
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);

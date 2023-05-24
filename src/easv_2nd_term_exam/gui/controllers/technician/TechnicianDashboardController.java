@@ -5,10 +5,7 @@ import easv_2nd_term_exam.enums.CustomerType;
 import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.ModelManager;
 import easv_2nd_term_exam.gui.models.ModelManagerLoader;
-import easv_2nd_term_exam.util.DialogUtility;
-import easv_2nd_term_exam.util.FileUtility;
-import easv_2nd_term_exam.util.PdfReportGenerator;
-import easv_2nd_term_exam.util.PictureUtility;
+import easv_2nd_term_exam.util.*;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -195,27 +192,27 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        // Get a reference to the current window
-        Node source = (Node) event.getSource();
-        Stage currentStage = (Stage) source.getScene().getWindow();
+        boolean confirmLogout = DialogUtility.showConfirmationDialog("Are you sure you want to logout?");
+        if (confirmLogout) {
+            Node source = (Node) event.getSource();
+            Stage currentStage = (Stage) source.getScene().getWindow();
 
-        // Hide the current window
-        currentStage.hide();
+            currentStage.hide();
 
-        // Load the login window
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(root));
+            loginStage.show();
         }
-
-        // Show the login window
-        Stage loginStage = new Stage();
-        loginStage.setScene(new Scene(root));
-        loginStage.show();
     }
+
 
     @FXML
     private void openDrawingLayout(ActionEvent event) {
@@ -332,6 +329,9 @@ public class TechnicianDashboardController implements Initializable {
                     pictures.add(picture);
                 }
             }
+        } else {
+            DialogUtility.showInformationDialog("No pictures uploaded. Please add pictures to the installation report.");
+            return;
         }
 
         try {
@@ -352,6 +352,8 @@ public class TechnicianDashboardController implements Initializable {
         } catch (Exception e) {
             DialogUtility.showExceptionDialog(e);
         }
+
+        DialogUtility.showInformationDialog("The report has been successfully saved.");
 
         setUpReportTableView();
         showMyReports(event);
@@ -457,19 +459,111 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void nextToCustomerInfo(ActionEvent event) {
-        handleViewSwitch(false, false, true, false, false);
+        if (!ValidationUtility.isNotEmpty(techEmailField)) {
+            DialogUtility.showInformationDialog("Technician Email is required.");
+            return;
+        }
 
+
+        if (!ValidationUtility.isNotEmpty(techIdField)) {
+            DialogUtility.showInformationDialog("Technician ID is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(techNameField)) {
+            DialogUtility.showInformationDialog("Technician Name is required.");
+            return;
+        }
+        handleViewSwitch(false, false, true, false, false);
     }
+
 
     @FXML
     private void nextToInstallationInfo(ActionEvent event) {
+        if (!ValidationUtility.isNotEmpty(customerAddressField) &&
+                !ValidationUtility.isNotEmpty(customerEmailField) &&
+                !ValidationUtility.isNotEmpty(customerNameField) &&
+                !ValidationUtility.isNotEmpty(billingAddressField) &&
+                !ValidationUtility.isComboBoxNotEmpty(customerTypeBox)) {
+            DialogUtility.showInformationDialog("You must select a customer or create a new one before proceeding.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerAddressField)) {
+            DialogUtility.showInformationDialog("Customer Address is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidDanishAddress(customerAddressField)) {
+            DialogUtility.showInformationDialog("Customer Address is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerEmailField)) {
+            DialogUtility.showInformationDialog("Customer Email is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidEmail(customerEmailField)) {
+            DialogUtility.showInformationDialog("Customer Email is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isNotEmpty(customerNameField)) {
+            DialogUtility.showInformationDialog("Customer Name is required.");
+            return;
+        }
+
+        if (!ValidationUtility.isValidName(customerNameField)) {
+            DialogUtility.showInformationDialog("Customer Name is not valid.");
+            return;
+        }
+
+        if (!ValidationUtility.isComboBoxNotEmpty(customerTypeBox)) {
+            DialogUtility.showInformationDialog("Customer Type is required.");
+            return;
+        }
+
+        if (customerTypeBox.getValue() == CustomerType.B2B) {
+            if (!ValidationUtility.isNotEmpty(billingAddressField)) {
+                DialogUtility.showInformationDialog("Billing Address is required for B2B customers.");
+                return;
+            }
+        }
         handleViewSwitch(false, false, false, true, false);
     }
 
+
     @FXML
     private void nextToInstallationPhotos(ActionEvent event) {
+        if (!ValidationUtility.isComboBoxNotEmpty(installationTypeBox)) {
+            DialogUtility.showInformationDialog("Installation Type Box is empty. Please select an Installation Type.");
+            return;
+        }
+
+        if (devices == null || devices.isEmpty()) {
+            DialogUtility.showInformationDialog("Devices List is empty. Please add a Device.");
+            return;
+        }
+
+        if (!ValidationUtility.isTextAreaNotEmpty(descriptionArea)) {
+            DialogUtility.showInformationDialog("Description Area is empty. Please fill in the Description.");
+            return;
+        }
+
+        if (datePicker.getValue() == null) {
+            DialogUtility.showInformationDialog("Please select a Creating Date.");
+            return;
+        }
+
+        if (expireDatePicker.getValue() == null) {
+            DialogUtility.showInformationDialog("Expiration Date Picker is empty. Please select an Expiration Date.");
+            return;
+        }
+
         handleViewSwitch(false, false, false, false, true);
     }
+
 
     public void displayImage(int index) {
         installationPictureView.setImage(images.get(index));
@@ -488,7 +582,27 @@ public class TechnicianDashboardController implements Initializable {
 
     @FXML
     private void deleteCurrentImage(ActionEvent event) {
+        try {
+            if (currentIndex < images.size() && currentIndex >= 0) {
+                boolean confirmDelete = DialogUtility.showConfirmationDialog("Are you sure you want to delete the current image?");
+                if (confirmDelete) {
+                    images.remove(currentIndex);
+                    if (!images.isEmpty()) {
+                        currentIndex = images.size() - 1;
+                        displayImage(currentIndex);
+                    } else {
+                        installationPictureView.setImage(null);
+                        currentIndex = -1;
+                    }
+                }
+            } else {
+                DialogUtility.showInformationDialog("Current index is out of range. Please select a valid image to delete.");
+            }
+        } catch (Exception ex) {
+            DialogUtility.showExceptionDialog(ex);
+        }
     }
+
 
     @FXML
     private void previousImage() {
@@ -503,5 +617,25 @@ public class TechnicianDashboardController implements Initializable {
             currentIndex++;
             animateImageChange();
         }
+    }
+
+    @FXML
+    private void backToReports(ActionEvent event) {
+        showMyReports(event);
+    }
+
+    @FXML
+    private void backToTechnicianInfo(ActionEvent event) {
+        handleViewSwitch(false, true, false, false, false);
+    }
+
+    @FXML
+    private void backToCustomerInfo(ActionEvent event) {
+        handleViewSwitch(false, false, true, false, false);
+    }
+
+    @FXML
+    private void backToInstallationInfo(ActionEvent event) {
+        handleViewSwitch(false, false, false, true, false);
     }
 }

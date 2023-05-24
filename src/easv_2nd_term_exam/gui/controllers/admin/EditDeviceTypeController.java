@@ -50,7 +50,6 @@ public class EditDeviceTypeController implements Initializable {
             selectedDeviceType.setName(deviceTypeName);
             try {
                 modelManager.getDeviceTypeModel().updateDeviceType(selectedDeviceType);
-                ControllerManager.getInstance().getAdminDashboardController().setUpDeviceTypeTableView();
                 DialogUtility.showInformationDialog("Device Type successfully updated.");
                 ControllerManager.getInstance().getAdminDashboardController().setUpDeviceTypeTableView();
                 closeStage(event);
