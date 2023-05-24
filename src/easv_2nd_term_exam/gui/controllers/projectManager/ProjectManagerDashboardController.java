@@ -229,9 +229,6 @@ public class ProjectManagerDashboardController implements Initializable {
         controller.getInstallationIdLabel().setText(String.valueOf(report.getInstallationId()));
         controller.getCustomerTypeBox().setValue(CustomerType.valueOf(report.getCustomerType()));
 
-        InstallationType installationType = new InstallationType();
-        installationType.setName(report.getInstallationType());
-        controller.getInstallationTypeBox().setValue(installationType);
         controller.getDatePicker().setValue(report.getCreatedDate());
         controller.getExpireDatePicker().setValue(report.getExpiryDate());
         controller.getDescriptionArea().setText(report.getDescription());

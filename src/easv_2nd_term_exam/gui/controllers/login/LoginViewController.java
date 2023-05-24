@@ -7,6 +7,7 @@ import easv_2nd_term_exam.gui.controllers.ControllerManager;
 import easv_2nd_term_exam.gui.models.LogInModel;
 import easv_2nd_term_exam.gui.models.ModelManager;
 
+import easv_2nd_term_exam.util.DialogUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,11 +83,11 @@ public class LoginViewController implements Initializable {
                 stage.setScene(scene);
                 stage.show();
                 System.out.println("This is " + user.getRole() + " " + user.getName() + "\nContact: " + user.getEmail());
-                // Get a reference to the current window
                 Window currentWindow = ((Node) actionEvent.getSource()).getScene().getWindow();
 
-                // Close the current window
                 currentWindow.hide();
+            } else {
+            DialogUtility.showInformationDialog("Invalid username or password.");
             }
         } catch (SQLServerException e) {
             throw new RuntimeException(e);

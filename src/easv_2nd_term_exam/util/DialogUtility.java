@@ -63,8 +63,4 @@ public class DialogUtility {
         alert.showAndWait();
     }
 
-    public static boolean showDeviceFieldsReminder() {
-        String message = "Device Username and/or Password fields are empty. Do you want to continue without filling in these fields?";
-        return showConfirmationDialog(message);
-    }
 }

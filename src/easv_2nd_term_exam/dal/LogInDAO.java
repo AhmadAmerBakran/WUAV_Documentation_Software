@@ -33,7 +33,6 @@ public class LogInDAO {
                     String role = result.getString("Role");
                     boolean isDeleted = result.getBoolean("IsDeleted");
 
-                    // Check if the provided password matches the hashed password from the database
                     if (!BCrypt.checkpw(password, hashedPassword)) {
                         return null;
                     }
