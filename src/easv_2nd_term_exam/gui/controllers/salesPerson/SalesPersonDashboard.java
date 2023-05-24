@@ -116,23 +116,24 @@ public class SalesPersonDashboard implements Initializable {
     }
 
     @FXML
-    void handleLogout(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private void handleLogout(ActionEvent event) {
+        if (DialogUtility.showConfirmationDialog("Are you sure you want to logout?")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv_2nd_term_exam/gui/views/login/LoginView.fxml"));
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                DialogUtility.showExceptionDialog(e);
+            }
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(scene);
+            stage.show();
+            Node source = (Node) event.getSource();
+            Stage currentStage = (Stage) source.getScene().getWindow();
+            currentStage.hide();
         }
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Login");
-        stage.setScene(scene);
-        stage.show();
-        Node source = (Node) event.getSource();
-        Stage currentStage = (Stage) source.getScene().getWindow();
-        currentStage.hide();
-
     }
 
     @FXML

@@ -14,7 +14,7 @@ public class CustomerModel {
     private ObservableList<Customer> customers;
     private ObservableList<Customer> deletedCustomers;
 
-    public CustomerModel() throws Exception {
+    public CustomerModel() throws SQLException {
         customerManager = new CustomerManager();
         customers = FXCollections.observableArrayList();
         customers.setAll(customerManager.getAllActiveCustomers());

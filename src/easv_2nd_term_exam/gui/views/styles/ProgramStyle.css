@@ -194,8 +194,6 @@
 
 .combo-box-popup .list-view .list-cell {
     -fx-padding: 4 0 4 5;
-
-    /* No alternate highlighting */
     -fx-background-color: #F7F8F9;
 }
 
@@ -213,6 +211,7 @@
 .combo-box-base {
     -fx-background-color: #F7F8F9, #F7F8F9, #F7F8F9, #F7F8F9;
     -fx-background-radius: 5, 5, 4, 3;
+    -fx-border-color: #E84910;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-padding: 0;
 }

@@ -6,12 +6,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ICustomerDAO {
-    Customer createCustomer(Customer customer) throws Exception;
-    Customer getCustomer(int id) throws Exception;
-    List<Customer> getAllActiveCustomers() throws Exception;
+    Customer createCustomer(Customer customer) throws SQLException;
+    Customer getCustomer(int id) throws SQLException;
+    List<Customer> getAllActiveCustomers() throws SQLException;
     List<Customer> getDeletedCustomers() throws SQLException;
-    void updateCustomer(Customer customer) throws Exception;
-    void deleteCustomer(int id) throws Exception;
+    void updateCustomer(Customer customer) throws SQLException;
+    void deleteCustomer(int id)  throws SQLException;
     Customer findCustomerByEmail(String email) throws SQLException;
     Customer updateCustomerByEmail(Customer customer) throws SQLException;
     public void restoreCustomer(int id) throws SQLException;

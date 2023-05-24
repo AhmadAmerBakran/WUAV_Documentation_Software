@@ -28,7 +28,7 @@ public class ModelManagerLoader {
             });
             thread.start();
             try {
-                thread.join(); // wait for the thread to finish
+                thread.join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="600.0" prefWidth="999.0" stylesheets="@../styles/TechnicianDBStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController">
+<StackPane prefHeight="600.0" prefWidth="999.0" stylesheets="@../styles/ProgramStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv_2nd_term_exam.gui.controllers.projectManager.UpdateReportViewController">
    <children>
       <BorderPane fx:id="techPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <center>

@@ -1,5 +1,7 @@
 package easv_2nd_term_exam.gui.models;
 
+import java.sql.SQLException;
+
 public class ModelManager {
 
     private AdminModel adminModel;
@@ -14,86 +16,69 @@ public class ModelManager {
     private InstallationTypeModel installationTypeModel;
 
     public ModelManager() throws Exception {
-        adminModel = new AdminModel();
-        customerModel = new CustomerModel();
-        installationModel = new InstallationModel();
-        logInModel = new LogInModel();
-        pictureModel = new PictureModel();
-        reportModel = new ReportModel();
-        deviceTypeModel = new DeviceTypeModel();
-        devicesModel = new DevicesModel();
-        installationTypeModel = new InstallationTypeModel();
-    }
-
-    public DeviceTypeModel getDeviceTypeModel() {
-        return deviceTypeModel;
-    }
-
-    public void setDeviceTypeModel(DeviceTypeModel deviceTypeModel) {
-        this.deviceTypeModel = deviceTypeModel;
-    }
-
-    public DevicesModel getDevicesModel() {
-        return devicesModel;
-    }
-
-    public void setDevicesModel(DevicesModel devicesModel) {
-        this.devicesModel = devicesModel;
-    }
-
-    public InstallationTypeModel getInstallationTypeModel() {
-        return installationTypeModel;
-    }
-
-    public void setInstallationTypeModel(InstallationTypeModel installationTypeModel) {
-        this.installationTypeModel = installationTypeModel;
     }
 
     public AdminModel getAdminModel() {
+        if (adminModel == null) {
+            adminModel = new AdminModel();
+        }
         return adminModel;
     }
 
-    public ReportModel getReportModel() {
-        return reportModel;
-    }
-
-    public void setReportModel(ReportModel reportModel) {
-        this.reportModel = reportModel;
-    }
-
-    public void setAdminModel(AdminModel adminModel) {
-        this.adminModel = adminModel;
-    }
-
-    public CustomerModel getCustomerModel() {
+    public CustomerModel getCustomerModel() throws SQLException {
+        if (customerModel == null) {
+            customerModel = new CustomerModel();
+        }
         return customerModel;
     }
 
-    public void setCustomerModel(CustomerModel customerModel) {
-        this.customerModel = customerModel;
-    }
-
-    public InstallationModel getInstallationModel() {
+    public InstallationModel getInstallationModel() throws Exception {
+        if (installationModel == null) {
+            installationModel = new InstallationModel();
+        }
         return installationModel;
     }
 
-    public void setInstallationModel(InstallationModel installationModel) {
-        this.installationModel = installationModel;
-    }
-
     public LogInModel getLogInModel() {
+        if (logInModel == null) {
+            logInModel = new LogInModel();
+        }
         return logInModel;
     }
 
-    public void setLogInModel(LogInModel logInModel) {
-        this.logInModel = logInModel;
-    }
-
-    public PictureModel getPictureModel() {
+    public PictureModel getPictureModel() throws Exception {
+        if (pictureModel == null) {
+            pictureModel = new PictureModel();
+        }
         return pictureModel;
     }
 
-    public void setPictureModel(PictureModel pictureModel) {
-        this.pictureModel = pictureModel;
+    public ReportModel getReportModel() {
+        if (reportModel == null) {
+            reportModel = new ReportModel();
+        }
+        return reportModel;
     }
+
+    public DeviceTypeModel getDeviceTypeModel() {
+        if (deviceTypeModel == null) {
+            deviceTypeModel = new DeviceTypeModel();
+        }
+        return deviceTypeModel;
+    }
+
+    public DevicesModel getDevicesModel() {
+        if (devicesModel == null) {
+            devicesModel = new DevicesModel();
+        }
+        return devicesModel;
+    }
+
+    public InstallationTypeModel getInstallationTypeModel() {
+        if (installationTypeModel == null) {
+            installationTypeModel = new InstallationTypeModel();
+        }
+        return installationTypeModel;
+    }
+
 }

@@ -28,7 +28,7 @@ public class CustomerManager {
         return customerDAO.getCustomer(id);
     }
 
-    public List<Customer> getAllActiveCustomers() throws Exception {
+    public List<Customer> getAllActiveCustomers() throws SQLException {
         return customerDAO.getAllActiveCustomers();
     }
     public List<Customer> getDeletedCustomers() throws SQLException
