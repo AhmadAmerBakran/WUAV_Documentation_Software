@@ -502,13 +502,15 @@ public class UpdateReportViewController implements Initializable {
         try {
             pictures = modelManager.getPictureModel().getPicturesByInstallationId(Integer.parseInt(installationIdLabel.getText()));
             for (Picture picture: pictures) {
-                images.add(new Image(new ByteArrayInputStream(picture.getImageData())));
+                Image image = PictureUtility.byteArrayToImage(picture.getImageData());
+                images.add(image);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            DialogUtility.showExceptionDialog(e);
         }
         displayImage(currentIndex);
     }
+
     @FXML
     private void previousImage() {
         if (currentIndex > 0) {

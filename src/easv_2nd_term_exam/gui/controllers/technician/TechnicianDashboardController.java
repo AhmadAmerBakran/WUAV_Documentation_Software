@@ -255,12 +255,6 @@ public class TechnicianDashboardController implements Initializable {
         }
     }
 
-    private String createPackagePath() {
-        String projectPath = System.getProperty("user.dir") + File.separator + "src";
-        String sanitizedUserName = loggedUser.getName().replace(" ", "_");
-        return projectPath + File.separator + "easv_2nd_term_exam" + File.separator + "installation_pictures" + File.separator + sanitizedUserName.toLowerCase() + File.separator;
-    }
-
     @FXML
     private void cancel(ActionEvent event) {
         showMyReports(event);
@@ -335,8 +329,6 @@ public class TechnicianDashboardController implements Initializable {
             DialogUtility.showExceptionDialog(e);
         }
 
-        deleteFilesFromDirectory(createPackagePath());
-
         for (Device d: devices) {
             d.setInstallationId(installationId);
         }
@@ -364,19 +356,6 @@ public class TechnicianDashboardController implements Initializable {
         handleViewSwitch(true, false, false, false, false);
     }
 
-    private void deleteFilesFromDirectory(String directoryPath) {
-        File directory = new File(directoryPath);
-        if (directory.exists() && directory.isDirectory()) {
-            File[] files = directory.listFiles();
-            if (files != null) {
-                for (File file: files) {
-                    if (!file.isDirectory()) {
-                        file.delete();
-                    }
-                }
-            }
-        }
-    }
 
     @FXML
     private void downloadReport(ActionEvent event) {
