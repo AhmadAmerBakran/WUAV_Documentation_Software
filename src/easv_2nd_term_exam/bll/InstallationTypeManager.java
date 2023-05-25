@@ -2,13 +2,14 @@ package easv_2nd_term_exam.bll;
 
 import easv_2nd_term_exam.dal.InstallationTypeDAO;
 import easv_2nd_term_exam.be.InstallationType;
+import easv_2nd_term_exam.dal.interfaces.IInstallationTypeDAO;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class InstallationTypeManager {
 
-    private InstallationTypeDAO installationTypeDAO;
+    private IInstallationTypeDAO installationTypeDAO;
 
     public InstallationTypeManager() {
         installationTypeDAO = new InstallationTypeDAO();

@@ -62,7 +62,7 @@ public class PictureDAO implements IPictureDAO {
                     }
                 }
 
-                pstmt.clearParameters(); // Clear the parameters for the next iteration
+                pstmt.clearParameters();
             }
         }
         return createdPictures;

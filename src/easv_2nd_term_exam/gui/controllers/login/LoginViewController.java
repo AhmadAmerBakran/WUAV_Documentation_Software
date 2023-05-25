@@ -22,6 +22,7 @@ import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginViewController implements Initializable {
@@ -89,7 +90,7 @@ public class LoginViewController implements Initializable {
             } else {
             DialogUtility.showInformationDialog("Invalid username or password.");
             }
-        } catch (SQLServerException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

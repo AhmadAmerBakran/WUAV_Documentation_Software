@@ -2,18 +2,20 @@ package easv_2nd_term_exam.dal;
 
         import easv_2nd_term_exam.be.*;
         import easv_2nd_term_exam.dal.connector.DBConnector;
+        import easv_2nd_term_exam.dal.interfaces.IReportDAO;
 
         import java.sql.*;
         import java.util.ArrayList;
         import java.util.List;
 
-public class ReportDAO {
+public class ReportDAO implements IReportDAO {
     private final DBConnector dbConnector;
 
     public ReportDAO() {
         dbConnector = new DBConnector();
     }
 
+    @Override
     public List<Report> getAllTechnicianReports(int technicianId) {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
@@ -94,6 +96,7 @@ public class ReportDAO {
 
 
 
+    @Override
     public List<Report> getAllReports() {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
@@ -130,6 +133,7 @@ public class ReportDAO {
         return reportList;
     }
 
+    @Override
     public List<Report> getExpiringReports(int daysBeforeExpiry) {
         List<Report> reportList = new ArrayList<>();
         String query1 = "SELECT c.ID AS customerId, c.Name AS customerName, c.Address AS customerAddress, " +
@@ -213,6 +217,7 @@ public class ReportDAO {
     }
 
 
+    @Override
     public boolean updateReport(Report report) {
         Connection connection = null;
         String sqlDeleteDevices = "DELETE FROM Devices WHERE InstallationId = ?";
@@ -310,12 +315,7 @@ public class ReportDAO {
             }
         }
     }
-
-
-
-
-
-
+    @Override
     public boolean deleteReport(int installationId) {
         Connection connection = null;
         try {

@@ -2,6 +2,7 @@ package easv_2nd_term_exam.dal;
 
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.dal.connector.DBConnector;
+import easv_2nd_term_exam.dal.interfaces.IAdminDAO;
 import easv_2nd_term_exam.enums.UserRole;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -12,13 +13,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminDAO {
+public class AdminDAO implements IAdminDAO {
     private DBConnector dbConnector;
 
     public AdminDAO() {
         dbConnector = new DBConnector();
     }
 
+    @Override
     public List<User> getAllUsers() {
         String sql = "SELECT * FROM Employee WHERE IsDeleted = 0";
         List<User> users = new ArrayList<>();
@@ -54,6 +56,7 @@ public class AdminDAO {
         return users;
     }
 
+    @Override
     public User addUser(User user) {
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
@@ -87,6 +90,7 @@ public class AdminDAO {
         return user;
     }
 
+    @Override
     public boolean hasAdmins() {
         String sql = "SELECT COUNT(*) FROM Employee WHERE Role = ? AND IsDeleted = 0;";
 
@@ -106,6 +110,7 @@ public class AdminDAO {
         return false;
     }
 
+    @Override
     public void createAdminUser(String name, String email, String username, String password) {
         User adminUser = new Admin(0, name, email, username, password, false);
         adminUser.setRole(UserRole.ADMIN);
@@ -114,6 +119,7 @@ public class AdminDAO {
 
 
 
+    @Override
     public boolean updateUser(User user) {
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
@@ -136,6 +142,7 @@ public class AdminDAO {
         }
     }
 
+    @Override
     public boolean deleteUser(int id) {
         String sql = "UPDATE Employee SET IsDeleted = 1 WHERE ID = ?";
 
@@ -149,6 +156,7 @@ public class AdminDAO {
             throw new RuntimeException("Error while trying to delete user.", e);
         }
     }
+    @Override
     public boolean restoreUser(int id) {
         String sql = "UPDATE Employee SET IsDeleted = 0 WHERE ID = ?";
 
@@ -196,37 +204,28 @@ public class AdminDAO {
         return users;
     }
 
-    public List<User> getActiveUsers() {
-        return getUsers("SELECT * FROM Employee WHERE IsDeleted = 0");
-    }
 
+    @Override
     public List<User> getDeletedUsers() {
         return getUsers("SELECT * FROM Employee WHERE IsDeleted = 1");
     }
 
+    @Override
     public List<Technician> getAllActiveTechnicians() {
         return getUsersByRole(UserRole.TECHNICIAN, false);
     }
 
-    public List<Technician> getAllDeletedTechnicians() {
-        return getUsersByRole(UserRole.TECHNICIAN, true);
-    }
 
+    @Override
     public List<ProjectManager> getAllActiveProjectManagers() {
         return getUsersByRole(UserRole.PROJECT_MANAGER, false);
     }
 
-    public List<ProjectManager> getAllDeletedProjectManagers() {
-        return getUsersByRole(UserRole.PROJECT_MANAGER, true);
-    }
 
     public List<SalesPerson> getAllActiveSalesPersons() {
         return getUsersByRole(UserRole.SALES_PERSON, false);
     }
 
-    public List<SalesPerson> getAllDeletedSalesPersons() {
-        return getUsersByRole(UserRole.SALES_PERSON, true);
-    }
 
 
     private <T extends User> List<T> getUsersByRole(UserRole role, boolean isDeleted) {

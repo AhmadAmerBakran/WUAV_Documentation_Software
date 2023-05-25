@@ -6,12 +6,13 @@ import easv_2nd_term_exam.be.SalesPerson;
 import easv_2nd_term_exam.be.Technician;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.dal.AdminDAO;
+import easv_2nd_term_exam.dal.interfaces.IAdminDAO;
 
 import java.util.List;
 
 public class AdminManager {
 
-    private AdminDAO adminDAO;
+    private IAdminDAO adminDAO;
 
     public AdminManager() {
         adminDAO = new AdminDAO();

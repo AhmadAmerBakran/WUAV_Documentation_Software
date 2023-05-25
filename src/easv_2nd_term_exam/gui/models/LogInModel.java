@@ -5,6 +5,8 @@ import easv_2nd_term_exam.be.Technician;
 import easv_2nd_term_exam.be.User;
 import easv_2nd_term_exam.bll.LogInManager;
 
+import java.sql.SQLException;
+
 public class LogInModel {
 
     private LogInManager logInManager;
@@ -13,7 +15,7 @@ public class LogInModel {
         logInManager = new LogInManager();
     }
 
-    public User userLogIn(String username, String password) throws SQLServerException {
+    public User userLogIn(String username, String password) throws SQLException {
         return logInManager.userLogIn(username, password);
     }
 }

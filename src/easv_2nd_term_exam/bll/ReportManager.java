@@ -2,13 +2,14 @@ package easv_2nd_term_exam.bll;
 
 import easv_2nd_term_exam.be.Report;
 import easv_2nd_term_exam.dal.ReportDAO;
+import easv_2nd_term_exam.dal.interfaces.IReportDAO;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ReportManager {
 
-    private ReportDAO reportDAO;
+    private IReportDAO reportDAO;
 
     public ReportManager() {
         reportDAO = new ReportDAO();

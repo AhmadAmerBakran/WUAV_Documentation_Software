@@ -2,6 +2,7 @@ package easv_2nd_term_exam.dal;
 
 import easv_2nd_term_exam.be.*;
 import easv_2nd_term_exam.dal.connector.DBConnector;
+import easv_2nd_term_exam.dal.interfaces.ILogInDAO;
 import easv_2nd_term_exam.enums.UserRole;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -10,13 +11,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LogInDAO {
+public class LogInDAO implements ILogInDAO {
     private DBConnector dbConnector;
 
     public LogInDAO() {
         dbConnector = new DBConnector();
     }
 
+    @Override
     public User userLogIn(String username, String password) {
         String sql = "SELECT * FROM Employee WHERE Username = ? AND IsDeleted = 0;";
 
