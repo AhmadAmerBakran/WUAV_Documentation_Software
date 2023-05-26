@@ -1,3 +1,8 @@
+/**
+ * Represents a Technician in the system.
+ * This class is a subclass of User with a specific role of UserRole.Technician.
+ */
+
 package easv_2nd_term_exam.be;
 
 import easv_2nd_term_exam.enums.UserRole;

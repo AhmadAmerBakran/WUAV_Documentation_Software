@@ -39,6 +39,7 @@ public class PictureDAO implements IPictureDAO {
         return picture;
     }
 
+    @Override
     public List<Picture> createPictures(List<Picture> pictures) throws SQLException {
         List<Picture> createdPictures = new ArrayList<>();
         String sql = "INSERT INTO Picture (InstallationId, PictureName, ImageData) VALUES (?, ?, ?)";
@@ -51,7 +52,7 @@ public class PictureDAO implements IPictureDAO {
                 pstmt.setString(2, picture.getPictureName());
                 pstmt.setBytes(3, picture.getImageData());
 
-                pstmt.executeUpdate(); // Execute each prepared statement individually
+                pstmt.executeUpdate();
 
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
