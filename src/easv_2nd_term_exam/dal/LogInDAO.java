@@ -62,4 +62,8 @@ public class LogInDAO implements ILogInDAO {
             throw new RuntimeException("Error while trying to login.", e);
         }
     }
+
+    public void setDbConnector(DBConnector dbConnector) {
+        this.dbConnector = dbConnector;
+    }
 }

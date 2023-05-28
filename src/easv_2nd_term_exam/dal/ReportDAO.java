@@ -1,18 +1,21 @@
 package easv_2nd_term_exam.dal;
 
-        import easv_2nd_term_exam.be.*;
-        import easv_2nd_term_exam.dal.connector.DBConnector;
-        import easv_2nd_term_exam.dal.interfaces.IReportDAO;
-
-        import java.sql.*;
-        import java.util.ArrayList;
-        import java.util.List;
+import easv_2nd_term_exam.be.*;
+import easv_2nd_term_exam.dal.connector.DBConnector;
+import easv_2nd_term_exam.dal.interfaces.IReportDAO;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReportDAO implements IReportDAO {
-    private final DBConnector dbConnector;
+    private  DBConnector dbConnector;
 
     public ReportDAO() {
         dbConnector = new DBConnector();
+    }
+
+    public void setDbConnector(DBConnector dbConnector) {
+        this.dbConnector = dbConnector;
     }
 
     @Override
